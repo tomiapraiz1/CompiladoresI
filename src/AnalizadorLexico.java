@@ -44,7 +44,7 @@ public class AnalizadorLexico {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		AnalizadorLexico l = new AnalizadorLexico();
-		l.readStateMatrix("E:\\Facultad\\4to\\Compiladores I\\MatrizEstados.txt", 14, 24);
+		l.readStateMatrix("E:\\Facultad\\4to\\Compiladores I\\TPE-Compiladores\\CompiladoresI\\MatrizEstados.txt", 15, 24);
 		l.mostrarMatriz();
 	}
 
