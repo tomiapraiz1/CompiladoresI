@@ -109,16 +109,14 @@ public class AnalizadorLexico {
 		String pathA = "E:\\Facultad\\4to\\Compiladores I\\TPE-Compiladores\\CompiladoresI\\MatrizAcciones.txt";
 		AnalizadorLexico l = new AnalizadorLexico(pathS, pathA, 15, 26);
 		
-		AS0 a = new AS0(l);
+		ASE a = new ASE(l);
 		
 		BufferedReader archivo = new BufferedReader(new FileReader("E:\\Facultad\\4to\\Compiladores I\\TPE-Compiladores\\CompiladoresI\\pruebas.txt"));
         StringBuilder n = new StringBuilder();
         
-        for (int i=0; i<15;i++) {
+        for (int i=0; i<7;i++) {
         	a.ejecutar(archivo, n);
         }
-        
-        System.out.println(l.getLine());
         
 		//l.mostrarStateMatrix();
 		//l.mostrarASMatrix();
