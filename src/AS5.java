@@ -5,6 +5,25 @@ public class AS5 extends AccionSemantica{
 	@Override
 	public int ejecutar(Reader r, StringBuilder token) {
 		// TODO Auto-generated method stub
-		return 0;
+		if (token.indexOf("F") != -1)
+			token.setCharAt(token.indexOf("F"), 'E');
+		token.append("d");
+		String simbolo = token.toString();
+		try {
+			Double valor = Double.parseDouble(simbolo);
+			System.out.println(simbolo);
+			if (valor > AnalizadorLexico.maxF) {
+				System.out.println("Warning linea " + AnalizadorLexico.getLine() + " : el valor del simbolo sobrepasa el valor maximo."
+						+ " El mismo fue truncado al maximo.");
+				simbolo = Double.toString(AnalizadorLexico.maxF);
+				System.out.println(simbolo);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CONSTANTE, "Float", AnalizadorLexico.getLine());
+		
+		return AnalizadorLexico.CONSTANTE;
 	}
 }

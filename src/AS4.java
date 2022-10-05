@@ -5,6 +5,12 @@ public class AS4 extends AccionSemantica {
 	@Override
 	public int ejecutar(Reader r, StringBuilder token) {
 		// TODO Auto-generated method stub
-		return 0;
+		try {
+			return r.read();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return error;
 	}
 }
