@@ -1,6 +1,11 @@
-/AnalizadorLexico.class
-/AccionSemantica.class
-/AS0.class
-/AS1.class
+/TablaPalabrasReservadas.class
+/TablaTokens.class
+/TablaSimbolos.class
 /AS2.class
-/ASE.class
+/AS3.class
+/AS4.class
+/AS5.class
+/AS6.class
+/AS7.class
+/AS8.class
+/AS9.class

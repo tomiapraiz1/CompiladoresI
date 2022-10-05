@@ -10,18 +10,21 @@ import java.util.Scanner;
 public class AnalizadorLexico {
 	
 	private static int [][] state_matrix;
-	private static String[][] as_matrix;
+	private static AccionSemantica[][] as_matrix;
 	private int rows, columns;
 	private int line = 1;
 	
 	public static Reader r;
-	public static int estado = 0;
-	public StringBuilder token;
+	public static StringBuilder token_actual;
+	public static int estado_actual = 0;
 	
 	public static final char TAB = '\t';
 	public static final char BLANCO = ' ';
 	public static final char NL = '\n';
 	public static final char PL = '\r'; //vuelve al principio de la linea
+	public static final char MINUSCULA = 'a';
+	public static final char MAYUSCULA = 'A';
+	public static final char DIGITO = '0';
 	
 	
 	public AnalizadorLexico(String pathS, String pathA, int rows, int columns) {
@@ -61,9 +64,38 @@ public class AnalizadorLexico {
 
     }
 	
+	private AccionSemantica crearAccion(String accion) {
+        switch (accion) {
+            case "AS0":
+                return new AS0(this);
+            case "AS1":
+                return new AS1(this);
+            case "AS2":
+                return new AS2(this);
+            case "ASE":
+                return new ASE(this);
+            case "AS3":
+                return new AS3(this);
+            case "AS4":
+                return new AS4(this);
+            case "AS5":
+                return new AS5(this);
+            case "AS6":
+                return new AS6(this);
+            case "AS7":
+                return new AS7(this);
+            case "AS8":
+                return new AS8(this);
+            case "AS9":
+                return new AS9(this);
+            default:
+                return null;
+        }
+    }
+	
 	private void readASMatrix(String path, int rows, int columns) {
         
-		as_matrix = new String[rows][columns];
+		as_matrix = new AccionSemantica[rows][columns];
         this.rows = rows;
         this.columns = columns;
 
@@ -73,7 +105,7 @@ public class AnalizadorLexico {
 
             for (int i = 0; i < columns; ++i) {
                 for (int j = 0; j < rows; ++j) {
-                    as_matrix[j][i] = scanner.nextLine();
+                    as_matrix[j][i] = crearAccion(scanner.nextLine());
                 }
             }
 
@@ -102,16 +134,114 @@ public class AnalizadorLexico {
             System.out.println();
         }
 	}
+	
+	private static char obtenerTipoCaracter(char caracter) {
+        if (Character.isDigit(caracter)) {
+            return DIGITO;
+        } else if (Character.isLowerCase(caracter)) {
+            return MINUSCULA;
+        } else if (caracter != 'F' && Character.isUpperCase(caracter)) {
+            return MAYUSCULA;
+        } else {
+            return caracter;
+        }
+    }
+	
+	public static int cambiarEstado(Reader lector, char caracter) {
+        int caracter_actual;
+        switch (obtenerTipoCaracter(caracter)) {
+            case BLANCO:
+                caracter_actual = 0;
+                break;
+            case TAB:
+                caracter_actual = 1;
+                break;
+            case NL:
+            case PL:
+                caracter_actual = 2;
+                break;
+            case MINUSCULA:
+                caracter_actual = 3;
+                break;
+            case MAYUSCULA:
+                caracter_actual = 4;
+                break;
+            case '_':
+                caracter_actual = 5;
+                break;
+            case DIGITO:
+                caracter_actual = 6;
+                break;
+            case '.':
+                caracter_actual = 7;
+                break;
+            case 'E':
+                caracter_actual = 8;
+                break;
+            case '+':
+                caracter_actual = 9;
+                break;
+            case '-':
+                caracter_actual = 10;
+                break;
+            case '/':
+                caracter_actual = 11;
+                break;
+            case '(':
+                caracter_actual = 12;
+                break;
+            case ')':
+                caracter_actual = 13;
+                break;
+            case ',':
+                caracter_actual = 14;
+                break;
+            case ';':
+                caracter_actual = 15;
+                break;
+            case ':':
+                caracter_actual = 16;
+                break;
+            case '=':
+                caracter_actual = 17;
+                break;
+            case '>':
+                caracter_actual = 18;
+                break;
+            case '<':
+                caracter_actual = 19;
+                break;
+            case '*':
+                caracter_actual = 20;
+                break;
+            case '{':
+                caracter_actual = 21;
+                break;
+            case '}':
+            	caracter_actual = 22;
+            	break;
+            default:
+                caracter_actual = 23;
+                break;
+        }
 
-	public static void main(String[] args) throws IOException {
+        AccionSemantica accion = as_matrix[estado_actual][caracter_actual];
+        int identificador_token = accion.ejecutar(lector, token_actual);
+        estado_actual = state_matrix[estado_actual][caracter_actual];
+
+        return identificador_token;
+    }
+}
+
+	/*public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		String pathS = "E:\\Facultad\\4to\\Compiladores I\\TPE-Compiladores\\CompiladoresI\\MatrizEstados.txt";
-		String pathA = "E:\\Facultad\\4to\\Compiladores I\\TPE-Compiladores\\CompiladoresI\\MatrizAcciones.txt";
+		String pathS = "D:\\Tomi\\repo-compi\\CompiladoresI\\MatrizEstados.txt";
+		String pathA = "D:\\Tomi\\repo-compi\\CompiladoresI\\MatrizAcciones.txt";
 		AnalizadorLexico l = new AnalizadorLexico(pathS, pathA, 15, 26);
 		
 		ASE a = new ASE(l);
 		
-		BufferedReader archivo = new BufferedReader(new FileReader("E:\\Facultad\\4to\\Compiladores I\\TPE-Compiladores\\CompiladoresI\\pruebas.txt"));
+		BufferedReader archivo = new BufferedReader(new FileReader("D:\\Tomi\\repo-compi\\CompiladoresI\\pruebas.txt"));
         StringBuilder n = new StringBuilder();
         
         for (int i=0; i<7;i++) {
@@ -119,8 +249,7 @@ public class AnalizadorLexico {
         }
         
 		//l.mostrarStateMatrix();
-		//l.mostrarASMatrix();
+		l.mostrarASMatrix();
 		
-	}
+	}*/
 
-}
