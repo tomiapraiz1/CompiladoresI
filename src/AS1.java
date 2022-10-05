@@ -2,10 +2,6 @@ import java.io.IOException;
 import java.io.Reader;
 
 public class AS1 extends AccionSemantica{
-	
-	public AS1(AnalizadorLexico l) {
-		super(l);
-	}
 
 	@Override
 	public int ejecutar(Reader r, StringBuilder token) {

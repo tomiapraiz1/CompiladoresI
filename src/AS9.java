@@ -1,11 +1,6 @@
 import java.io.Reader;
 
 public class AS9 extends AccionSemantica{
-	
-	public AS9(AnalizadorLexico l) {
-		super(l);
-		// TODO Auto-generated constructor stub
-	}
 
 	@Override
 	public int ejecutar(Reader r, StringBuilder token) {

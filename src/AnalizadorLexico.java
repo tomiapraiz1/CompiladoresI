@@ -12,11 +12,12 @@ public class AnalizadorLexico {
 	private static int [][] state_matrix;
 	private static AccionSemantica[][] as_matrix;
 	private int rows, columns;
-	private int line = 1;
+	private static int line = 1;
 	
 	public static Reader r;
 	public static StringBuilder token_actual;
 	public static int estado_actual = 0;
+	public static final int longitud_id = 25;
 	
 	public static final char TAB = '\t';
 	public static final char BLANCO = ' ';
@@ -25,6 +26,10 @@ public class AnalizadorLexico {
 	public static final char MINUSCULA = 'a';
 	public static final char MAYUSCULA = 'A';
 	public static final char DIGITO = '0';
+	public static final int IDENTIFICADOR = 257;
+	public static final int CONSTANTE = 258;
+	public static final double maxInt = 32767;
+	public static final double minInt = -32768;
 	
 	
 	public AnalizadorLexico(String pathS, String pathA, int rows, int columns) {
@@ -32,12 +37,12 @@ public class AnalizadorLexico {
 		this.readStateMatrix(pathS, rows, columns);
 	}
 
-	public int getLine() {
+	public static int getLine() {
 		return line;
 	}
 	
-	public void setLine(int line) {
-		this.line = line;
+	public static void setLine(int linea) {
+		line = linea;
 	}
 	
 	private void readStateMatrix(String path, int rows, int columns) {
@@ -67,27 +72,27 @@ public class AnalizadorLexico {
 	private AccionSemantica crearAccion(String accion) {
         switch (accion) {
             case "AS0":
-                return new AS0(this);
+                return new AS0();
             case "AS1":
-                return new AS1(this);
+                return new AS1();
             case "AS2":
-                return new AS2(this);
+                return new AS2();
             case "ASE":
-                return new ASE(this);
+                return new ASE();
             case "AS3":
-                return new AS3(this);
+                return new AS3();
             case "AS4":
-                return new AS4(this);
+                return new AS4();
             case "AS5":
-                return new AS5(this);
+                return new AS5();
             case "AS6":
-                return new AS6(this);
+                return new AS6();
             case "AS7":
-                return new AS7(this);
+                return new AS7();
             case "AS8":
-                return new AS8(this);
+                return new AS8();
             case "AS9":
-                return new AS9(this);
+                return new AS9();
             default:
                 return null;
         }
@@ -231,15 +236,15 @@ public class AnalizadorLexico {
 
         return identificador_token;
     }
-}
 
-	/*public static void main(String[] args) throws IOException {
+
+	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		String pathS = "D:\\Tomi\\repo-compi\\CompiladoresI\\MatrizEstados.txt";
+		/*String pathS = "D:\\Tomi\\repo-compi\\CompiladoresI\\MatrizEstados.txt";
 		String pathA = "D:\\Tomi\\repo-compi\\CompiladoresI\\MatrizAcciones.txt";
 		AnalizadorLexico l = new AnalizadorLexico(pathS, pathA, 15, 26);
 		
-		ASE a = new ASE(l);
+		ASE a = new ASE();
 		
 		BufferedReader archivo = new BufferedReader(new FileReader("D:\\Tomi\\repo-compi\\CompiladoresI\\pruebas.txt"));
         StringBuilder n = new StringBuilder();
@@ -250,6 +255,8 @@ public class AnalizadorLexico {
         
 		//l.mostrarStateMatrix();
 		l.mostrarASMatrix();
-		
-	}*/
+		*/
+		System.out.println(AnalizadorLexico.maxInt);
+	}
 
+}
