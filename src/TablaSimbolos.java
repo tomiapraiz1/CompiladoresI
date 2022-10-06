@@ -3,50 +3,46 @@ import java.util.Map.Entry;
 
 public class TablaSimbolos {
 	
-	private static HashMap<Integer, HashMap<String,String>> tabla = new HashMap<Integer, HashMap<String, String>>();
+	private static HashMap<String, Atributo> tabla = new HashMap<String, Atributo>();
 	
-	private static int id = 1;
-	
-	public void agregarSimbolo(String simbolo) {
-		HashMap<String,String> atributo = new HashMap<String, String>();
-		atributo.put("Lexema", simbolo);
-		tabla.put(id, atributo);
-		id++;
+	public static void agregarSimbolo(String lexema, int id, String tipo, int line) {
+		Atributo a = new Atributo(lexema, id, tipo, line);
+		tabla.put(lexema, a);
 	}
 	
-	public int obtenerSimbolo(String lexema) {
-		for (Entry<Integer, HashMap<String,String>> e : tabla.entrySet()) {
-			String lexema_act = e.getValue().get("Lexema");
-			if (lexema_act.equals(lexema))
-				return e.getKey();
-		}
+	public static int obtenerSimbolo(String lexema) {
+		if (tabla.containsKey(lexema))
+			return tabla.get(lexema).getIdToken();
 		return -1;
 	}
 	
-	public void eliminarSimbolo(int key) {
+	public static void eliminarSimbolo(String key) {
 		if (tabla.containsKey(key))
 			tabla.remove(key);
 	}
 	
-	public void agregarAtributo(int key, String atributo, String valor) {
+	public static void modificarAtributo(String key, String tipo) {
         if (tabla.containsKey(key)) {
-            HashMap<String, String> atributos = tabla.get(key);
-            atributos.put(atributo, valor);
+            tabla.get(key).setTipo(tipo);
         }  
     }
 	
 	public static void imprimirTabla() {
-        System.out.println("\nTablaSimbolos:");
+        System.out.println("\nTabla de Simbolos:");
 
-        for (Entry<Integer, HashMap<String, String>> e : tabla.entrySet()) {
-            HashMap<String, String> atributos = e.getValue();
-            System.out.print(e.getKey() + ": ");
-
-            for (Entry<String, String> atributo: atributos.entrySet()) {
-                System.out.print("(" + atributo.getKey() + ": " + atributo.getValue() + ") ");
-            }
-
+        for (Entry<String, Atributo> e : tabla.entrySet()) {
+            System.out.print(e.getKey() + ": " + e.getValue());
             System.out.println();
         }
     }
+	
+	/*public static void main(String[] args) {
+		
+		TablaSimbolos t = new TablaSimbolos();
+		t.agregarSimbolo("Boca");
+		t.agregarAtributo(1, "Hinchada", "La mitad + 1");
+		t.agregarSimbolo("Riber");
+		t.agregarAtributo(2, "Hinchada", "Frio");
+		t.imprimirTabla();
+	}*/
 }

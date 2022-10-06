@@ -1,16 +1,19 @@
 import java.io.Reader;
 
 public class AS6 extends AccionSemantica{
-	
-	public AS6(AnalizadorLexico l) {
-		super(l);
-		// TODO Auto-generated constructor stub
-	}
 
 	@Override
 	public int ejecutar(Reader r, StringBuilder token) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		token.delete(0, token.length()); // Reinicia el token
+
+        try {
+            r.read(); // Lee el siguiente caracter
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return t_activo;
 	}
 
 }

@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 import java.util.Scanner;
 
 public class AnalizadorLexico {
@@ -12,19 +11,25 @@ public class AnalizadorLexico {
 	private static int [][] state_matrix;
 	private static AccionSemantica[][] as_matrix;
 	private int rows, columns;
-	private int line = 1;
+	private static int line = 1;
 	
 	public static Reader r;
 	public static StringBuilder token_actual;
 	public static int estado_actual = 0;
+	public static final int longitud_id = 25;
 	
-	public static final char TAB = '\t';
-	public static final char BLANCO = ' ';
-	public static final char NL = '\n';
-	public static final char PL = '\r'; //vuelve al principio de la linea
-	public static final char MINUSCULA = 'a';
-	public static final char MAYUSCULA = 'A';
-	public static final char DIGITO = '0';
+	public static final int TAB = '\t';
+	public static final int BLANCO = ' ';
+	public static final int NL = '\n';
+	public static final int PL = '\r'; //vuelve al principio de la linea
+	public static final int MINUSCULA = 'a';
+	public static final int MAYUSCULA = 'A';
+	public static final int DIGITO = '0';
+	public static final int IDENTIFICADOR = 257;
+	public static final int CONSTANTE = 258;
+	
+	public static final double maxInt = 32768;
+	public static final double maxF = 2147483648.0d;
 	
 	
 	public AnalizadorLexico(String pathS, String pathA, int rows, int columns) {
@@ -32,12 +37,12 @@ public class AnalizadorLexico {
 		this.readStateMatrix(pathS, rows, columns);
 	}
 
-	public int getLine() {
+	public static int getLine() {
 		return line;
 	}
 	
-	public void setLine(int line) {
-		this.line = line;
+	public static void setLine(int linea) {
+		line = linea;
 	}
 	
 	private void readStateMatrix(String path, int rows, int columns) {
@@ -67,27 +72,27 @@ public class AnalizadorLexico {
 	private AccionSemantica crearAccion(String accion) {
         switch (accion) {
             case "AS0":
-                return new AS0(this);
+                return new AS0();
             case "AS1":
-                return new AS1(this);
+                return new AS1();
             case "AS2":
-                return new AS2(this);
+                return new AS2();
             case "ASE":
-                return new ASE(this);
+                return new ASE();
             case "AS3":
-                return new AS3(this);
+                return new AS3();
             case "AS4":
-                return new AS4(this);
+                return new AS4();
             case "AS5":
-                return new AS5(this);
+                return new AS5();
             case "AS6":
-                return new AS6(this);
+                return new AS6();
             case "AS7":
-                return new AS7(this);
+                return new AS7();
             case "AS8":
-                return new AS8(this);
+                return new AS8();
             case "AS9":
-                return new AS9(this);
+                return new AS9();
             default:
                 return null;
         }
@@ -135,7 +140,7 @@ public class AnalizadorLexico {
         }
 	}
 	
-	private static char obtenerTipoCaracter(char caracter) {
+	private static int obtenerTipoCaracter(char caracter) {
         if (Character.isDigit(caracter)) {
             return DIGITO;
         } else if (Character.isLowerCase(caracter)) {
@@ -151,77 +156,83 @@ public class AnalizadorLexico {
         int caracter_actual;
         switch (obtenerTipoCaracter(caracter)) {
             case BLANCO:
-                caracter_actual = 0;
+                caracter_actual = 4;
                 break;
             case TAB:
-                caracter_actual = 1;
+                caracter_actual = 23;
                 break;
             case NL:
             case PL:
-                caracter_actual = 2;
+                caracter_actual = 24;
                 break;
             case MINUSCULA:
-                caracter_actual = 3;
+                caracter_actual = 1;
                 break;
             case MAYUSCULA:
-                caracter_actual = 4;
+                caracter_actual = 0;
                 break;
             case '_':
-                caracter_actual = 5;
+                caracter_actual = 3;
                 break;
             case DIGITO:
-                caracter_actual = 6;
+                caracter_actual = 2;
                 break;
             case '.':
-                caracter_actual = 7;
-                break;
-            case 'E':
                 caracter_actual = 8;
                 break;
+            case 'F':
+                caracter_actual = 7;
+                break;
             case '+':
-                caracter_actual = 9;
-                break;
-            case '-':
-                caracter_actual = 10;
-                break;
-            case '/':
-                caracter_actual = 11;
-                break;
-            case '(':
-                caracter_actual = 12;
-                break;
-            case ')':
-                caracter_actual = 13;
-                break;
-            case ',':
-                caracter_actual = 14;
-                break;
-            case ';':
                 caracter_actual = 15;
                 break;
-            case ':':
+            case '-':
                 caracter_actual = 16;
                 break;
-            case '=':
-                caracter_actual = 17;
-                break;
-            case '>':
+            case '/':
                 caracter_actual = 18;
                 break;
-            case '<':
-                caracter_actual = 19;
-                break;
-            case '*':
-                caracter_actual = 20;
-                break;
-            case '{':
+            case '(':
                 caracter_actual = 21;
                 break;
+            case ')':
+                caracter_actual = 22;
+                break;
+            case ',':
+                caracter_actual = 6;
+                break;
+            case ';':
+                caracter_actual = 5;
+                break;
+            case ':':
+                caracter_actual = 13;
+                break;
+            case '=':
+                caracter_actual = 11;
+                break;
+            case '>':
+                caracter_actual = 10;
+                break;
+            case '<':
+                caracter_actual = 9;
+                break;
+            case '*':
+                caracter_actual = 17;
+                break;
+            case '{':
+                caracter_actual = 19;
+                break;
             case '}':
-            	caracter_actual = 22;
+            	caracter_actual = 20;
+            	break;
+            case '!':
+            	caracter_actual = 12;
+            	break;
+            case 39: //representa ' en ascii
+            	caracter_actual = 14;
             	break;
             default:
-                caracter_actual = 23;
+                caracter_actual = 25;
                 break;
         }
 
@@ -231,25 +242,35 @@ public class AnalizadorLexico {
 
         return identificador_token;
     }
-}
 
-	/*public static void main(String[] args) throws IOException {
+
+	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		String pathS = "D:\\Tomi\\repo-compi\\CompiladoresI\\MatrizEstados.txt";
-		String pathA = "D:\\Tomi\\repo-compi\\CompiladoresI\\MatrizAcciones.txt";
+		/*String pathS = "E:\\Facultad\\4to\\Compiladores I\\TPE-Compiladores\\CompiladoresI\\MatrizEstados.txt";
+		String pathA = "E:\\Facultad\\4to\\Compiladores I\\TPE-Compiladores\\CompiladoresI\\MatrizAcciones.txt";
 		AnalizadorLexico l = new AnalizadorLexico(pathS, pathA, 15, 26);
 		
-		ASE a = new ASE(l);
-		
-		BufferedReader archivo = new BufferedReader(new FileReader("D:\\Tomi\\repo-compi\\CompiladoresI\\pruebas.txt"));
-        StringBuilder n = new StringBuilder();
+		AS1 a = new AS1();
         
         for (int i=0; i<7;i++) {
         	a.ejecutar(archivo, n);
         }
         
-		//l.mostrarStateMatrix();
-		l.mostrarASMatrix();
+        System.out.println(n);*/
 		
-	}*/
+		BufferedReader archivo = new BufferedReader(new FileReader("E:\\Facultad\\4to\\Compiladores I\\TPE-Compiladores\\CompiladoresI\\pruebas.txt"));
+		StringBuilder n = new StringBuilder();
+		n.append("2147483648.0");
+		AS5 a = new AS5();
+		a.ejecutar(archivo, n);
+		
+		
+		
+		        
+		//l.mostrarStateMatrix();
+		//l.mostrarASMatrix();
+		
+		//System.out.println(AnalizadorLexico.maxInt);
+	}
 
+}
