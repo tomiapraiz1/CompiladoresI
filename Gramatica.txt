@@ -2,107 +2,136 @@
 %start programa
 
 %%
-programa: nombre_prog begin_prog cuerpo_prog
-begin_prog: '{'
-nombre_prog: ID
+programa:		nombre_prog begin_prog cuerpo_prog
+			;
 
-cuerpo_prog: '{' bloque '}'
-           | '{' '}'
+begin_prog:		'{'
+	  		;
 
-bloque: bloque sentencia
-      | sentencia
+nombre_prog:		ID
+	   		;
 
-sentencia:  sentencia sentencia_ejecutable
-	  | sentencia sentencia_declarativa
-	  | sentencia_ejecutable
-	  | sentencia_declarativa
+cuerpo_prog:		'{' bloque '}'
+           		| '{' '}'
+	   		;
 
-sentencia_declarativa: declaracion
+bloque:			bloque sentencia
+      			| sentencia
+      			;
 
-declaracion:  declaracion_var
-            | declaracion_funcion
-	    | declaracion_const
+sentencia:		sentencia_ejecutable
+	 		| sentencia_declarativa
+         		;
 
-declaracion_const: CONST list_const';'
-list_const: list_const ',' ID =: CTE
-          | ID := CTE
+sentencia_declarativa:		declaracion
+		     		;
 
-declaracion_var: tipo lista_de_variables';'
-lista_de_variables: lista_de_variables ',' variable
-		  | variable
-variable: ID
-tipo: i16
-    | f32
+declaracion:		declaracion_var
+           		| declaracion_funcion
+	   		| declaracion_const
+	   		;
+declaracion_const:		CONST list_const';'
+		 		;
+list_const:		list_const ',' ID =: CTE
+          		| ID := CTE
+	  		;
 
-declaracion_func: header_func '{' cuerpo_func '}'
-header_func: FUN nombre_func '(' lista_parametros ')' ':' tipo
-lista_parametros: tipo ID ',' tipo ID
-                | tipo ID
-                |
-cuerpo_func: '{' sentencia
-	   | '{' sentencia RETURN '(' expresion_aritmetica ')' ';'
-nombre_func: ID
+declaracion_var:		tipo lista_de_variables';'
+	       			;
+lista_de_variables:		lista_de_variables ',' variable
+		  		| variable
+		  		;
+variable:		ID
+			;
+tipo: 		i16
+    		| f32
+    		;
 
-sentencia_ejecucion: '{' ejecucion '}'
+declaracion_func:		header_func '{' cuerpo_func '}'
+				;
+header_func:		FUN nombre_func '(' lista_parametros_funcion ')' ':' tipo
+	   		;
+lista_parametros_funcion:		tipo ID ',' tipo ID
+                			| tipo ID
+                			|
+					;
+cuerpo_func:		'{' sentencia
+	   		| '{' sentencia RETURN '(' expresion_aritmetica ')' ';'
+	   		;
+nombre_func:		ID
+	   		;
 
-ejecucion: ejecucion asignacion
-         | ejecucion seleccion
-	 | ejecucion impresion
- 	 | ejecucion estruct_when
-	 | ejecucion estruct_do_until
- 	 | ejecucion break ';'
-	 | ejecucion continue ';'
-	 | asignacion
-         | seleccion
-	 | impresion
- 	 | estruct_when
-	 | estruct_do_until
- 	 | BREAK';'
-	 | CONTINUE ';'
-	 | etiqueta CONTINUE ';'
-	 | etiqueta estruct_do_until
+sentencia_ejecucion:		ejecucion
+		   		| declaracion
+		   		;
 
-asignacion: ID =: expresion_aritmetica ';'
-expresion_aritmetica: expresion_aritmetica '+' termino
-		    | expresion_aritmetica '-' termino
-	            | termino
-termino: termino '*' factor
-       | termino '/' factor
-       | factor
-factor: ID
-      | CTE
-      | '-' factor
-      | ID '(' lista_inv_func ')'
-lista_inv_func: lista_inv_func ',' ID
-	      | lista_inv_func ',' CTE
-	      | CTE
-	      | ID
-seleccion: IF '(' condicion ')' then bloque_sentencias_ejecutables
-         | IF '(' condicion ')' then bloque_sentencias_ejecutables ELSE bloque_sentencias_ejecutables END_IF ';'
-bloque_sentencias_ejecutables: sentencia_ejecucion
-condicion: expresion_aritmetica operador expresion_aritmetica
-operador: '<'
-	| <=
-	| '>'
-	| >=
-	| ==
-	| !=
+ejecucion:		asignacion
+         		| seleccion
+	 		| impresion
+ 	 		| estruct_when
+	 		| estruct_do_until
+ 	 		| BREAK';'
+	 		| CONTINUE ';'
+	 		| etiqueta CONTINUE ';'
+	 		| etiqueta estruct_do_until
+	 		;
 
-impresion: OUT '(' cadena ')' ';'
-cadena: TOKEN CADENA
-      | 
+asignacion:		ID =: expresion_aritmetica ';'
+	  		;
+expresion_aritmetica:		expresion_aritmetica '+' termino
+		    		| expresion_aritmetica '-' termino
+	            		| termino
+		    		;
+termino:		termino '*' factor
+       			| termino '/' factor
+       			| factor
+       			;
+factor:		ID
+      		| CTE
+      		| '-' factor
+      		| ID '(' lista_inv_func ')'
+      		;
+lista_inv_func:		lista_inv_func ',' ID
+	      		| lista_inv_func ',' CTE
+	      		| CTE
+	      		| ID
+	      		;
+seleccion:		IF '(' condicion ')' then bloque_sentencias_ejecutables
+         		| IF '(' condicion ')' then bloque_sentencias_ejecutables ELSE bloque_sentencias_ejecutables END_IF ';'
+	 		;
+bloque_sentencias_ejecutables:		sentencia_ejecucion
+			     		;
+condicion:		expresion_aritmetica operador expresion_aritmetica
+	 		;
+operador:		'<'
+			| <=
+			| '>'
+			| >=
+			| ==
+			| !=
+			;
 
-estruct_when: bloque_when ejecucion
-	    | bloque_when declaracion
-	    | declaracion
-	    | ejecucion
+impresion:		OUT '(' cadena ')' ';'
+	 		;
+cadena:		TOKEN CADENA
+      		| 
+      		;
 
-estruct_do_until: DO bloque_do_until UNTIL '(' condicion ')' ';'
-bloque_do_until: bloque_do_until ejecucion
-etiqueta: ID
+estruct_when:		bloque_when ejecucion
+	    		| bloque_when declaracion
+	    		| declaracion
+	    		| ejecucion
+	    		;
 
-sentencia_ctr_expr: do bloque_do_until_expr until '(' condicion ')' ';'
-bloque_do_until_expr: bloque_do_until_expr ejecucion BREAK CTE;
+estruct_do_until:		DO bloque_do_until UNTIL '(' condicion ')' ';'
+				;
+bloque_do_until:		bloque_do_until ejecucion
+	       			;
+etiqueta:		ID
+			;
 
+sentencia_ctr_expr:		do bloque_do_until_expr until '(' condicion ')' ';'
+		  		;
+bloque_do_until_expr:		bloque_do_until_expr ejecucion BREAK CTE;
+		    		;
 %%
-codigo
