@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class TablaPalabrasReservadas {
 	
-	private static final HashMap<String, Integer> tabla = readMap("D:\\Tomi\\repo-compi\\CompiladoresI\\PalabrasReservadas.txt");
+	private static final HashMap<String, Integer> tabla = readMap("src/PalabrasReservadas.txt");
 	
 	public static final int palabra_noreservada = -1;
 	

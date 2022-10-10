@@ -14,7 +14,7 @@ public class AnalizadorLexico {
 	private static int line = 1;
 	
 	public static Reader r;
-	public static StringBuilder token_actual;
+	public static StringBuilder token_actual = new StringBuilder();
 	public static int estado_actual = 0;
 	public static final int longitud_id = 25;
 	
@@ -140,6 +140,22 @@ public class AnalizadorLexico {
         }
 	}
 	
+	public static boolean endOfFile(Reader r) throws IOException {
+        r.mark(1);
+        int value = r.read();
+        r.reset();
+
+        return value < 0;
+    }
+	
+	public static char getNextCharWithoutAdvancing(Reader r) throws IOException {
+        r.mark(1);
+        char next_character = (char) r.read();
+        r.reset();
+
+        return next_character;
+    }
+	
 	private static int obtenerTipoCaracter(char caracter) {
         if (Character.isDigit(caracter)) {
             return DIGITO;
@@ -239,38 +255,13 @@ public class AnalizadorLexico {
         AccionSemantica accion = as_matrix[estado_actual][caracter_actual];
         int identificador_token = accion.ejecutar(lector, token_actual);
         estado_actual = state_matrix[estado_actual][caracter_actual];
+        System.out.println("Estado actual: " + estado_actual);
 
         return identificador_token;
     }
 
-
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		/*String pathS = "E:\\Facultad\\4to\\Compiladores I\\TPE-Compiladores\\CompiladoresI\\MatrizEstados.txt";
-		String pathA = "E:\\Facultad\\4to\\Compiladores I\\TPE-Compiladores\\CompiladoresI\\MatrizAcciones.txt";
-		AnalizadorLexico l = new AnalizadorLexico(pathS, pathA, 15, 26);
-		
-		AS1 a = new AS1();
-        
-        for (int i=0; i<7;i++) {
-        	a.ejecutar(archivo, n);
-        }
-        
-        System.out.println(n);*/
-		
-		BufferedReader archivo = new BufferedReader(new FileReader("E:\\Facultad\\4to\\Compiladores I\\TPE-Compiladores\\CompiladoresI\\pruebas.txt"));
-		StringBuilder n = new StringBuilder();
-		n.append("2147483648.0");
-		AS5 a = new AS5();
-		a.ejecutar(archivo, n);
-		
-		
-		
-		        
-		//l.mostrarStateMatrix();
-		//l.mostrarASMatrix();
-		
-		//System.out.println(AnalizadorLexico.maxInt);
 	}
 
 }

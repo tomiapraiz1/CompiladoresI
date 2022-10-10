@@ -1,0 +1,6 @@
+messi{
+	const a =: 12;
+	const b =: 12;
+	if (a=b) then
+		a =: 15;;
+}
