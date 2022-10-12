@@ -28,7 +28,7 @@ public class AnalizadorLexico {
 	public static final int IDENTIFICADOR = 257;
 	public static final int CONSTANTE = 258;
 	
-	public static final double maxInt = 32768;
+	public static final Integer maxInt = 32768;
 	public static final double maxF = 2147483648.0d;
 	
 	
@@ -259,9 +259,34 @@ public class AnalizadorLexico {
 
         return identificador_token;
     }
+	
+	public static int yylex() {
+	    int identificador_token = 0;
+	    Reader lector = AnalizadorLexico.r;
+	    AnalizadorLexico.estado_actual = 0;
 
-	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
+	    // Leo hasta que el archivo termine
+	    while (true) {
+	            try {
+	                    if (AnalizadorLexico.endOfFile(lector)) {
+	                            break;
+	                    }
+
+	                    char caracter = AnalizadorLexico.getNextCharWithoutAdvancing(lector);
+	                    identificador_token = AnalizadorLexico.cambiarEstado(lector, caracter);
+
+	                    // Si llego a un estado final
+	                    if (identificador_token != AccionSemantica.t_activo) {
+	                            Parser.yylval = new ParserVal(AnalizadorLexico.token_actual.toString());
+	                            AnalizadorLexico.token_actual.delete(0, AnalizadorLexico.token_actual.length());
+	                            return identificador_token;
+	                    }
+	            } catch (IOException e) {
+	                    e.printStackTrace();
+	            }
+	    }
+
+	    return identificador_token;
 	}
 
 }
