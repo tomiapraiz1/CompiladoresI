@@ -20,6 +20,8 @@ public class AS3 extends AccionSemantica{
 		
 		TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CONSTANTE, "Entero", AnalizadorLexico.getLine());
 		
+		System.out.println("Constante entera " + simbolo);
+		
 		return AnalizadorLexico.CONSTANTE;
 	}
 

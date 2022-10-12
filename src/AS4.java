@@ -6,7 +6,9 @@ public class AS4 extends AccionSemantica {
 	public int ejecutar(Reader r, StringBuilder token) {
 		// TODO Auto-generated method stub
 		try {
-			return r.read();
+			char c = (char) r.read();
+			System.out.println(c);
+			return c;
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
