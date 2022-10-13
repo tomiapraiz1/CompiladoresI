@@ -1,3 +1,4 @@
+package AnalizadorLexico;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -6,7 +7,7 @@ import java.util.Scanner;
 
 public class TablaPalabrasReservadas {
 	
-	private static final HashMap<String, Integer> tabla = readMap("src/PalabrasReservadas.txt");
+	private static final HashMap<String, Integer> tabla = readMap("src/AnalizadorLexico/PalabrasReservadas.txt");
 	
 	public static final int palabra_noreservada = -1;
 	

@@ -1,3 +1,4 @@
+package AnalizadorLexico;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -5,6 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Scanner;
+
+import AnalizadorSintatico.*;
 
 public class AnalizadorLexico {
 	
@@ -255,7 +258,6 @@ public class AnalizadorLexico {
         AccionSemantica accion = as_matrix[estado_actual][caracter_actual];
         int identificador_token = accion.ejecutar(lector, token_actual);
         estado_actual = state_matrix[estado_actual][caracter_actual];
-        System.out.println("Estado actual: " + estado_actual);
 
         return identificador_token;
     }

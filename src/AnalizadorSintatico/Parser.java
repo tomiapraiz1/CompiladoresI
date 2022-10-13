@@ -1,7 +1,9 @@
+package AnalizadorSintatico;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import AnalizadorLexico.*;
 //### This file created by BYACC 1.8(/Java extension  1.15)
 //### Java capabilities added 7 Jan 97, Bob Jamison
 //### Updated : 27 Nov 97  -- Bob Jamison, Joe Nieten
@@ -106,7 +108,7 @@ int i;
 
 String   yytext;//user variable to return contextual strings
 ParserVal yyval; //used to return semantic vals from action routines
-static ParserVal yylval;//the 'lval' (result) I got from yylex()
+public static ParserVal yylval;//the 'lval' (result) I got from yylex()
 ParserVal valstk[];
 int valptr;
 //###############################################################
@@ -503,23 +505,6 @@ void yyerror(String mensaje) {
     // funcion utilizada para imprimir errores que produce yacc
     System.out.println("Error yacc: " + mensaje);
 }
-
-public static void main(String[] args) throws IOException {
-	// TODO Auto-generated method stub
-	try {
-		String pathA = "src/MatrizAcciones.txt";
-		String pathS = "src/MatrizEstados.txt";
-		AnalizadorLexico l = new AnalizadorLexico(pathS, pathA, 15, 26);
-		AnalizadorLexico.r = new BufferedReader(new FileReader("src/pruebas.txt"));
-		Parser p = new Parser(true);
-		p.run();
-		TablaSimbolos.imprimirTabla();
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-	
-}
-
 
 //###############################################################
 // method: yyparse : parse input and execute indicated items

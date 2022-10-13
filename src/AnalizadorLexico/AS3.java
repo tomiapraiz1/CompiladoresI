@@ -1,3 +1,4 @@
+package AnalizadorLexico;
 import java.io.Reader;
 
 public class AS3 extends AccionSemantica{
@@ -8,7 +9,6 @@ public class AS3 extends AccionSemantica{
 		String simbolo = token.toString();
 		try {
 			Integer valor = Integer.parseInt(simbolo);
-			System.out.println(valor);
 			if (valor > AnalizadorLexico.maxInt) {
 				System.out.println("Warning linea " + AnalizadorLexico.getLine() + " : el valor del simbolo sobrepasa el valor maximo."
 						+ " El mismo fue truncado al maximo.");

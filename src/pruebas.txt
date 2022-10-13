@@ -1,6 +1,0 @@
-messi{
-	const a =: -32769;
-	const b =: 12;
-	if (a=b) then
-		a =: 15;;
-}

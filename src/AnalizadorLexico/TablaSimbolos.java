@@ -1,3 +1,4 @@
+package AnalizadorLexico;
 import java.util.HashMap;
 import java.util.Map.Entry;
 

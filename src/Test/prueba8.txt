@@ -1,0 +1,5 @@
+program {
+	'Esto es una cadena'
+	'Esto es /
+	otro tipo de cadena'
+}k

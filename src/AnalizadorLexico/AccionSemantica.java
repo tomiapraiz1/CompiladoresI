@@ -1,3 +1,4 @@
+package AnalizadorLexico;
 import java.io.Reader;
 
 public abstract class AccionSemantica {

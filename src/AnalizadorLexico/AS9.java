@@ -1,3 +1,4 @@
+package AnalizadorLexico;
 import java.io.Reader;
 
 public class AS9 extends AccionSemantica{
