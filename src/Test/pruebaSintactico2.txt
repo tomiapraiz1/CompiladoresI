@@ -12,6 +12,6 @@ program{
 		suma =: 5;
 	end_if
 	
-	out('Esto es una impresion por pantalla');
+	out(suma);
 	
 }

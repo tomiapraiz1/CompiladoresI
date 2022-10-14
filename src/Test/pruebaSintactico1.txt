@@ -3,7 +3,7 @@ program{
 	
 	i16 mivarentera;
 
-	fun mifunc(f32 parametro1, i16 parametro2): i16
+	fun mifunc(f32 parametro1): i16
 	{
 		i16 x;
 		x =: y;
