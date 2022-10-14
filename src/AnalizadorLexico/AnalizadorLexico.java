@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Scanner;
 
-import AnalizadorSintatico.*;
+import AnalizadorSintactico.*;
 
 public class AnalizadorLexico {
 	
