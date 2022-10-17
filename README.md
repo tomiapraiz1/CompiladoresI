@@ -1,6 +1,6 @@
 # CompiladoresI
 
-Ejecucion
+## Ejecucion
 
 Abrir la terminal desde el lugar donde tenemos el archivo "compilador.jar".
 
