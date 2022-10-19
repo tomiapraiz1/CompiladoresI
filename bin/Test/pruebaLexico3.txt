@@ -1,0 +1,9 @@
+program {
+	f32 numeroflotante;
+	numeroflotante =: 32.5;
+	numeroflotante =: 32.;
+	numeroflotante =: .5;
+	numeroflotante =: 2.F4;
+	numeroflotante =: 2.F+4;
+	numeroflotante =: 2.F-4;
+}

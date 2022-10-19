@@ -1,0 +1,9 @@
+program{
+	i16 minEntero, maxEntero;
+	f32 minf;
+	f32 maxf;
+	minEntero =: -32769;
+	maxEntero =: 32769; 
+	minf =: -2147483649.0;
+	maxf =: 2147483649.0;
+}

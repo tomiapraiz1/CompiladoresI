@@ -1,0 +1,5 @@
+program {
+	i16 abc;
+	f32 esteidentificadorsepasaderango;
+	i16 a1_;
+}

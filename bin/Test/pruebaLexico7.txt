@@ -1,0 +1,6 @@
+program {
+	<< Esto es un comentario
+	i16 a;
+	<< Esto es otro comentario
+	< Esto no es un comentario
+}
