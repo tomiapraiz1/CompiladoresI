@@ -1,6 +1,4 @@
-%token ID CTE IF THEN ELSE END_IF OUT FUN RETURN BREAK WHEN DO UNTIL CONTINUE ASIG MENORIGUAL MAYORIGUAL DISTINTO COMENTARIO I16 F32 CONST
-%left '+' '-'
-%left '*' '/'
+%token ID CTE IF THEN ELSE END_IF OUT FUN RETURN BREAK WHEN DO UNTIL CONTINUE ASIG MENORIGUAL MAYORIGUAL DISTINTO COMENTARIO I16 F32 CONST CADENA
 %start programa
 
 %%
@@ -119,8 +117,8 @@ operador:		'<'
 			| DISTINTO
 			;
 
-impresion:		OUT '(' ID ')' ';'
-			| '(' ID ')' ';' {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta la palabra reservada OUT");}
+impresion:		OUT '(' CADENA ')' ';'
+			| '(' CADENA ')' ';' {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta la palabra reservada OUT");}
 	 		;
 
 

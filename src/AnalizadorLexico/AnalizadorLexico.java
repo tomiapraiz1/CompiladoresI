@@ -30,6 +30,7 @@ public class AnalizadorLexico {
 	public static final int DIGITO = '0';
 	public static final int IDENTIFICADOR = 257;
 	public static final int CONSTANTE = 258;
+	public static final int CADENA = 279;
 	
 	public static final Integer maxInt = 32768;
 	public static final double maxF = 2147483648.0d;
@@ -96,6 +97,8 @@ public class AnalizadorLexico {
                 return new AS8();
             case "AS9":
                 return new AS9();
+            case "AS10":
+            	return new AS10();
             default:
                 return null;
         }
@@ -290,5 +293,6 @@ public class AnalizadorLexico {
 
 	    return identificador_token;
 	}
+	
 
 }

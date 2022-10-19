@@ -1,5 +1,5 @@
 program {
-	'Esto es una cadena'
-	'Esto es /
-	otro tipo de cadena'
-}k
+	out('Esto es una cadena');
+	out('Esto es una multi /
+	cadena');
+}

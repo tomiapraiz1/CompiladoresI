@@ -6,7 +6,6 @@ program{
 	fun mifunc(f32 parametro1): i16
 	{
 		i16 x;
-		x =: y;
 		return (x);
 	}
 }

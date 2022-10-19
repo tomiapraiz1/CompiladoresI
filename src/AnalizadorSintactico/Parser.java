@@ -1,10 +1,19 @@
 package AnalizadorSintactico;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 import AnalizadorLexico.*;
-import AnalizadorSintactico.*;
+
+//### This file created by BYACC 1.8(/Java extension  1.15)
+//### Java capabilities added 7 Jan 97, Bob Jamison
+//### Updated : 27 Nov 97  -- Bob Jamison, Joe Nieten
+//###           01 Jan 98  -- Bob Jamison -- fixed generic semantic constructor
+//###           01 Jun 99  -- Bob Jamison -- added Runnable support
+//###           06 Aug 00  -- Bob Jamison -- made state variables class-global
+//###           03 Jan 01  -- Bob Jamison -- improved flags, tracing
+//###           16 May 01  -- Bob Jamison -- added custom stack sizing
+//###           04 Mar 02  -- Yuval Oren  -- improved java performance, added options
+//###           14 Mar 02  -- Tomas Hurka -- -d support, static initializer workaround
+//### Please send bug reports to tom@hukatronic.cz
+//### static char yysccsid[] = "@(#)yaccpar	1.8 (Berkeley) 01/20/90";
 
 
 
@@ -170,6 +179,7 @@ public final static short COMENTARIO=275;
 public final static short I16=276;
 public final static short F32=277;
 public final static short CONST=278;
+public final static short CADENA=279;
 public final static short YYERRCODE=256;
 final static short yylhs[] = {                           -1,
     0,    1,    1,    2,    2,    2,    2,    3,    3,    4,
@@ -202,8 +212,8 @@ final static short yydefred[] = {                         0,
    21,    0,   20,    0,    0,    0,   60,    0,    0,    0,
    51,    0,   58,    0,    0,    0,    0,    0,    0,    0,
     0,    0,   80,   82,    0,    0,    0,    4,    0,    0,
-   18,    0,    0,    0,   50,    0,    0,    0,   61,    0,
-    0,   52,    0,    0,   72,   74,   76,   71,   73,   75,
+   18,    0,    0,    0,   50,    0,    0,    0,   61,   52,
+    0,    0,    0,    0,   72,   74,   76,   71,   73,   75,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,   49,   16,   78,   19,    0,    0,    0,   24,   66,
    65,    0,    0,    0,    0,    0,   56,   57,    0,    0,
@@ -220,23 +230,23 @@ final static short yydgoto[] = {                          3,
    29,   30,   31,   61,   62,   63,  122,   65,  131,  101,
    40,   88,
 };
-final static short yysindex[] = {                      -243,
-    0,    0,    0,  -40, -250,   34,   39,  -37,  -20,   88,
-   23,    0,    0, -224,  -24, -203,    0,   17,    0,    0,
+final static short yysindex[] = {                      -226,
+    0,    0,    0,  -40, -254,  -13,   27,  -37,  -20,   88,
+   19,    0,    0, -199,  -24, -205,    0,   17,    0,    0,
     0,    0,    0,    0,    0, -169,  -29,    0,    0,    0,
-   38,  -36,   47, -160,    0,  -28,   59,    0,    0,   80,
+   38,  -36,   47, -182,    0,  -28,   59,    0,    0,   80,
     0, -149, -158,   70,    0,    0,   33,   84,    0,    0,
-    0,  -21,    0,   49, -139,   91,    0,   88,   47,   18,
-    0,  -25,    0,  -11,   92,   94,   95,   82,  -39,   97,
-  -26,  101,    0,    0,   85,   47, -224,    0,   86, -169,
-    0,  103,  -38,   22,    0, -238, -120, -121,    0,   47,
-   47,    0,   47,   47,    0,    0,    0,    0,    0,    0,
-   47, -111,   93, -107, -218,  107, -218,   96,   98,  114,
+    0,  -30,    0,   49, -139,   91,    0,   88,   47,  -23,
+    0,   -9,    0,  -11,   92,   94,   95,   82,  -39,   97,
+  -26,  101,    0,    0,   85,   47, -199,    0,   86, -169,
+    0,  103,  -38,   22,    0, -178, -120, -121,    0,    0,
+   47,   47,   47,   47,    0,    0,    0,    0,    0,    0,
+   47, -111,   93, -107, -195,  107, -195,   96,   98,  114,
    47,    0,    0,    0,    0,   15,  119,   47,    0,    0,
-    0,   27,  -53,  120,  -25,  -25,    0,    0,   35,   88,
-    0,    0,    0,    0, -218,    0, -218, -218,  105,  123,
-  102,  -14,   31,   21, -173,    0,  106,    0,   47,  -55,
-  -91,    0,    0, -218,  108,    0,  109,  110,   24,  111,
+    0,   24,  -53,  120,   -9,   -9,    0,    0,   26,   88,
+    0,    0,    0,    0, -195,    0, -195, -195,  105,  123,
+  102,  -22,   31,   18, -173,    0,  106,    0,   47,  -55,
+  -91,    0,    0, -195,  108,    0,  109,  110,   21,  111,
     0,    0,    0,  130,   88,    0,    0,    0,    0,    0,
     0,  113,    0,  -88,  -87,    0,  -51,  115,  117,    0,
     0,    0,
@@ -265,7 +275,7 @@ final static short yyrindex[] = {                         0,
 final static short yygindex[] = {                         0,
     0,    0,  170,   -7,   -3,    0,    0,    0,    0,    0,
    -2,   -1,    0,  112,    0,    0,    0,  116,   14,    0,
-    0,  131,  146,    0,   -4,  -41,    0, -101,    0,    0,
+    0,  131,  146,    0,   -5,  -41,    0, -101,    0,    0,
     0,    0,
 };
 final static int YYTABLESIZE=358;
@@ -274,14 +284,14 @@ static { yytable();}
 static void yytable(){
 yytable = new short[]{                         16,
    15,  118,   36,  166,  107,  148,   39,  180,   59,  140,
-   50,   45,   68,    1,  109,   16,   93,   89,  120,  121,
-   32,   94,   80,   59,   59,   59,  157,   59,   90,   59,
-   91,   90,   43,   91,   69,    2,   73,   81,   38,   50,
+   50,   45,   68,   80,  109,   16,   32,   89,  157,   91,
+   91,   92,   92,   59,   59,   59,   33,   59,   81,   59,
+    1,   91,   93,   92,   69,   90,   73,   94,   38,   50,
    15,   59,   59,   59,   59,   60,   83,  164,   98,  100,
-   99,  127,  128,   48,   87,  141,   16,   12,   13,   59,
-   90,  160,   91,   90,  172,   91,   90,  146,   91,   69,
-  145,  158,   16,   33,  113,   59,   92,   90,   34,   91,
-   42,   41,   15,  161,  162,  125,  126,   51,   16,   60,
+   99,  127,  128,    2,   87,  141,   16,   43,  160,   59,
+   91,  172,   92,   91,  146,   92,   34,  145,   91,   69,
+   92,  158,   16,   48,  113,   59,   42,   41,  120,  121,
+   12,   13,   15,  161,  162,  125,  126,   51,   16,   60,
    55,   59,   55,   54,   55,   55,   66,   53,   71,   53,
    46,   53,   54,  134,   54,  136,   54,   74,   55,   55,
    55,   55,   76,   77,  129,   53,   53,   53,   53,   16,
@@ -316,15 +326,15 @@ static { yycheck(); }
 static void yycheck() {
 yycheck = new short[] {                         40,
     0,   40,   40,   59,   44,   59,   10,   59,   45,  111,
-   18,   14,   41,  257,   41,   40,   42,   59,  257,  258,
-  271,   47,   44,   41,   42,   43,   41,   45,   43,   47,
-   45,   43,  257,   45,   36,  279,   40,   59,   59,   47,
+   18,   14,   41,   44,   41,   40,  271,   59,   41,   43,
+   43,   45,   45,   41,   42,   43,   40,   45,   59,   47,
+  257,   43,   42,   45,   36,   59,   40,   47,   59,   47,
    40,   59,   60,   61,   62,   32,   54,  149,   60,   61,
-   62,   93,   94,  257,   58,   41,   40,  276,  277,   45,
-   43,   41,   45,   43,   41,   45,   43,   41,   45,   71,
-   44,   41,   40,   40,   77,   45,   59,   43,   40,   45,
-   58,   59,  123,  257,  258,   90,   91,  257,   40,   76,
-   41,   45,   43,  123,   45,   58,  257,   41,   40,   43,
+   62,   93,   94,  280,   58,   41,   40,  257,   41,   45,
+   43,   41,   45,   43,   41,   45,   40,   44,   43,   71,
+   45,   41,   40,  279,   77,   45,   58,   59,  257,  258,
+  276,  277,  123,  257,  258,   91,   92,  257,   40,   76,
+   41,   45,   43,  123,   45,   58,  279,   41,   40,   43,
   125,   45,   41,  105,   43,  107,   45,  257,   59,   60,
    61,   62,  271,   44,  101,   59,   60,   61,   62,   40,
    59,   60,   61,   62,   41,  125,  130,   40,  268,  116,
@@ -354,7 +364,7 @@ yycheck = new short[] {                         40,
 };
 }
 final static short YYFINAL=3;
-final static short YYMAXTOKEN=279;
+final static short YYMAXTOKEN=280;
 final static String yyname[] = {
 "end-of-file",null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
@@ -374,7 +384,7 @@ null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,
 null,null,null,null,null,null,null,"ID","CTE","IF","THEN","ELSE","END_IF","OUT",
 "FUN","RETURN","BREAK","WHEN","DO","UNTIL","CONTINUE","ASIG","MENORIGUAL",
-"MAYORIGUAL","DISTINTO","COMENTARIO","I16","F32","CONST","\"\"",
+"MAYORIGUAL","DISTINTO","COMENTARIO","I16","F32","CONST","CADENA","\"\"",
 };
 final static String yyrule[] = {
 "$accept : programa",
@@ -454,8 +464,8 @@ final static String yyrule[] = {
 "operador : MAYORIGUAL",
 "operador : '='",
 "operador : DISTINTO",
-"impresion : OUT '(' ID ')' ';'",
-"impresion : '(' ID ')' ';'",
+"impresion : OUT '(' CADENA ')' ';'",
+"impresion : '(' CADENA ')' ';'",
 "estruct_do_until : DO bloque_do_until UNTIL '(' condicion ')' ';'",
 "bloque_do_until : bloque_do_until ejecucion",
 "bloque_do_until : ejecucion",
@@ -494,6 +504,7 @@ void yyerror(String mensaje) {
     // funcion utilizada para imprimir errores que produce yacc
     System.out.println("Error yacc: " + mensaje);
 }
+
 
 //###############################################################
 // method: yyparse : parse input and execute indicated items
@@ -624,74 +635,74 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 3:
-//#line 11 "gramatica.y"
+//#line 9 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": se esperaba un nombre");}
 break;
 case 6:
-//#line 16 "gramatica.y"
+//#line 14 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta un }");}
 break;
 case 7:
-//#line 17 "gramatica.y"
+//#line 15 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta un {");}
 break;
 case 27:
-//#line 53 "gramatica.y"
+//#line 51 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el tipo de retorno");}
 break;
 case 28:
-//#line 54 "gramatica.y"
+//#line 52 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el tipo de retorno");}
 break;
 case 29:
-//#line 55 "gramatica.y"
+//#line 53 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el nombre de la funcion");}
 break;
 case 30:
-//#line 56 "gramatica.y"
+//#line 54 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el nombre de la funcion");}
 break;
 case 33:
-//#line 60 "gramatica.y"
+//#line 58 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el tipo del parametro");}
 break;
 case 34:
-//#line 61 "gramatica.y"
+//#line 59 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el tipo del parametro");}
 break;
 case 35:
-//#line 62 "gramatica.y"
+//#line 60 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el nombre del parametro");}
 break;
 case 36:
-//#line 63 "gramatica.y"
+//#line 61 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el nombre del parametro");}
 break;
 case 39:
-//#line 67 "gramatica.y"
+//#line 65 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": la funcion debe retornar un valor");}
 break;
 case 40:
-//#line 68 "gramatica.y"
+//#line 66 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": la funcion debe retornar un valor");}
 break;
 case 41:
-//#line 69 "gramatica.y"
+//#line 67 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": la funcion debe retornar un valor");}
 break;
 case 78:
-//#line 123 "gramatica.y"
+//#line 121 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta la palabra reservada OUT");}
 break;
 case 84:
-//#line 136 "gramatica.y"
+//#line 134 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta la constante si no se cumple");}
 break;
 case 86:
-//#line 139 "gramatica.y"
+//#line 137 "gramatica.y"
 {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta la constante si no se cumple");}
 break;
-//#line 619 "Parser.java"
+//#line 620 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####
