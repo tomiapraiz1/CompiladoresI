@@ -21,6 +21,7 @@ public class Main {
 				Parser p = new Parser();
 				p.run();
 				TablaSimbolos.imprimirTabla();
+				s.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {

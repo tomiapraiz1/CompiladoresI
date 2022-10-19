@@ -10,8 +10,8 @@ program{
 		op =: 4;
 	else
 		suma =: 5;
-	end_if
+	end_if ;
 	
-	out(suma);
+	out('suma');
 	
 }
