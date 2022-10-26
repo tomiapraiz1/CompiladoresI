@@ -1,16 +1,2 @@
 1-Corregir automata, reconoce solamente el .
-2-Corregir la gramatica (archivo pS2):
-			 if(suma<3) then
-				op =: 4;
-			 else
-				suma =: 5;
-			 end_if ;
-faltan los {} en then y else.
-3-Corregir gramatica (archivo pS3):
-		a =: do 
- 			if (i = number) then
- 				x =: 4;;
- 				break 1;
- 		until (i> end) else 3 ;
-
-arreglar los ;;
+2- Hay que hacer andar el test "pruebaSintactico3.txt"

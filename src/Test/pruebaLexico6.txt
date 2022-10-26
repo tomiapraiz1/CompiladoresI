@@ -1,6 +1,7 @@
 program {
 	i16 UNTIL;
-	if ( 12 < 13 ) then
-		UNTIL =: 1;;
+	if ( 12 < 13 ) then {
+		UNTIL =: 1;
+	} end_if;
 	f32 until;
 }

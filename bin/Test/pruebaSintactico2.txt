@@ -6,11 +6,11 @@ program{
 	op =: suma - 6 * 3;
 	suma =: mifun(op) + 3;
 
-	if(suma<3) then
+	if(suma<3) then{
 		op =: 4;
-	else
+	}else{
 		suma =: 5;
-	end_if ;
+	} end_if ;
 	
 	out('suma');
 	

@@ -1,14 +1,15 @@
 program{
 	<<Temas particulares
-	const c1 =: 10; , x =: 5;;
-	outer: do 
+	
+	const c1 =: 10, x =: 5;
+	outer: do {
 			x =: 3;
 			continue: outer ;
-		until ( a < b );
+		} until ( a < b );
 
-	a =: do 
- 			if (i = number) then
- 				x =: 4;;
+	a =: do {
+ 			if (i = number) then {
  				break 1;
- 		until (i> end) else 3 ;
+ 			} end_if;
+ 		} until (i > end) else 3 ;
 }

@@ -1,146 +1,191 @@
+%{
+package AnalizadorSintactico;
+import java.io.IOException;
+import java.io.Reader;
+import AnalizadorLexico.*;
+%}
+
 %token ID CTE IF THEN ELSE END_IF OUT FUN RETURN BREAK WHEN DO UNTIL CONTINUE ASIG MENORIGUAL MAYORIGUAL DISTINTO COMENTARIO I16 F32 CONST CADENA
-%start programa
+
+%start program
 
 %%
-programa:		nombre_prog cuerpo_prog
-			;
 
-nombre_prog:		ID
-			| '' {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": se esperaba un nombre");}
-	   		;
+program:	nombre_programa inicio_programa bloque fin_programa
+;
 
-cuerpo_prog:		'{' bloque '}'
-           		| '{' '}'
-			| '{' bloque {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta un }");}
-			| bloque '}' {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta un {");}
-	   		;
+inicio_programa:	'{'
+;
 
-bloque:			bloque sentencia
-      			| sentencia
-      			;
+fin_programa:	'}'
+;
 
-sentencia:		ejecucion
-	 		| declaracion
-         		;
+nombre_programa:	ID
+;
 
+bloque:		bloque sentencia
+		| sentencia
+;
 
-declaracion:		declaracion_var
-           		| declaracion_func
-	   		| declaracion_const
-	   		;
+sentencia:	sentencia_ejecutable
+		| sentencia_declarativa
+;
 
-declaracion_func:		header_func '{' cuerpo_func '}'
-				;
-header_func:		FUN nombre_func '(' lista_parametros_funcion ')' ':' tipo
-			| FUN nombre_func '(' ')' ':' tipo
-			| FUN nombre_func '(' ')' ':' {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el tipo de retorno");}
-			| FUN nombre_func '(' lista_parametros_funcion ')' ':' {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el tipo de retorno");}
-			| FUN '(' ')' ':' tipo {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el nombre de la funcion");}
-			| FUN '(' lista_parametros_funcion ')' ':' tipo {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el nombre de la funcion");}
-	   		;
-lista_parametros_funcion:		tipo ID ',' tipo ID
-                			| tipo ID
-					| ID {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el tipo del parametro");}
-					| ID ',' ID {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el tipo del parametro");}
-					| tipo {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el nombre del parametro");}
-					| tipo ',' tipo {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta el nombre del parametro");}
-					;
-cuerpo_func:		bloque RETURN '(' expresion_aritmetica ')' ';'
-			| RETURN '(' expresion_aritmetica ')' ';'
-			| bloque '(' expresion_aritmetica ')' ';' {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": la funcion debe retornar un valor");}
-			| bloque RETURN '(' ')' ';' {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": la funcion debe retornar un valor");}
-			| RETURN '(' ')' ';' {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": la funcion debe retornar un valor");}
-	   		;
-nombre_func:		ID
-	   		;
+sentencia_declarativa:	declaracion_variables
+			| declaracion_funcion
+			| declaracion_constantes
+;
 
-ejecucion:		asignacion
-         		| seleccion
-	 		| impresion
-	 		| estruct_do_until
- 	 		| BREAK ';'
-	 		| CONTINUE ';'
-	 		| CONTINUE ':' etiqueta ';'
-	 		| etiqueta ':' estruct_do_until 
-			| ID ASIG sentencia_ctr_expr
-	 		;
+declaracion_variables:	tipo lista_variables ';'
+;
 
-asignacion:		ID ASIG expresion_aritmetica ';'
-	  		;
+lista_variables:	ID
+			| lista_variables ',' ID
+;
+
+tipo:		I16
+		| F32
+;
+
+declaracion_funcion:	header_funcion cuerpo_funcion
+;
+
+header_funcion:		FUN ID '(' lista_parametros ')' ':' tipo
+			| FUN ID '(' ')' ':' tipo
+;
+
+lista_parametros:	tipo ID ',' tipo ID
+                	| tipo ID
+;
+
+cuerpo_funcion:		'{' bloque retorno_funcion '}'
+;
+
+retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';'
+;
+
 expresion_aritmetica:		expresion_aritmetica '+' termino
 		    		| expresion_aritmetica '-' termino
 	            		| termino
-		    		;
+;
+
 termino:		termino '*' factor
        			| termino '/' factor
        			| factor
-       			;
+;
+
 factor:		ID
       		| CTE
       		| '-' factor
       		| ID '(' lista_inv_func ')'
-      		;
+;
+
 lista_inv_func:		lista_inv_func ',' ID
 	      		| lista_inv_func ',' CTE
 	      		| CTE
 	      		| ID
-	      		;
-seleccion:		IF condicion_seleccion then_seleccion
-	 		;
+;
 
-condicion_seleccion:	'(' condicion ')'
-			;
+declaracion_constantes:	CONST list_constantes ';'
+;
 
-then_seleccion:		THEN ejecucion ';'
-			| THEN ejecucion ELSE ejecucion END_IF ';'
-			;
+list_constantes:	list_constantes ',' asignacion
+			| asignacion
+;
 
-condicion:		expresion_aritmetica operador expresion_aritmetica
-	 		;
+asignacion:		ID ASIG expresion_aritmetica
+;
+
+sentencia_ejecutable:	ejecutable
+			| con_etiqueta
+;
+
+ejecutable:		asignacion ';'
+			| seleccion ';'
+			| impresion ';'
+			| estruct_do_until ';'
+;
+
+con_etiqueta:		BREAK ';'
+			| BREAK CTE ';'
+			| CONTINUE ';'
+			| CONTINUE ':' ID ';'
+			| ID ':' estruct_do_until ';'
+			| ID ASIG sentencia_ctr_expr ';'
+;
+
+seleccion:		IF condicion cuerpo_if END_IF
+;
+
+condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')'
+;
+
 operador:		'<'
 			| MENORIGUAL
 			| '>'
 			| MAYORIGUAL
 			| '='
 			| DISTINTO
-			;
+;
 
-estruct_do_until:		DO bloque_do_until UNTIL '(' condicion ')' ';'
-				;
-bloque_do_until:		bloque_do_until ejecucion
-				| ejecucion
-	       			;
-etiqueta:		ID
-			;
+cuerpo_if:		THEN '{' lista_sentencias_ejecutables '}' cuerpo_else
+			| THEN '{' lista_sentencias_ejecutables '}'
+;
 
-sentencia_ctr_expr:		DO bloque_do_until_expr UNTIL '(' condicion ')' ELSE CTE ';'
-				| DO bloque_do_until_expr UNTIL '(' condicion ')' ELSE ';' {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta la constante si no se cumple");}
-		  		;
-bloque_do_until_expr:		ejecucion BREAK CTE ';'
-				| ejecucion BREAK ';' {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta la constante si no se cumple");}
-		    		;
+cuerpo_else:		ELSE '{' lista_sentencias_ejecutables '}'
+;
 
-impresion:		OUT '(' CADENA ')' ';'
-			| '(' CADENA ')' ';' {System.out.println("Error sintactico en la linea " + AnalizadorLexico.getLine() + ": falta la palabra reservada OUT");}
-	 		;
+lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
+				| sentencia_ejecutable
+;
 
-declaracion_const:	CONST list_const ';'
-		 	;
+impresion:		OUT '(' CADENA ')'
+;
 
+estruct_do_until:	DO '{' lista_sentencias_ejecutables '}' until_condicion 
+;
 
-list_const:		list_const ',' asignacion
-          		| asignacion
-	  		;
+until_condicion:	UNTIL condicion
+;
 
-declaracion_var:	tipo lista_de_variables ';'
-	       		;
-lista_de_variables:	lista_de_variables ',' variable
-		  	| variable
-		  	;
-variable:		ID
-			;
-tipo: 			I16
-    			| F32
-    			;
+sentencia_ctr_expr:	DO '{' lista_sentencia_ejecutables '}' until_condicion else_until
+;
+
+else_until:		ELSE CTE
+;
 
 %%
+
+void yyerror(String mensaje) {
+        // funcion utilizada para imprimir errores que produce yacc
+        System.out.println("Error yacc: " + mensaje);
+}
+
+int yylex() {
+	    int identificador_token = 0;
+	    Reader lector = AnalizadorLexico.r;
+	    AnalizadorLexico.estado_actual = 0;
+
+	    // Leo hasta que el archivo termine
+	    while (true) {
+	            try {
+	                    if (AnalizadorLexico.endOfFile(lector)) {
+	                            break;
+	                    }
+
+	                    char caracter = AnalizadorLexico.getNextCharWithoutAdvancing(lector);
+	                    identificador_token = AnalizadorLexico.cambiarEstado(lector, caracter);
+
+	                    // Si llego a un estado final
+	                    if (identificador_token != AccionSemantica.t_activo) {
+	                            yylval = new ParserVal(AnalizadorLexico.token_actual.toString());
+	                            AnalizadorLexico.token_actual.delete(0, AnalizadorLexico.token_actual.length());
+	                            return identificador_token;
+	                    }
+	            } catch (IOException e) {
+	                    e.printStackTrace();
+	            }
+	    }
+
+	    return identificador_token;
+}
