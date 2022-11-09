@@ -3,6 +3,7 @@ package AnalizadorSintactico;
 import java.io.IOException;
 import java.io.Reader;
 import AnalizadorLexico.*;
+import GeneracionCodigo.*;
 %}
 
 %token ID CTE IF THEN ELSE END_IF OUT FUN RETURN BREAK WHEN DO UNTIL CONTINUE ASIG MENORIGUAL MAYORIGUAL DISTINTO COMENTARIO I16 F32 CONST CADENA
@@ -36,15 +37,15 @@ sentencia_declarativa:	declaracion_variables
 			| declaracion_constantes
 ;
 
-declaracion_variables:	tipo lista_variables ';'
+declaracion_variables:	tipo lista_variables ';' 
 ;
 
-lista_variables:	ID
-			| lista_variables ',' ID
+lista_variables:	ID	{setTipo($1.sval); setUso($1.sval, "Variable");}
+			| lista_variables ',' ID {setTipo($3.sval); setUso($3.sval, "Variable");}
 ;
 
-tipo:		I16
-		| F32
+tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
+		| F32	{$$.sval = $1.sval; tipoAux = $1.sval;}
 ;
 
 declaracion_funcion:	header_funcion cuerpo_funcion
@@ -64,19 +65,19 @@ cuerpo_funcion:		'{' bloque retorno_funcion '}'
 retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';'
 ;
 
-expresion_aritmetica:		expresion_aritmetica '+' termino
-		    		| expresion_aritmetica '-' termino
-	            		| termino
+expresion_aritmetica:		expresion_aritmetica '+' termino {$$.sval = TercetoManager.crear_terceto("+", $1.sval, $3.sval);}
+		    		| expresion_aritmetica '-' termino {$$.sval = TercetoManager.crear_terceto("-", $1.sval, $3.sval);}
+	            		| termino{$$.sval = $1.sval;}
 ;
 
-termino:		termino '*' factor
-       			| termino '/' factor
-       			| factor
+termino:		termino '*' factor {$$.sval = TercetoManager.crear_terceto("*", $1.sval, $3.sval);}
+       			| termino '/' factor {$$.sval = TercetoManager.crear_terceto("/", $1.sval, $3.sval);}
+       			| factor {$$.sval = $1.sval;}
 ;
 
-factor:		ID
-      		| CTE
-      		| '-' factor
+factor:		ID {$$.sval = $1.sval;}
+      		| CTE {$$.sval = $1.sval;}
+      		| '-' CTE {$$.sval = "-" + $1.sval;}
       		| ID '(' lista_inv_func ')'
 ;
 
@@ -93,7 +94,7 @@ list_constantes:	list_constantes ',' asignacion
 			| asignacion
 ;
 
-asignacion:		ID ASIG expresion_aritmetica
+asignacion:		ID ASIG expresion_aritmetica {$$.sval = TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
 ;
 
 sentencia_ejecutable:	ejecutable
@@ -117,15 +118,15 @@ con_etiqueta:		BREAK ';'
 seleccion:		IF condicion cuerpo_if END_IF
 ;
 
-condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')'
+condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')' {$$.sval = TercetoManager.crear_terceto($3.sval, $2.sval, $4.sval);}
 ;
 
-operador:		'<'
-			| MENORIGUAL
-			| '>'
-			| MAYORIGUAL
-			| '='
-			| DISTINTO
+operador:		'<' {$$.sval = "<";}
+			| MENORIGUAL {$$.sval = "<=";}
+			| '>' {$$.sval = ">";}
+			| MAYORIGUAL {$$.sval = ">=";}
+			| '=' {$$.sval = "=";}
+			| DISTINTO {$$.sval = "=!";}
 ;
 
 cuerpo_if:		THEN '{' lista_sentencias_ejecutables '}' cuerpo_else
@@ -155,6 +156,16 @@ else_until:		ELSE CTE
 ;
 
 %%
+
+public String tipoAux = "";
+
+void setTipo(String simbolo){
+	TablaSimbolos.modificarTipo(simbolo, tipoAux);
+}
+
+void setUso(String simbolo, String uso){
+	TablaSimbolos.modificarUso(simbolo, uso);
+}
 
 void yyerror(String mensaje) {
         // funcion utilizada para imprimir errores que produce yacc

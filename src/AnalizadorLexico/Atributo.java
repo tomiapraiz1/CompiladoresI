@@ -6,6 +6,7 @@ public class Atributo {
     private String lexema; 
     private String tipo;
     private int line;
+    private String uso;
     
     //private String uso; Sugerido por la catedra (filminas)
     
@@ -19,6 +20,7 @@ public class Atributo {
     	this.idToken = idToken;
         this.tipo = tipo;
         this.line = line;
+        this.uso = "";
     }
 
     public int getIdToken() {
@@ -53,11 +55,18 @@ public class Atributo {
 		this.line = line;
 	}
 
+	public String getUso() {
+		return uso;
+	}
+
+	public void setUso(String uso) {
+		this.uso = uso;
+	}
+
 	@Override
 	public String toString() {
-		return "Atributo [idToken=" + idToken + ", lexema=" + lexema + ", tipo=" + tipo + ", line=" + line + "]";
+		return "Atributo [idToken=" + idToken + ", lexema=" + lexema + ", tipo=" + tipo + ", line=" + line + ", uso="
+				+ uso + "]";
 	}
-    
-    
 
 }

@@ -1,9 +1,7 @@
 program {
-	i16 minEntero, maxEntero;
-	f32 minf;
-	f32 maxf;
-	minEntero =: -32768;
-	maxEntero =: 32768; 
-	minf =: -2147483648.0;
-	maxf =: 2147483648.0;
+	if(a-b >= c + 1)then{
+		a =: b + c;
+	}else{
+		a =: b - c;
+	}end_if;
 }

@@ -45,4 +45,11 @@ public class Terceto {
 		this.operador2 = operador2;
 	}
 
+	@Override
+	public String toString() {
+		return index + ". (" + operando + ", " + operador1 + ", " + operador2 + ")";
+	}
+	
+	
+
 }

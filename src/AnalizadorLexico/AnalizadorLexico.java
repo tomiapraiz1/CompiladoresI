@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Scanner;
 
-import AnalizadorSintactico.*;
-
 public class AnalizadorLexico {
 	
 	private static int [][] state_matrix;
 	private static AccionSemantica[][] as_matrix;
-	private int rows, columns;
+	private static int rows, columns;
 	private static int line = 1;
 	
 	public static Reader r;
@@ -34,9 +32,9 @@ public class AnalizadorLexico {
 	public static final double maxF = 2147483648.0d;
 	
 	
-	public AnalizadorLexico(String pathS, String pathA, int rows, int columns) {
-		this.readASMatrix(pathA, rows, columns);
-		this.readStateMatrix(pathS, rows, columns);
+	public static void setAnalizadorLexico(String pathS, String pathA, int rows, int columns) {
+		readASMatrix(pathA, rows, columns);
+		readStateMatrix(pathS, rows, columns);
 	}
 
 	public static int getLine() {
@@ -47,11 +45,11 @@ public class AnalizadorLexico {
 		line = linea;
 	}
 	
-	private void readStateMatrix(String path, int rows, int columns) {
+	private static void readStateMatrix(String path, int _rows, int _columns) {
         
 		state_matrix = new int[rows][columns];
-        this.rows = rows;
-        this.columns = columns;
+        rows = _rows;
+        columns = _columns;
 
         try {
             File archivo = new File(path);
@@ -71,7 +69,7 @@ public class AnalizadorLexico {
 
     }
 	
-	private AccionSemantica crearAccion(String accion) {
+	private static AccionSemantica crearAccion(String accion) {
         switch (accion) {
             case "AS0":
                 return new AS0();
@@ -102,11 +100,11 @@ public class AnalizadorLexico {
         }
     }
 	
-	private void readASMatrix(String path, int rows, int columns) {
+	private static void readASMatrix(String path, int _rows, int _columns) {
         
-		as_matrix = new AccionSemantica[rows][columns];
-        this.rows = rows;
-        this.columns = columns;
+		as_matrix = new AccionSemantica[_rows][_columns];
+        rows = _rows;
+        columns = _columns;
 
         try {
             File archivo = new File(path);

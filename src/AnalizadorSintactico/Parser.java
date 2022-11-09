@@ -21,7 +21,8 @@ package AnalizadorSintactico;
 import java.io.IOException;
 import java.io.Reader;
 import AnalizadorLexico.*;
-//#line 22 "Parser.java"
+import GeneracionCodigo.*;
+//#line 23 "Parser.java"
 
 
 
@@ -229,21 +230,21 @@ final static short yydgoto[] = {                          2,
    95,   72,  140,  123,  145,
 };
 final static short yysindex[] = {                      -211,
-    0,    0,  -73,    0, -144,  -24,   30,   32, -175,  -43,
-  -39,   20,    0,    0, -167, -107,    0,    0,    0,    0,
-    0,    0, -165,  -29,   37,    0,    0,   55,   59,   62,
-  -28, -145,  -33, -157, -154,   89,   72,    0, -121,    0,
- -120, -131,    3,    0,    0,    0,    0,    0,    4, -144,
-    0,    0,    0,    0,    0,  101,    0,   21,  -33,   38,
-   18,    0,   84,   87,   -5,   25, -111,  112,  -41,    0,
-    0,  -84,   95,  -33,    0, -167,    0, -102, -166, -169,
+    0,    0,  -75,    0, -166,  -24,   10,   19, -190,  -43,
+  -45,   50,    0,    0, -177, -107,    0,    0,    0,    0,
+    0,    0, -169,  -31,   31,    0,    0,   44,   58,   64,
+  -28, -143,  -33, -131, -141,  100,   82,    0, -144,    0,
+ -115, -128,    3,    0,    0,    0,    0,    0,    5, -166,
+    0,    0,    0,    0,    0,  104,    0,   22, -112,   23,
+   47,    0,   88,   89,   -5,   26, -111,  112,  -41,    0,
+    0,  -84,   95,  -33,    0, -177,    0, -102, -194, -137,
  -122,    0,  -33,  -33,  -33,  -33,    0,    0,    0,    0,
-    0,    0,    0,    0,  -33, -121,    0,    0,  102,  -95,
+    0,    0,    0,    0,  -33, -144,    0,    0,  102,  -95,
   123, -104,    0,    0,    0,    0,  126,   42,    0,    0,
-   36,   43,   18,   18,    0,    0,   23,  -83, -168,  128,
-  119,   30,    0,  -33,    0, -141,    0, -104,    0,  -80,
-    0, -168, -168,    0,   26,    0,    0,  -72,   65,    0,
-  -79,    0,  132,  -65,    0, -121,    0,    0,    0,  -67,
+   55,   43,   47,   47,    0,    0,   36,  -83, -149,  128,
+  119,   10,    0,  -33,    0, -126,    0, -104,    0,  -80,
+    0, -149, -149,    0,   73,    0,    0,  -73,   66,    0,
+  -79,    0,  132,  -65,    0, -144,    0,    0,    0,  -67,
     0,
 };
 final static short yyrindex[] = {                         0,
@@ -252,7 +253,7 @@ final static short yyrindex[] = {                         0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-    0,    0,    0,    0,    0,  -40,    0,    0,    0,   15,
+    0,    0,    0,    0,    0,  -40,    0,    0,    0,   16,
   -35,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -266,7 +267,7 @@ final static short yyrindex[] = {                         0,
 };
 final static short yygindex[] = {                         0,
     0,    0,  145,    0,   27,  -11,    0,    0,    0,    0,
-  -46,    0,    0,    0,    0,    0,    6,   44,  -10,    0,
+  -46,    0,    0,    0,    0,    0,    6,   53,   48,    0,
     0,   29,    0,    0,    0,    0,  165,    0,   78,    0,
     0,  -51,    0,   74,    0,
 };
@@ -279,21 +280,21 @@ yytable = new short[]{                         99,
    24,   59,   24,   24,   24,   38,   59,   45,   30,   30,
    30,   30,  100,   26,   26,   26,   26,   71,   24,   24,
    24,   24,   25,   32,   25,   25,   25,   83,   65,   84,
-  102,  130,   47,   44,  118,    1,   76,   78,   82,    4,
-   25,   25,   25,   25,   92,   94,   93,  151,   41,   85,
-  103,   75,   77,  129,   86,   83,  143,   84,   83,   33,
-   84,   35,  131,   41,  115,  116,  127,   41,   40,  126,
-   83,   36,   84,   39,   71,  141,  142,  109,  110,   42,
-    6,   48,    7,   50,  150,   52,    8,    9,  107,   10,
-  117,   11,   66,   12,  105,   47,  103,   13,   14,   13,
-   14,   15,    6,   53,    7,  136,  137,   54,    8,    9,
-   55,   10,   11,   11,   68,   12,  113,  114,   69,  135,
-   70,   13,   14,   15,   71,    6,   73,    7,  103,   74,
-   80,    8,   87,   81,   10,   88,   11,   96,   12,    6,
+  102,  130,   47,   44,  118,    1,   76,    4,   78,   33,
+   25,   25,   25,   25,   92,   94,   93,  151,   35,   41,
+  103,   75,    6,   77,    7,   83,   36,   84,    8,    9,
+  107,   10,  131,   11,   41,   12,  129,   39,   83,   42,
+   84,   13,   14,   15,   71,  141,  142,   48,   85,   52,
+    6,   50,    7,   86,  150,  127,    8,    9,  126,   10,
+  117,   11,   53,   12,  105,   47,  103,   41,   40,   13,
+   14,   15,    6,  143,    7,   83,   54,   84,    8,  109,
+  110,   10,   55,   11,   11,   12,   13,   14,   66,  135,
+  136,  137,  115,  116,   71,  113,  114,   68,  103,   69,
+   70,   73,   74,   80,   81,   82,   87,   88,   96,    6,
    97,    7,   98,  104,  106,    8,    9,  112,   10,  119,
    11,  120,   12,  121,  122,  124,  125,  128,   13,   14,
    15,  132,    6,    6,    7,    7,  133,  147,    8,    8,
-  139,   10,   10,   11,   11,   12,   12,  146,  144,    6,
+  139,   10,   10,   11,   11,   12,   12,  144,  146,    6,
   148,    7,  149,   21,   79,    8,   64,   63,   10,  134,
    11,  138,   12,    0,    0,    0,    0,    0,    0,    0,
     0,    0,    0,    0,   37,    0,    0,    0,    0,    0,
@@ -312,21 +313,21 @@ yycheck = new short[] {                         41,
    41,   45,   43,   44,   45,   59,   45,  125,   59,   60,
    61,   62,   69,   59,   60,   61,   62,   39,   59,   60,
    61,   62,   41,   58,   43,   44,   45,   43,   33,   45,
-  125,  125,   16,   15,   96,  257,   44,   44,   59,  123,
-   59,   60,   61,   62,   60,   61,   62,  125,   44,   42,
-   72,   59,   59,   41,   47,   43,   41,   45,   43,   40,
-   45,   40,  119,   59,   85,   86,   41,   58,   59,   44,
-   43,  257,   45,  123,   96,  132,  133,  257,  258,  257,
-  257,  257,  259,  123,  146,   59,  263,  264,  265,  266,
-   95,  268,  260,  270,   76,   79,  118,  276,  277,  276,
-  277,  278,  257,   59,  259,  257,  258,   59,  263,  264,
-   59,  266,  268,  268,  279,  270,   83,   84,   40,  124,
-   59,  276,  277,  278,  146,  257,  257,  259,  150,  271,
-   40,  263,   59,  123,  266,   59,  268,  123,  270,  257,
+  125,  125,   16,   15,   96,  257,   44,  123,   44,   40,
+   59,   60,   61,   62,   60,   61,   62,  125,   40,   44,
+   72,   59,  257,   59,  259,   43,  257,   45,  263,  264,
+  265,  266,  119,  268,   59,  270,   41,  123,   43,  257,
+   45,  276,  277,  278,   96,  132,  133,  257,   42,   59,
+  257,  123,  259,   47,  146,   41,  263,  264,   44,  266,
+   95,  268,   59,  270,   76,   79,  118,   58,   59,  276,
+  277,  278,  257,   41,  259,   43,   59,   45,  263,  257,
+  258,  266,   59,  268,  268,  270,  276,  277,  260,  124,
+  257,  258,   85,   86,  146,   83,   84,  279,  150,   40,
+   59,  257,  271,   40,  123,  258,   59,   59,  123,  257,
   262,  259,   41,   59,  257,  263,  264,  280,  266,   58,
   268,  257,  270,   41,  269,   40,  125,  125,  276,  277,
   278,   44,  257,  257,  259,  259,   58,  257,  263,  263,
-  261,  266,  266,  268,  268,  270,  270,  123,  261,  257,
+  261,  266,  266,  268,  268,  270,  270,  261,  123,  257,
    59,  259,  258,   41,   50,  263,   32,  262,  266,  122,
   268,  128,  270,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
    -1,   -1,   -1,   -1,  258,   -1,   -1,   -1,   -1,   -1,
@@ -394,7 +395,7 @@ final static String yyrule[] = {
 "termino : factor",
 "factor : ID",
 "factor : CTE",
-"factor : '-' factor",
+"factor : '-' CTE",
 "factor : ID '(' lista_inv_func ')'",
 "lista_inv_func : lista_inv_func ',' ID",
 "lista_inv_func : lista_inv_func ',' CTE",
@@ -436,7 +437,17 @@ final static String yyrule[] = {
 "else_until : ELSE CTE",
 };
 
-//#line 158 "gramatica.y"
+//#line 159 "gramatica.y"
+
+public String tipoAux = "";
+
+void setTipo(String simbolo){
+	TablaSimbolos.modificarTipo(simbolo, tipoAux);
+}
+
+void setUso(String simbolo, String uso){
+	TablaSimbolos.modificarUso(simbolo, uso);
+}
 
 void yyerror(String mensaje) {
         // funcion utilizada para imprimir errores que produce yacc
@@ -471,7 +482,7 @@ int yylex() {
 
 	    return identificador_token;
 }
-//#line 403 "Parser.java"
+//#line 414 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -625,6 +636,91 @@ boolean doaction;
     switch(yyn)
       {
 //########## USER-SUPPLIED ACTIONS ##########
+case 13:
+//#line 43 "gramatica.y"
+{setTipo(val_peek(0).sval); setUso(val_peek(0).sval, "Variable");}
+break;
+case 14:
+//#line 44 "gramatica.y"
+{setTipo(val_peek(0).sval); setUso(val_peek(0).sval, "Variable");}
+break;
+case 15:
+//#line 47 "gramatica.y"
+{yyval.sval = val_peek(0).sval; tipoAux = val_peek(0).sval;}
+break;
+case 16:
+//#line 48 "gramatica.y"
+{yyval.sval = val_peek(0).sval; tipoAux = val_peek(0).sval;}
+break;
+case 24:
+//#line 68 "gramatica.y"
+{yyval.sval = TercetoManager.crear_terceto("+", val_peek(2).sval, val_peek(0).sval);}
+break;
+case 25:
+//#line 69 "gramatica.y"
+{yyval.sval = TercetoManager.crear_terceto("-", val_peek(2).sval, val_peek(0).sval);}
+break;
+case 26:
+//#line 70 "gramatica.y"
+{yyval.sval = val_peek(0).sval;}
+break;
+case 27:
+//#line 73 "gramatica.y"
+{yyval.sval = TercetoManager.crear_terceto("*", val_peek(2).sval, val_peek(0).sval);}
+break;
+case 28:
+//#line 74 "gramatica.y"
+{yyval.sval = TercetoManager.crear_terceto("/", val_peek(2).sval, val_peek(0).sval);}
+break;
+case 29:
+//#line 75 "gramatica.y"
+{yyval.sval = val_peek(0).sval;}
+break;
+case 30:
+//#line 78 "gramatica.y"
+{yyval.sval = val_peek(0).sval;}
+break;
+case 31:
+//#line 79 "gramatica.y"
+{yyval.sval = val_peek(0).sval;}
+break;
+case 32:
+//#line 80 "gramatica.y"
+{yyval.sval = "-" + val_peek(1).sval;}
+break;
+case 41:
+//#line 97 "gramatica.y"
+{yyval.sval = TercetoManager.crear_terceto("=:", val_peek(2).sval, val_peek(0).sval);}
+break;
+case 55:
+//#line 121 "gramatica.y"
+{yyval.sval = TercetoManager.crear_terceto(val_peek(2).sval, val_peek(3).sval, val_peek(1).sval);}
+break;
+case 56:
+//#line 124 "gramatica.y"
+{yyval.sval = "<";}
+break;
+case 57:
+//#line 125 "gramatica.y"
+{yyval.sval = "<=";}
+break;
+case 58:
+//#line 126 "gramatica.y"
+{yyval.sval = ">";}
+break;
+case 59:
+//#line 127 "gramatica.y"
+{yyval.sval = ">=";}
+break;
+case 60:
+//#line 128 "gramatica.y"
+{yyval.sval = "=";}
+break;
+case 61:
+//#line 129 "gramatica.y"
+{yyval.sval = "=!";}
+break;
+//#line 647 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

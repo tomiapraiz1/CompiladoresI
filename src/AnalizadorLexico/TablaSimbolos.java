@@ -22,9 +22,15 @@ public class TablaSimbolos {
 			tabla.remove(key);
 	}
 	
-	public static void modificarAtributo(String key, String tipo) {
+	public static void modificarTipo(String key, String tipo) {
         if (tabla.containsKey(key)) {
             tabla.get(key).setTipo(tipo);
+        }  
+    }
+	
+	public static void modificarUso(String key, String uso) {
+        if (tabla.containsKey(key)) {
+            tabla.get(key).setUso(uso);
         }  
     }
 	
@@ -36,14 +42,4 @@ public class TablaSimbolos {
             System.out.println();
         }
     }
-	
-	/*public static void main(String[] args) {
-		
-		TablaSimbolos t = new TablaSimbolos();
-		t.agregarSimbolo("Boca");
-		t.agregarAtributo(1, "Hinchada", "La mitad + 1");
-		t.agregarSimbolo("Riber");
-		t.agregarAtributo(2, "Hinchada", "Frio");
-		t.imprimirTabla();
-	}*/
 }

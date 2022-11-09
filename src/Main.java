@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import AnalizadorLexico.*;
 import AnalizadorSintactico.*;
+import GeneracionCodigo.TercetoManager;
 
 
 public class Main {
@@ -13,14 +14,13 @@ public class Main {
 			try {
 				String pathA = "src/AnalizadorLexico/MatrizAcciones.txt";
 				String pathS = "src/AnalizadorLexico/MatrizEstados.txt";
-				AnalizadorLexico l = new AnalizadorLexico(pathS, pathA, 15, 26);
+				AnalizadorLexico.setAnalizadorLexico(pathS, pathA, 16, 26);
 				System.out.println("Ingrese la direccion del archivo de prueba:");
 				Scanner s = new Scanner(System.in);
 				String prueba = s.nextLine();
 				AnalizadorLexico.r = new BufferedReader(new FileReader(prueba));
 				Parser p = new Parser();
 				p.run();
-				TablaSimbolos.imprimirTabla();
 				s.close();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -33,6 +33,8 @@ public class Main {
 				}
 			}
 			
+			//TablaSimbolos.imprimirTabla();
+			TercetoManager.imprimirTercetos();
 	}
 
 }
