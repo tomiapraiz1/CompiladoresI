@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import AnalizadorLexico.*;
 import AnalizadorSintactico.*;
-import GeneracionCodigo.TercetoManager;
+import GeneracionCodigo.*;
 
 
 public class Main {
