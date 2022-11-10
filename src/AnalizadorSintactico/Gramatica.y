@@ -15,7 +15,7 @@ import GeneracionCodigo.*;
 program:	nombre_programa inicio_programa bloque fin_programa
 ;
 
-inicio_programa:	'{'
+inicio_programa:	'{' {Ambito.concatenarAmbito("main");}
 ;
 
 fin_programa:	'}'
@@ -59,7 +59,7 @@ lista_parametros:	tipo ID ',' tipo ID
                 	| tipo ID
 ;
 
-cuerpo_funcion:		'{' bloque retorno_funcion '}'
+cuerpo_funcion:		'{' bloque retorno_funcion '}' {Ambito.concatenarAmbito();}
 ;
 
 retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';'
@@ -129,11 +129,11 @@ operador:		'<' {$$.sval = "<";}
 			| DISTINTO {$$.sval = "=!";}
 ;
 
-cuerpo_if:		THEN '{' lista_sentencias_ejecutables '}' cuerpo_else
-			| THEN '{' lista_sentencias_ejecutables '}'
+cuerpo_if:		THEN '{' lista_sentencias_ejecutables '}' cuerpo_else {Ambito.concatenarAmbito();}
+			| THEN '{' lista_sentencias_ejecutables '}' {Ambito.concatenarAmbito();}
 ;
 
-cuerpo_else:		ELSE '{' lista_sentencias_ejecutables '}'
+cuerpo_else:		ELSE '{' lista_sentencias_ejecutables '}' {Ambito.concatenarAmbito("ELSE");}
 ;
 
 lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
@@ -143,13 +143,13 @@ lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
 impresion:		OUT '(' CADENA ')'
 ;
 
-estruct_do_until:	DO '{' lista_sentencias_ejecutables '}' until_condicion 
+estruct_do_until:	DO '{' lista_sentencias_ejecutables '}' until_condicion {Ambito.concatenarAmbito();}
 ;
 
 until_condicion:	UNTIL condicion
 ;
 
-sentencia_ctr_expr:	DO '{' lista_sentencia_ejecutables '}' until_condicion else_until
+sentencia_ctr_expr:	DO '{' lista_sentencia_ejecutables '}' until_condicion else_until {Ambito.concatenarAmbito();}
 ;
 
 else_until:		ELSE CTE

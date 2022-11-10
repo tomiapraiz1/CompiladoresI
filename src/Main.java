@@ -35,6 +35,7 @@ public class Main {
 			
 			//TablaSimbolos.imprimirTabla();
 			TercetoManager.imprimirTercetos();
+	
 	}
 
 }

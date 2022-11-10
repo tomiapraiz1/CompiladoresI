@@ -1,34 +1,41 @@
 package GeneracionCodigo;
 
+import java.util.ArrayList;
+
+// Main:funcion:do
+
 public class Ambito {
 	
-	private static StringBuilder ambito = new StringBuilder();
-	private static int tam = 0;
+	private static ArrayList<String> ambito = new ArrayList<String>();
 	
-	public static char getAmbitoActual() {
+	private static String Abecedario[] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+	
+	private static int indexOf = 0;
+	
+	public static String getAmbitoActual() {
 		
 		if (!ambito.isEmpty()) {
-			return ambito.charAt(tam - 1);
+			return ambito.get(ambito.size() - 1);
 		}
 		
-		return '1';
+		return "Null";
 	}
 	
-	//Ejemplo de ambito x:A:B:C donde x es el nombre de la variable y ABC los ambitos anidados
+	public static void concatenarAmbito(String amb) {
+		ambito.add(amb);
+	}
 	
-	public static void concatenarAmbito(char amb) {
-		ambito.append(":" + amb);
-		tam += 2;
+	public static void concatenarAmbito() {
+		ambito.add(Abecedario[indexOf]);
+		indexOf++;
 	}
 	
 	public static boolean esVacio() {
-		return tam == 0;
+		return ambito.isEmpty();
 	}
 	
 	public static void removeAmbito() {
-		 ambito.deleteCharAt(tam - 1);
-		 ambito.deleteCharAt(tam - 2);
-		 tam -= 2;
+		ambito.remove(ambito.size() - 1);
 	}
 	
 	public static void imprimirAmbitos() {
