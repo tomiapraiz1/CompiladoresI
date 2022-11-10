@@ -14,8 +14,10 @@ public class Ambito {
 		return '1';
 	}
 	
-	public static void concatenarAmbito(String amb) {
-		ambito.append(amb);
+	//Ejemplo de ambito x:A:B:C donde x es el nombre de la variable y ABC los ambitos anidados
+	
+	public static void concatenarAmbito(char amb) {
+		ambito.append(":" + amb);
 		tam += 2;
 	}
 	
