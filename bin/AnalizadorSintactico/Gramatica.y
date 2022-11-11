@@ -15,10 +15,10 @@ import GeneracionCodigo.*;
 program:	nombre_programa inicio_programa bloque fin_programa
 ;
 
-inicio_programa:	'{'
+inicio_programa:	'{' {Ambito.concatenarAmbito("main");}
 ;
 
-fin_programa:	'}'
+fin_programa:	'}' {Ambito.removeAmbito();}
 ;
 
 nombre_programa:	ID
@@ -40,8 +40,8 @@ sentencia_declarativa:	declaracion_variables
 declaracion_variables:	tipo lista_variables ';' 
 ;
 
-lista_variables:	ID	{setTipo($1.sval); setUso($1.sval, "Variable");}
-			| lista_variables ',' ID {setTipo($3.sval); setUso($3.sval, "Variable");}
+lista_variables:	ID	{setTipo($1.sval); setUso($1.sval, "Variable"); $1.sval = TablaSimbolos.modificarNombre($1.sval);}
+			| lista_variables ',' ID {setTipo($3.sval); setUso($3.sval, "Variable"); $3.sval = TablaSimbolos.modificarNombre($3.sval);}
 ;
 
 tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
@@ -51,15 +51,21 @@ tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
 declaracion_funcion:	header_funcion cuerpo_funcion
 ;
 
-header_funcion:		FUN ID '(' lista_parametros ')' ':' tipo
-			| FUN ID '(' ')' ':' tipo
+header_funcion:		FUN ID '(' lista_parametros ')' ':' tipo {setTipo($2.sval); setUso($2.sval, "Funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval);}
+			| FUN ID '(' ')' ':' tipo	{setTipo($2.sval); setUso($2.sval, "Funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval);}
 ;
 
 lista_parametros:	tipo ID ',' tipo ID
                 	| tipo ID
 ;
 
-cuerpo_funcion:		'{' bloque retorno_funcion '}'
+cuerpo_funcion:		inicio_funcion bloque retorno_funcion fin_funcion 
+;
+
+inicio_funcion: '{' {Ambito.concatenarAmbito("func");}
+;
+
+fin_funcion: '}' {Ambito.removeAmbito();}
 ;
 
 retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';'
@@ -75,7 +81,7 @@ termino:		termino '*' factor {$$.sval = TercetoManager.crear_terceto("*", $1.sva
        			| factor {$$.sval = $1.sval;}
 ;
 
-factor:		ID {$$.sval = $1.sval;}
+factor:		ID {comprobarAmbito($1.sval); $$.sval = $1.sval;}
       		| CTE {$$.sval = $1.sval;}
       		| '-' CTE {$$.sval = "-" + $1.sval;}
       		| ID '(' lista_inv_func ')'
@@ -94,7 +100,7 @@ list_constantes:	list_constantes ',' asignacion
 			| asignacion
 ;
 
-asignacion:		ID ASIG expresion_aritmetica {$$.sval = TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
+asignacion:		ID ASIG expresion_aritmetica {comprobarAmbito($1.sval); $$.sval = TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
 ;
 
 sentencia_ejecutable:	ejecutable
@@ -129,11 +135,11 @@ operador:		'<' {$$.sval = "<";}
 			| DISTINTO {$$.sval = "=!";}
 ;
 
-cuerpo_if:		THEN '{' lista_sentencias_ejecutables '}' cuerpo_else
+cuerpo_if:		THEN '{' lista_sentencias_ejecutables '}' cuerpo_else 
 			| THEN '{' lista_sentencias_ejecutables '}'
 ;
 
-cuerpo_else:		ELSE '{' lista_sentencias_ejecutables '}'
+cuerpo_else:		ELSE '{' lista_sentencias_ejecutables '}' 
 ;
 
 lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
@@ -143,13 +149,25 @@ lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
 impresion:		OUT '(' CADENA ')'
 ;
 
-estruct_do_until:	DO '{' lista_sentencias_ejecutables '}' until_condicion 
+estruct_do_until:	DO inicion_estruct_do_until lista_sentencias_ejecutables fin_estruct_do_until until_condicion 
+;
+
+inicion_estruct_do_until: '{' {Ambito.concatenarAmbito("doUntil");}
+;
+
+fin_estruct_do_until: '}' {Ambito.removeAmbito();}
 ;
 
 until_condicion:	UNTIL condicion
 ;
 
-sentencia_ctr_expr:	DO '{' lista_sentencia_ejecutables '}' until_condicion else_until
+sentencia_ctr_expr:	DO inicio_sentencia_ctr_expr lista_sentencias_ejecutables fin_sentencia_ctr_expr until_condicion else_until
+;
+
+inicio_sentencia_ctr_expr: '{' {Ambito.concatenarAmbito("doUntilExpr");}
+;
+
+fin_sentencia_ctr_expr: '}' {Ambito.removeAmbito();}
 ;
 
 else_until:		ELSE CTE
@@ -165,6 +183,12 @@ void setTipo(String simbolo){
 
 void setUso(String simbolo, String uso){
 	TablaSimbolos.modificarUso(simbolo, uso);
+}
+
+void comprobarAmbito(String simbolo){
+	String aux = Ambito.getAmbito(simbolo);
+	if (aux == null)
+		System.out.println("Error");
 }
 
 void yyerror(String mensaje) {

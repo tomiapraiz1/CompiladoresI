@@ -40,8 +40,8 @@ sentencia_declarativa:	declaracion_variables
 declaracion_variables:	tipo lista_variables ';' 
 ;
 
-lista_variables:	ID	{setTipo($1.sval); setUso($1.sval, "Variable");}
-			| lista_variables ',' ID {setTipo($3.sval); setUso($3.sval, "Variable");}
+lista_variables:	ID	{setTipo($1.sval); setUso($1.sval, "Variable"); $1.sval = TablaSimbolos.modificarNombre($1.sval);}
+			| lista_variables ',' ID {setTipo($3.sval); setUso($3.sval, "Variable"); $3.sval = TablaSimbolos.modificarNombre($3.sval);}
 ;
 
 tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
@@ -51,8 +51,8 @@ tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
 declaracion_funcion:	header_funcion cuerpo_funcion
 ;
 
-header_funcion:		FUN ID '(' lista_parametros ')' ':' tipo
-			| FUN ID '(' ')' ':' tipo
+header_funcion:		FUN ID '(' lista_parametros ')' ':' tipo {setTipo($2.sval); setUso($2.sval, "Funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval);}
+			| FUN ID '(' ')' ':' tipo	{setTipo($2.sval); setUso($2.sval, "Funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval);}
 ;
 
 lista_parametros:	tipo ID ',' tipo ID
@@ -81,7 +81,7 @@ termino:		termino '*' factor {$$.sval = TercetoManager.crear_terceto("*", $1.sva
        			| factor {$$.sval = $1.sval;}
 ;
 
-factor:		ID {$$.sval = $1.sval;}
+factor:		ID {comprobarAmbito($1.sval); $$.sval = $1.sval;}
       		| CTE {$$.sval = $1.sval;}
       		| '-' CTE {$$.sval = "-" + $1.sval;}
       		| ID '(' lista_inv_func ')'
@@ -100,7 +100,7 @@ list_constantes:	list_constantes ',' asignacion
 			| asignacion
 ;
 
-asignacion:		ID ASIG expresion_aritmetica {$$.sval = TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
+asignacion:		ID ASIG expresion_aritmetica {comprobarAmbito($1.sval); $$.sval = TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
 ;
 
 sentencia_ejecutable:	ejecutable
@@ -135,23 +135,11 @@ operador:		'<' {$$.sval = "<";}
 			| DISTINTO {$$.sval = "=!";}
 ;
 
-cuerpo_if:		THEN inicio_then lista_sentencias_ejecutables fin_then cuerpo_else 
-			| THEN inicio_then lista_sentencias_ejecutables fin_then
+cuerpo_if:		THEN '{' lista_sentencias_ejecutables '}' cuerpo_else 
+			| THEN '{' lista_sentencias_ejecutables '}'
 ;
 
-inicio_then: '{' {Ambito.concatenarAmbito("then");}
-;
-
-fin_then: '}' {Ambito.removeAmbito();}
-;
-
-cuerpo_else:		ELSE inicio_else lista_sentencias_ejecutables fin_else {Ambito.concatenarAmbito("else");}
-;
-
-inicio_else: '{' {Ambito.concatenarAmbito("else");}
-;
-
-fin_else: '}' {Ambito.removeAmbito();}
+cuerpo_else:		ELSE '{' lista_sentencias_ejecutables '}' 
 ;
 
 lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
@@ -173,7 +161,7 @@ fin_estruct_do_until: '}' {Ambito.removeAmbito();}
 until_condicion:	UNTIL condicion
 ;
 
-sentencia_ctr_expr:	DO inicio_sentencia_ctr_expr lista_sentencia_ejecutables fin_sentencia_ctr_expr until_condicion else_until
+sentencia_ctr_expr:	DO inicio_sentencia_ctr_expr lista_sentencias_ejecutables fin_sentencia_ctr_expr until_condicion else_until
 ;
 
 inicio_sentencia_ctr_expr: '{' {Ambito.concatenarAmbito("doUntilExpr");}
@@ -195,6 +183,12 @@ void setTipo(String simbolo){
 
 void setUso(String simbolo, String uso){
 	TablaSimbolos.modificarUso(simbolo, uso);
+}
+
+void comprobarAmbito(String simbolo){
+	String aux = Ambito.getAmbito(simbolo);
+	if (aux == null)
+		System.out.println("Error");
 }
 
 void yyerror(String mensaje) {

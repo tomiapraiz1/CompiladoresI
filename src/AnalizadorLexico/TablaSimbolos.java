@@ -2,6 +2,8 @@ package AnalizadorLexico;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import GeneracionCodigo.Ambito;
+
 public class TablaSimbolos {
 	
 	private static HashMap<String, Atributo> tabla = new HashMap<String, Atributo>();
@@ -15,6 +17,10 @@ public class TablaSimbolos {
 		if (tabla.containsKey(lexema))
 			return tabla.get(lexema).getIdToken();
 		return -1;
+	}
+	
+	public static boolean contieneSimbolo(String key) {
+		return tabla.containsKey(key);
 	}
 	
 	public static void eliminarSimbolo(String key) {
@@ -33,6 +39,18 @@ public class TablaSimbolos {
             tabla.get(key).setUso(uso);
         }  
     }
+	
+	public static String modificarNombre(String key) {
+		String nuevo = key + Ambito.getAmbitoActual();
+		if (tabla.containsKey(nuevo)) {
+			System.out.println("Error");
+			return "Null";
+		}
+		Atributo t = tabla.remove(key);
+		t.setLexema(nuevo);
+		tabla.put(nuevo, t);
+		return nuevo;
+	}
 	
 	public static void imprimirTabla() {
         System.out.println("\nTabla de Simbolos:");

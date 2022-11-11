@@ -20,9 +20,7 @@ public class AS5 extends AccionSemantica{
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		
-		TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CONSTANTE, "Float", AnalizadorLexico.getLine());
-		
+				
 		System.out.println("Constante flotante " + simbolo);
 		
 		return AnalizadorLexico.CONSTANTE;
