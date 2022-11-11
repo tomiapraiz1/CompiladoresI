@@ -59,7 +59,7 @@ lista_parametros:	tipo ID ',' tipo ID
                 	| tipo ID
 ;
 
-cuerpo_funcion:		'{' bloque retorno_funcion '}' {Ambito.concatenarAmbito();}
+cuerpo_funcion:		'{' bloque retorno_funcion '}' {Ambito.concatenarAmbito("func");}
 ;
 
 retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';'
@@ -129,11 +129,13 @@ operador:		'<' {$$.sval = "<";}
 			| DISTINTO {$$.sval = "=!";}
 ;
 
-cuerpo_if:		THEN '{' lista_sentencias_ejecutables '}' cuerpo_else {Ambito.concatenarAmbito();}
-			| THEN '{' lista_sentencias_ejecutables '}' {Ambito.concatenarAmbito();}
+cuerpo_if:		THEN inic_then lista_sentencias_ejecutables '}' cuerpo_else 
+			| THEN '{' lista_sentencias_ejecutables '}' {Ambito.concatenarAmbito("then");}
 ;
 
-cuerpo_else:		ELSE '{' lista_sentencias_ejecutables '}' {Ambito.concatenarAmbito("ELSE");}
+inic_then: '{' {Ambito.concatenarAmbito("then");}
+
+cuerpo_else:		ELSE '{' lista_sentencias_ejecutables '}' {Ambito.concatenarAmbito("else");}
 ;
 
 lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
@@ -143,13 +145,13 @@ lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
 impresion:		OUT '(' CADENA ')'
 ;
 
-estruct_do_until:	DO '{' lista_sentencias_ejecutables '}' until_condicion {Ambito.concatenarAmbito();}
+estruct_do_until:	DO '{' lista_sentencias_ejecutables '}' until_condicion {Ambito.concatenarAmbito("doUntil");}
 ;
 
 until_condicion:	UNTIL condicion
 ;
 
-sentencia_ctr_expr:	DO '{' lista_sentencia_ejecutables '}' until_condicion else_until {Ambito.concatenarAmbito();}
+sentencia_ctr_expr:	DO '{' lista_sentencia_ejecutables '}' until_condicion else_until {Ambito.concatenarAmbito("doUntilExpr");}
 ;
 
 else_until:		ELSE CTE

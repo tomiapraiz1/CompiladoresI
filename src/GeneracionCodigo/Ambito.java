@@ -22,12 +22,10 @@ public class Ambito {
 	}
 	
 	public static void concatenarAmbito(String amb) {
-		ambito.add(amb);
-	}
-	
-	public static void concatenarAmbito() {
-		ambito.add(Abecedario[indexOf]);
-		indexOf++;
+		if (amb == "main")
+			ambito.add(amb);
+		else
+			ambito.add(amb + Abecedario[indexOf]);
 	}
 	
 	public static boolean esVacio() {
