@@ -33,8 +33,8 @@ public class Main {
 				}
 			}
 			
-			TablaSimbolos.imprimirTabla();
-			//TercetoManager.imprimirTercetos();
+			//TablaSimbolos.imprimirTabla();
+			TercetoManager.imprimirTercetos();
 	
 	}
 

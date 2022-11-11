@@ -4,21 +4,11 @@ public class Terceto {
 	private String operando;
 	private String operador1;
 	private String operador2;
-	private int index;
 	
-	Terceto(String _operando, String _operador1, String _operador2, int index){
+	Terceto(String _operando, String _operador1, String _operador2){
 		this.operando = _operando;
 		this.operador1 = _operador1;
 		this.operador2 = _operador2;
-		this.index = index;
-	}
-
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
 	}
 
 	public String getOperando() {
@@ -47,7 +37,7 @@ public class Terceto {
 
 	@Override
 	public String toString() {
-		return index + ". (" + operando + ", " + operador1 + ", " + operador2 + ")";
+		return "(" + operando + ", " + operador1 + ", " + operador2 + ")";
 	}
 	
 	

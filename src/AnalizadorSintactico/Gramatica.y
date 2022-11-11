@@ -71,13 +71,13 @@ fin_funcion: '}' {Ambito.removeAmbito();}
 retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';'
 ;
 
-expresion_aritmetica:		expresion_aritmetica '+' termino {$$.sval = TercetoManager.crear_terceto("+", $1.sval, $3.sval);}
-		    		| expresion_aritmetica '-' termino {$$.sval = TercetoManager.crear_terceto("-", $1.sval, $3.sval);}
+expresion_aritmetica:		expresion_aritmetica '+' termino {$$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("+", $1.sval, $3.sval);}
+		    		| expresion_aritmetica '-' termino {$$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("-", $1.sval, $3.sval);}
 	            		| termino{$$.sval = $1.sval;}
 ;
 
-termino:		termino '*' factor {$$.sval = TercetoManager.crear_terceto("*", $1.sval, $3.sval);}
-       			| termino '/' factor {$$.sval = TercetoManager.crear_terceto("/", $1.sval, $3.sval);}
+termino:		termino '*' factor {$$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("*", $1.sval, $3.sval);}
+       			| termino '/' factor {$$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("/", $1.sval, $3.sval);}
        			| factor {$$.sval = $1.sval;}
 ;
 
@@ -100,7 +100,7 @@ list_constantes:	list_constantes ',' asignacion
 			| asignacion
 ;
 
-asignacion:		ID ASIG expresion_aritmetica {comprobarAmbito($1.sval); $$.sval = TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
+asignacion:		ID ASIG expresion_aritmetica {comprobarAmbito($1.sval); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
 ;
 
 sentencia_ejecutable:	ejecutable
@@ -121,10 +121,10 @@ con_etiqueta:		BREAK ';'
 			| ID ASIG sentencia_ctr_expr ';'
 ;
 
-seleccion:		IF condicion cuerpo_if END_IF
+seleccion:		IF condicion cuerpo_if END_IF {TercetoManager.add_seleccion();}
 ;
 
-condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')' {$$.sval = TercetoManager.crear_terceto($3.sval, $2.sval, $4.sval);}
+condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')' {TercetoManager.crear_terceto($3.sval, $2.sval, $4.sval); TercetoManager.add_seleccion_cond();}
 ;
 
 operador:		'<' {$$.sval = "<";}
@@ -135,11 +135,14 @@ operador:		'<' {$$.sval = "<";}
 			| DISTINTO {$$.sval = "=!";}
 ;
 
-cuerpo_if:		THEN '{' lista_sentencias_ejecutables '}' cuerpo_else 
-			| THEN '{' lista_sentencias_ejecutables '}'
+cuerpo_if:		THEN cuerpo_then ELSE cuerpo_else 
+			| THEN cuerpo_then
 ;
 
-cuerpo_else:		ELSE '{' lista_sentencias_ejecutables '}' 
+cuerpo_then:	'{' lista_sentencias_ejecutables '}' {TercetoManager.add_seleccion_then(); }
+;
+
+cuerpo_else:		 '{' lista_sentencias_ejecutables '}' 
 ;
 
 lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
