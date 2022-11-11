@@ -18,7 +18,7 @@ program:	nombre_programa inicio_programa bloque fin_programa
 inicio_programa:	'{' {Ambito.concatenarAmbito("main");}
 ;
 
-fin_programa:	'}'
+fin_programa:	'}' {Ambito.removeAmbito();}
 ;
 
 nombre_programa:	ID
@@ -59,7 +59,13 @@ lista_parametros:	tipo ID ',' tipo ID
                 	| tipo ID
 ;
 
-cuerpo_funcion:		'{' bloque retorno_funcion '}' {Ambito.concatenarAmbito("func");}
+cuerpo_funcion:		inicio_funcion bloque retorno_funcion fin_funcion 
+;
+
+inicio_funcion: '{' {Ambito.concatenarAmbito("func");}
+;
+
+fin_funcion: '}' {Ambito.removeAmbito();}
 ;
 
 retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';'
@@ -129,13 +135,23 @@ operador:		'<' {$$.sval = "<";}
 			| DISTINTO {$$.sval = "=!";}
 ;
 
-cuerpo_if:		THEN inic_then lista_sentencias_ejecutables '}' cuerpo_else 
-			| THEN '{' lista_sentencias_ejecutables '}' {Ambito.concatenarAmbito("then");}
+cuerpo_if:		THEN inicio_then lista_sentencias_ejecutables fin_then cuerpo_else 
+			| THEN inicio_then lista_sentencias_ejecutables fin_then
 ;
 
-inic_then: '{' {Ambito.concatenarAmbito("then");}
+inicio_then: '{' {Ambito.concatenarAmbito("then");}
+;
 
-cuerpo_else:		ELSE '{' lista_sentencias_ejecutables '}' {Ambito.concatenarAmbito("else");}
+fin_then: '}' {Ambito.removeAmbito();}
+;
+
+cuerpo_else:		ELSE inicio_else lista_sentencias_ejecutables fin_else {Ambito.concatenarAmbito("else");}
+;
+
+inicio_else: '{' {Ambito.concatenarAmbito("else");}
+;
+
+fin_else: '}' {Ambito.removeAmbito();}
 ;
 
 lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
@@ -145,13 +161,25 @@ lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
 impresion:		OUT '(' CADENA ')'
 ;
 
-estruct_do_until:	DO '{' lista_sentencias_ejecutables '}' until_condicion {Ambito.concatenarAmbito("doUntil");}
+estruct_do_until:	DO inicion_estruct_do_until lista_sentencias_ejecutables fin_estruct_do_until until_condicion 
+;
+
+inicion_estruct_do_until: '{' {Ambito.concatenarAmbito("doUntil");}
+;
+
+fin_estruct_do_until: '}' {Ambito.removeAmbito();}
 ;
 
 until_condicion:	UNTIL condicion
 ;
 
-sentencia_ctr_expr:	DO '{' lista_sentencia_ejecutables '}' until_condicion else_until {Ambito.concatenarAmbito("doUntilExpr");}
+sentencia_ctr_expr:	DO inicio_sentencia_ctr_expr lista_sentencia_ejecutables fin_sentencia_ctr_expr until_condicion else_until
+;
+
+inicio_sentencia_ctr_expr: '{' {Ambito.concatenarAmbito("doUntilExpr");}
+;
+
+fin_sentencia_ctr_expr: '}' {Ambito.removeAmbito();}
 ;
 
 else_until:		ELSE CTE
