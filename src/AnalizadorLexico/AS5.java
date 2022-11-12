@@ -22,8 +22,8 @@ public class AS5 extends AccionSemantica{
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-				
-		System.out.println("Constante flotante " + simbolo);
+		
+		TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CONSTANTE, "flotante", AnalizadorLexico.getLine());
 		
 		return AnalizadorLexico.CONSTANTE;
 	}

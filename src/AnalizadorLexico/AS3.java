@@ -18,8 +18,8 @@ public class AS3 extends AccionSemantica{
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-				
-		System.out.println("Constante entera " + simbolo);
+		
+		TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CONSTANTE, "entero", AnalizadorLexico.getLine());
 		
 		return AnalizadorLexico.CONSTANTE;
 	}

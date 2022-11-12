@@ -47,7 +47,7 @@ public class TablaSimbolos {
 			return "Null";
 		}
 		Atributo t = tabla.remove(key);
-		t.setLexema(nuevo);
+		t.setAmbito(Ambito.getAmbitoActual());
 		tabla.put(nuevo, t);
 		return nuevo;
 	}

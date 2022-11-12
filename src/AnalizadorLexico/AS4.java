@@ -8,7 +8,6 @@ public class AS4 extends AccionSemantica {
 		// TODO Auto-generated method stub
 		try {
 			char c = (char) r.read();
-			System.out.println(c);
 			return c;
 		} catch(Exception e) {
 			e.printStackTrace();

@@ -64,8 +64,8 @@ header_funcion:		FUN ID '(' lista_parametros ')' ':' tipo {setTipo($2.sval); set
 			| FUN '(' ')' ':' tipo	{erroresSintacticos.add("Se esperaba un identificador de la funcion");}
 ;
 
-lista_parametros:	tipo ID ',' tipo ID
-                	| tipo ID
+lista_parametros:	tipo ID ',' tipo ID {setTipo($1.sval,$2.sval);setUso($2.sval, "Nombre_Parametro_Funcion"); setTipo($4.sval,$5.sval); setUso($5.sval, "Nombre_Parametro_Funcion"); }
+                	| tipo ID {setUso($2.sval, "Nombre_Parametro_Funcion");}
                 	| ID		{erroresSintacticos.add("Se esperaba un tipo para el identificador");}
                 	| ID ',' ID {erroresSintacticos.add("Los identificadores deben tener un tipo");}
 ;
@@ -113,8 +113,8 @@ declaracion_constantes:	CONST list_constantes ';'
 						| CONST list_constantes {erroresSintacticos.add("Falta un ;");}
 ;
 
-list_constantes:	list_constantes ',' asignacion
-			| asignacion
+list_constantes:	list_constantes ',' asignacion 
+			| asignacion 
 ;
 
 asignacion:		ID ASIG expresion_aritmetica {comprobarAmbito($1.sval); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
@@ -235,6 +235,10 @@ public static ArrayList<String> erroresLexicos = new ArrayList<String>();
 
 void setTipo(String simbolo){
 	TablaSimbolos.modificarTipo(simbolo, tipoAux);
+}
+
+void setTipo(String tipo, String simbolo){
+	TablaSimbolos.modificarTipo(simbolo,tipo);
 }
 
 void setUso(String simbolo, String uso){

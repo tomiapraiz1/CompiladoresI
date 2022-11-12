@@ -1,1 +1,2 @@
-1- Hay que hacer andar el test "pruebaSintactico3.txt"
+1- Falta incorporar a los parametros de funciones su Ambito
+2-

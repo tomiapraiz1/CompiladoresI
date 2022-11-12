@@ -14,8 +14,6 @@ public class AS8 extends AccionSemantica{
 
         String simbolo = token.toString();
         
-        System.out.println(simbolo);
-
         return TablaPalabrasReservadas.identificadorPalabra(simbolo);
 	}
 

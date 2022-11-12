@@ -14,7 +14,6 @@ public class AS10 extends AccionSemantica {
 			}
 			String simbolo = token.toString();
 			TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CADENA, "Cadena", AnalizadorLexico.getLine());
-			System.out.println("Cadena: " + simbolo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

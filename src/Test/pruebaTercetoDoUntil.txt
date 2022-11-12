@@ -1,13 +1,8 @@
 program{
 
 	i16 a,b;
+	f32 miVar, miConstante;
 	
-	do{
-		a =: 2;
-		
-		a =: a + 1;
-		
-		b =: a;
+	const miConstante =: 3;
 	
-	} until (b < 20);
 }

@@ -12,7 +12,6 @@ public class AS2 extends AccionSemantica{
 		int id_pr = TablaPalabrasReservadas.identificadorPalabra(simbolo);
 		if (id_pr != TablaPalabrasReservadas.palabra_noreservada) {
 			id = id_pr;
-			System.out.println("Palabra reservada " + simbolo);
 		} else {
 			if (token.length() > AnalizadorLexico.longitud_id) { //se pasa de longitud
 				simbolo = token.substring(0, AnalizadorLexico.longitud_id);
@@ -21,7 +20,6 @@ public class AS2 extends AccionSemantica{
 			}
 			TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.IDENTIFICADOR, "", AnalizadorLexico.getLine());
 			id = AnalizadorLexico.IDENTIFICADOR;
-			System.out.println("Identificador " + simbolo);
 		}
 		return id;
 	}

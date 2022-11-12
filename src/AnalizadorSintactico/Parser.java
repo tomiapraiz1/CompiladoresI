@@ -674,6 +674,10 @@ void setTipo(String simbolo){
 	TablaSimbolos.modificarTipo(simbolo, tipoAux);
 }
 
+void setTipo(String tipo, String simbolo){
+	TablaSimbolos.modificarTipo(simbolo,tipo);
+}
+
 void setUso(String simbolo, String uso){
 	TablaSimbolos.modificarUso(simbolo, uso);
 }
@@ -726,7 +730,7 @@ int yylex() {
 
 	    return identificador_token;
 }
-//#line 658 "Parser.java"
+//#line 662 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -943,6 +947,14 @@ break;
 case 27:
 //#line 64 "Gramatica.y"
 {erroresSintacticos.add("Se esperaba un identificador de la funcion");}
+break;
+case 28:
+//#line 67 "Gramatica.y"
+{setTipo(val_peek(4).sval,val_peek(3).sval);setUso(val_peek(3).sval, "Nombre_Parametro_Funcion"); setTipo(val_peek(1).sval,val_peek(0).sval); setUso(val_peek(0).sval, "Nombre_Parametro_Funcion"); }
+break;
+case 29:
+//#line 68 "Gramatica.y"
+{setUso(val_peek(0).sval, "Nombre_Parametro_Funcion");}
 break;
 case 30:
 //#line 69 "Gramatica.y"
@@ -1212,7 +1224,7 @@ case 127:
 //#line 227 "Gramatica.y"
 {erroresSintacticos.add("Se esperaba un else");}
 break;
-//#line 1139 "Parser.java"
+//#line 1151 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

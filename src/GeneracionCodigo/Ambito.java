@@ -17,7 +17,6 @@ public class Ambito {
 		int ind = ambito.size()-1;
         while (ind>=0){
             String aux = simbolo + getNombreVariable(ind);
-            //System.out.println(aux);
             if (TablaSimbolos.contieneSimbolo(aux)){
                 TablaSimbolos.eliminarSimbolo(simbolo);
                 return aux;
