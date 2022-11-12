@@ -1,6 +1,8 @@
 program{
 	<<Temas particulares
 	
+	x =: 999999999;
+	
 	const c1 =: 10, x =: 5;
 	outer: do {
 			x =: 3;

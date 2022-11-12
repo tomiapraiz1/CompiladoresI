@@ -1,6 +1,8 @@
 package AnalizadorLexico;
 import java.io.Reader;
 
+import AnalizadorSintactico.Parser;
+
 public class AS5 extends AccionSemantica{
 
 	@Override
@@ -13,7 +15,7 @@ public class AS5 extends AccionSemantica{
 		try {
 			Double valor = Double.parseDouble(simbolo);
 			if (valor > AnalizadorLexico.maxF) {
-				System.out.println("Warning linea " + AnalizadorLexico.getLine() + " : el valor del simbolo sobrepasa el valor maximo."
+				Parser.erroresLexicos.add("Warning linea " + AnalizadorLexico.getLine() + " : el valor del simbolo sobrepasa el valor maximo."
 						+ " El mismo fue truncado al maximo.");
 				simbolo = Double.toString(AnalizadorLexico.maxF);
 			}

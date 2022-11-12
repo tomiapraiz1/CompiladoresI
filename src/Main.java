@@ -33,7 +33,9 @@ public class Main {
 				}
 			}
 			
-			//TablaSimbolos.imprimirTabla();
+			
+			TablaSimbolos.imprimirTabla();
+			Parser.printErrores();
 			TercetoManager.imprimirTercetos();
 	
 	}
