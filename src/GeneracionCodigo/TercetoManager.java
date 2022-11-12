@@ -59,8 +59,19 @@ public class TercetoManager {
 
 	public static void imprimirTercetos() {
 		for (Terceto t : tercetos) {
-			System.out.println(t);
+			System.out.println((Integer.toString(tercetos.indexOf(t))) + ". " + t);
 		}
+	}
+
+	public static void add_inicio_do_until(){
+		pushTerceto('['+Integer.toString(tercetos.size())+']');
+	}
+
+	public static void add_iter_do_until(){
+		int indice_cond = popTerceto();
+        getTerceto(indice_cond).setOperador2('['+Integer.toString(tercetos.size()+1)+']'); 
+        indice_cond = popTerceto();
+		crear_terceto("BI",Integer.toString(indice_cond),"_"); 
 	}
 	
 	

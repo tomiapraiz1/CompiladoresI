@@ -2,11 +2,5 @@ program {
 	i16 a, b, c;
 	if ( a - b > c + 1 )then{
 	 	a =: b + c;
-	 	if (b < 3) then{
-	 		b =: 2;
-	 	}end_if;
-	 	b =: a;
-	}else{
-	 	a =: b + c;
 	}end_if;
 }

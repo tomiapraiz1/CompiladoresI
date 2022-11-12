@@ -193,13 +193,13 @@ impresion:		OUT '(' CADENA ')'
 				| OUT '(' ')' {erroresSintacticos.add("Falta una cadena que imprimir");}
 ;
 
-estruct_do_until:	DO inicion_estruct_do_until lista_sentencias_ejecutables fin_estruct_do_until until_condicion
+estruct_do_until:	DO inicion_estruct_do_until lista_sentencias_ejecutables fin_estruct_do_until until_condicion {TercetoManager.add_iter_do_until();}
 					| DO lista_sentencias_ejecutables fin_estruct_do_until until_condicion {erroresSintacticos.add("Falta un {");}
 					| DO inicion_estruct_do_until lista_sentencias_ejecutables until_condicion {erroresSintacticos.add("Falta un }");}
 					| DO inicion_estruct_do_until fin_estruct_do_until until_condicion {erroresSintacticos.add("Faltan sentencias de ejecucion");}
 ;
 
-inicion_estruct_do_until: '{' {Ambito.concatenarAmbito("doUntil");}
+inicion_estruct_do_until: '{' {Ambito.concatenarAmbito("doUntil"); TercetoManager.add_inicio_do_until();}
 ;
 
 fin_estruct_do_until: '}' {Ambito.removeAmbito();}

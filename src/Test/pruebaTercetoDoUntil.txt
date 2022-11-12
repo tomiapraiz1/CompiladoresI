@@ -1,0 +1,13 @@
+program{
+
+	i16 a,b;
+	
+	do{
+		a =: 2;
+		
+		a =: a + 1;
+		
+		b =: a;
+	
+	} until (b < 20);
+}
