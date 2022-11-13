@@ -25,6 +25,10 @@ public class TercetoManager {
 		return tercetos.get(index);
 	}
 	
+	public static Terceto getTerceto(String index) {
+		return tercetos.get(Integer.parseInt(index.substring(1,index.length()-1)));
+	}
+	
 	public static void pushTerceto(String indexTerceto) {
 		
 		stackTercetos.push(indexTerceto);

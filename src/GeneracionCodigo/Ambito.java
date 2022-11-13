@@ -9,10 +9,6 @@ public class Ambito {
 	
 	private static ArrayList<String> ambito = new ArrayList<String>();
 	
-	//private static String Abecedario[] = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
-	
-	//private static int indexOf = 0;
-	
 	public static String getAmbito(String simbolo) { //verifica el ambito de un simbolo
 		int ind = ambito.size()-1;
         while (ind>=0){

@@ -2,6 +2,7 @@ package AnalizadorLexico;
 import java.io.Reader;
 
 import AnalizadorSintactico.Parser;
+import GeneracionCodigo.Ambito;
 
 public class AS5 extends AccionSemantica{
 
@@ -23,7 +24,7 @@ public class AS5 extends AccionSemantica{
 			e.printStackTrace();
 		}
 		
-		TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CONSTANTE, "flotante", AnalizadorLexico.getLine());
+		TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CONSTANTE, "f32", AnalizadorLexico.getLine());
 		
 		return AnalizadorLexico.CONSTANTE;
 	}

@@ -13,10 +13,11 @@ public class TablaSimbolos {
 		tabla.put(lexema, a);
 	}
 	
-	public static int obtenerSimbolo(String lexema) {
+	public static Atributo obtenerSimbolo(String lexema) {
+	
 		if (tabla.containsKey(lexema))
-			return tabla.get(lexema).getIdToken();
-		return -1;
+			return tabla.get(lexema);
+		return null;
 	}
 	
 	public static boolean contieneSimbolo(String key) {

@@ -11,6 +11,8 @@ public class Atributo {
     
     //private String uso; Sugerido por la catedra (filminas)
     
+
+    
     public Atributo(String lexema, int id) {
     	this.lexema = lexema;
     	this.idToken = id;

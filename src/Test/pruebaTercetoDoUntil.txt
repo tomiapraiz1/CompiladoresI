@@ -1,8 +1,14 @@
 program{
 
 	i16 a,b;
-	f32 miVar, miConstante;
+	f32 miVar;
 	
-	const miConstante =: 3;
+	fun x (i16 z) : i16{
+		i16 miVar2;
+		miVar2 =: 3;
+		return (miVar2);
+	}
+	
+	miVar =: x() + b;
 	
 }
