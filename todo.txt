@@ -1,2 +1,5 @@
 1- Falta incorporar a los parametros de funciones su Ambito
-2-
+2- Falta tema 10
+3- Break y Continue del tema 13
+4- Tema 18
+5- Tema 20
