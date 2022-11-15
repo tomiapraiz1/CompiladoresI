@@ -52,11 +52,11 @@ tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
 		| F32	{$$.sval = $1.sval; tipoAux = $1.sval;}
 ;
 
-declaracion_funcion:	header_funcion cuerpo_funcion
+declaracion_funcion:	header_funcion cuerpo_funcion 
 ;
 
-header_funcion:		FUN ID '(' lista_parametros ')' ':' tipo {setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval);}
-			| FUN ID '(' ')' ':' tipo	{setTipo($2.sval); setUso($2.sval, "Funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval);}
+header_funcion:		FUN ID '(' lista_parametros ')' ':' tipo {String ambitoAux = $2.sval; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); Ambito.concatenarAmbito(ambitoAux);}
+			| FUN ID '(' ')' ':' tipo	{String ambitoAux = $2.sval; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); Ambito.concatenarAmbito(ambitoAux);}
 			| FUN ID ')' ':' tipo	{erroresSintacticos.add("Falta un (");}
 			| FUN ID '(' ':' tipo	{erroresSintacticos.add("Falta un )");}
 			| FUN ID '(' ')' tipo	{erroresSintacticos.add("Falta un :");}
@@ -74,7 +74,7 @@ cuerpo_funcion:		inicio_funcion bloque retorno_funcion fin_funcion
 					| inicio_funcion bloque fin_funcion {erroresSintacticos.add("La funcion debe retornar un valor");}
 ;
 
-inicio_funcion: '{' {Ambito.concatenarAmbito("func");}
+inicio_funcion: '{' 
 ;
 
 fin_funcion: '}' {Ambito.removeAmbito();}
@@ -89,12 +89,12 @@ retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';'
 
 expresion_aritmetica:		expresion_aritmetica '+' termino {verificarTipos($1.sval,$3.sval,"+"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("+", $1.sval, $3.sval);}
 		    		| expresion_aritmetica '-' termino {verificarTipos($1.sval,$3.sval, "-"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("-", $1.sval, $3.sval);}
-	            		| termino{$$.sval = $1.sval;}
+	            		| termino
 ;
 
 termino:		termino '*' factor {verificarTipos($1.sval,$3.sval, "*"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("*", $1.sval, $3.sval);}
        			| termino '/' factor {verificarTipos($1.sval,$3.sval, "/"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("/", $1.sval, $3.sval);}
-       			| factor {$$.sval = $1.sval;}
+       			| factor 
 ;
 
 factor:		ID {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.sval = $1.sval;}
@@ -136,11 +136,11 @@ ejecutable:		asignacion ';'
 			| estruct_do_until {erroresSintacticos.add("Falta un ;");}
 ;
 
-con_etiqueta:		BREAK ';'
+con_etiqueta:		BREAK ';' {TercetoManager.breakDoUntil();}
 			| BREAK {erroresSintacticos.add("Falta un ;");}
 			| BREAK CTE ';'
 			| BREAK CTE {erroresSintacticos.add("Falta un ;");}
-			| CONTINUE ';'
+			| CONTINUE ';' {TercetoManager.continueDoUntil();}
 			| CONTINUE {erroresSintacticos.add("Falta un ;");}
 			| CONTINUE ':' ID ';'
 			| CONTINUE ':' ID {erroresSintacticos.add("Falta un ;");}
@@ -160,7 +160,7 @@ seleccion:		IF condicion cuerpo_if END_IF {TercetoManager.add_seleccion();}
 				| IF condicion cuerpo_if {erroresSintacticos.add("Falta un end_if");}
 ;
 
-condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')' {TercetoManager.crear_terceto($3.sval, $2.sval, $4.sval); TercetoManager.add_seleccion_cond();}
+condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')' {verificarTipos($2.sval, $4.sval, $3.sval); TercetoManager.crear_terceto($3.sval, $2.sval, $4.sval); TercetoManager.add_seleccion_cond();}
 				| '(' operador expresion_aritmetica ')' {erroresSintacticos.add("Falta un valor con que comparar");}
 				| '(' expresion_aritmetica operador ')' {erroresSintacticos.add("Falta un valor con que comparar");}
 ;

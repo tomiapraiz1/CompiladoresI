@@ -9,6 +9,13 @@ public class Ambito {
 	
 	private static ArrayList<String> ambito = new ArrayList<String>();
 	
+    public static String sinAmbito(String simbolo) {
+    	if (simbolo.contains(":"))
+    		return simbolo.substring(0, simbolo.indexOf(':'));
+    	else
+    		return simbolo;
+    }
+	
 	public static String getAmbito(String simbolo) { //verifica el ambito de un simbolo
 		int ind = ambito.size()-1;
         while (ind>=0){
@@ -51,7 +58,6 @@ public class Ambito {
 	
 	public static void removeAmbito() {
 		ambito.remove(ambito.size() - 1);
-		//indexOf--;
 	}
 	
 	public static void imprimirAmbitos() {

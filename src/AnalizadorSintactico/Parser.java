@@ -938,11 +938,11 @@ case 19:
 break;
 case 21:
 //#line 58 "gramatica.y"
-{setTipo(val_peek(5).sval); setUso(val_peek(5).sval, "funcion"); val_peek(5).sval = TablaSimbolos.modificarNombre(val_peek(5).sval);}
+{String ambitoAux = val_peek(5).sval; setTipo(val_peek(5).sval); setUso(val_peek(5).sval, "funcion"); val_peek(5).sval = TablaSimbolos.modificarNombre(val_peek(5).sval); Ambito.concatenarAmbito(ambitoAux);}
 break;
 case 22:
 //#line 59 "gramatica.y"
-{setTipo(val_peek(4).sval); setUso(val_peek(4).sval, "Funcion"); val_peek(4).sval = TablaSimbolos.modificarNombre(val_peek(4).sval);}
+{String ambitoAux = val_peek(4).sval; setTipo(val_peek(4).sval); setUso(val_peek(4).sval, "funcion"); val_peek(4).sval = TablaSimbolos.modificarNombre(val_peek(4).sval); Ambito.concatenarAmbito(ambitoAux);}
 break;
 case 23:
 //#line 60 "gramatica.y"
@@ -984,10 +984,6 @@ case 33:
 //#line 74 "gramatica.y"
 {erroresSintacticos.add("La funcion debe retornar un valor");}
 break;
-case 34:
-//#line 77 "gramatica.y"
-{Ambito.concatenarAmbito("func");}
-break;
 case 35:
 //#line 80 "gramatica.y"
 {Ambito.removeAmbito();}
@@ -1016,10 +1012,6 @@ case 42:
 //#line 91 "gramatica.y"
 {verificarTipos(val_peek(2).sval,val_peek(0).sval, "-"); yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("-", val_peek(2).sval, val_peek(0).sval);}
 break;
-case 43:
-//#line 92 "gramatica.y"
-{yyval.sval = val_peek(0).sval;}
-break;
 case 44:
 //#line 95 "gramatica.y"
 {verificarTipos(val_peek(2).sval,val_peek(0).sval, "*"); yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("*", val_peek(2).sval, val_peek(0).sval);}
@@ -1027,10 +1019,6 @@ break;
 case 45:
 //#line 96 "gramatica.y"
 {verificarTipos(val_peek(2).sval,val_peek(0).sval, "/"); yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("/", val_peek(2).sval, val_peek(0).sval);}
-break;
-case 46:
-//#line 97 "gramatica.y"
-{yyval.sval = val_peek(0).sval;}
 break;
 case 47:
 //#line 100 "gramatica.y"
@@ -1076,6 +1064,10 @@ case 71:
 //#line 136 "gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
+case 72:
+//#line 139 "gramatica.y"
+{TercetoManager.breakDoUntil();}
+break;
 case 73:
 //#line 140 "gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
@@ -1083,6 +1075,10 @@ break;
 case 75:
 //#line 142 "gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
+break;
+case 76:
+//#line 143 "gramatica.y"
+{TercetoManager.continueDoUntil();}
 break;
 case 77:
 //#line 144 "gramatica.y"
@@ -1134,7 +1130,7 @@ case 91:
 break;
 case 92:
 //#line 163 "gramatica.y"
-{TercetoManager.crear_terceto(val_peek(2).sval, val_peek(3).sval, val_peek(1).sval); TercetoManager.add_seleccion_cond();}
+{verificarTipos(val_peek(3).sval, val_peek(1).sval, val_peek(2).sval); TercetoManager.crear_terceto(val_peek(2).sval, val_peek(3).sval, val_peek(1).sval); TercetoManager.add_seleccion_cond();}
 break;
 case 93:
 //#line 164 "gramatica.y"
@@ -1244,7 +1240,7 @@ case 128:
 //#line 228 "gramatica.y"
 {erroresSintacticos.add("Se esperaba un else");}
 break;
-//#line 1171 "Parser.java"
+//#line 1167 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

@@ -34,9 +34,12 @@ public class Main {
 			}
 			
 			
-			//TablaSimbolos.imprimirTabla();
+			TablaSimbolos.imprimirTabla();
 			Parser.printErrores();
-			TercetoManager.imprimirTercetos();
+			//TercetoManager.imprimirTercetos();
+			TercetoManager.imprimirTercetosSinAmbito();
+			//GeneradorAssembler.procesarArchivo();
+			//GeneradorAssembler.imprimir();
 	
 	}
 

@@ -1,14 +1,14 @@
 program{
 
-	i16 a,b;
-	f32 miVar;
+	i16 a,b,t,d,e,f,z;
 	
-	fun x (i16 z) : i16{
-		i16 miVar2;
-		miVar2 =: 3;
-		return (miVar2);
-	}
+	a =: 1;
+	b =: 1;
+	z =: 1;
+	d =: 1;
+	e =: 1;
+	f =: 1;
 	
-	miVar =: x() + b;
+	t =: a + b * z + d / e + f + 20;
 	
 }

@@ -1,6 +1,12 @@
 program {
-	i16 a, b, c;
-	if ( a - b > c + 1 )then{
-	 	a =: b + c;
-	}end_if;
+	i16 a, b, d;
+	
+
+	fun xx(): i16{
+		f32 b;
+		
+		b =: 3;
+		
+		return (b);
+	}
 }

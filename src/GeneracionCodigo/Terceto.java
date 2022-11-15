@@ -4,7 +4,6 @@ public class Terceto {
 	private String operando;
 	private String operador1;
 	private String operador2;
-	private String infoTipos;
 	
 	Terceto(String _operando, String _operador1, String _operador2){
 		this.operando = _operando;
@@ -41,6 +40,9 @@ public class Terceto {
 		return "(" + operando + ", " + operador1 + ", " + operador2 + ")";
 	}
 	
+	public String imprimirTerceto() {
+		return "(" + operando + ", " + Ambito.sinAmbito(operador1) + ", " + Ambito.sinAmbito(operador2) + ")";
+	}
 	
 
 }
