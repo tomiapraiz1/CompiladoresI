@@ -1,12 +1,7 @@
 program {
 	i16 a, b, d;
 	
-
-	fun xx(): i16{
-		f32 b;
-		
-		b =: 3;
-		
-		return (b);
-	}
+	b =: 3;
+	
+	a =: b;
 }

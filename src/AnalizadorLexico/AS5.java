@@ -25,6 +25,7 @@ public class AS5 extends AccionSemantica{
 		}
 		
 		TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CONSTANTE, "f32", AnalizadorLexico.getLine());
+		TablaSimbolos.modificarUso(simbolo, "constante");
 		
 		return AnalizadorLexico.CONSTANTE;
 	}

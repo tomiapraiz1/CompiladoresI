@@ -21,6 +21,7 @@ public class AS3 extends AccionSemantica{
 		}
 		
 		TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CONSTANTE, "i16", AnalizadorLexico.getLine());
+		TablaSimbolos.modificarUso(simbolo, "constante");
 		
 		return AnalizadorLexico.CONSTANTE;
 	}

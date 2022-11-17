@@ -8,6 +8,10 @@ public class TablaSimbolos {
 	
 	private static HashMap<String, Atributo> tabla = new HashMap<String, Atributo>();
 	
+	public static HashMap<String, Atributo> getTabla(){
+		return tabla;
+	}
+	
 	public static void agregarSimbolo(String lexema, int id, String tipo, int line) {
 		Atributo a = new Atributo(lexema, id, tipo, line);
 		tabla.put(lexema, a);

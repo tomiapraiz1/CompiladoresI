@@ -2,6 +2,7 @@ package GeneracionCodigo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import AnalizadorLexico.*;
 
@@ -49,10 +50,13 @@ public class GeneradorAssembler {
             .append("include \\masm32\\include\\user32.inc\n")
             .append("includelib \\masm32\\lib\\kernel32.lib\n")
             .append("includelib \\masm32\\lib\\user32.lib\n")
-            .append(".data\n").append(".code\n").append("START:\n");
-
+            .append(".data\n");
+    	
     	lineaCODE.add(s);
-
+    	generarCodigoDatos();
+        StringBuilder x = new StringBuilder();
+    	x.append(".code\n").append("START:\n");
+    	lineaCODE.add(x);
     }
     
     public static void procesarArchivo(){
@@ -208,11 +212,13 @@ public class GeneradorAssembler {
                         }else {
                             tArg=variablesPrevias.get(tArg);
                         }
-                        lineaCODE.add(new StringBuilder(mov +" AL, " + tArg));
-                        lineaCODE.add(new StringBuilder(mov +" " + sArg + ", AL"));
+                        lineaCODE.add(new StringBuilder(mov +" AX, " + tArg));
+                        lineaCODE.add(new StringBuilder(mov +" " + sArg + ", AX"));
                         extras+=1;
                     }else {
-                        lineaCODE.add(new StringBuilder(mov +" " + sArg +", "+ tArg));
+                    	lineaCODE.add(new StringBuilder(mov +" AX, " + tArg));
+                        lineaCODE.add(new StringBuilder(mov +" " + sArg + ", AX"));
+                        extras+=1;
                     }
                     
                     break;
@@ -301,11 +307,11 @@ public class GeneradorAssembler {
     }
     
     public static void procesarTerceto(String sOp, String tOp, String funcion, String variable) {
-    	 StringBuilder contenido = new StringBuilder(mov + " AL, " +sOp);
+    	 StringBuilder contenido = new StringBuilder(mov + " AX, " +sOp);
          lineaCODE.add(contenido);
-         contenido = new StringBuilder(funcion + " AL, " +tOp);
+         contenido = new StringBuilder(funcion + " AX, " +tOp);
          lineaCODE.add(contenido);
-         contenido = new StringBuilder(mov +" " + variable + ", AL");
+         contenido = new StringBuilder(mov +" " + variable + ", AX");
          lineaCODE.add(contenido);
          extras+=2;
     }
@@ -320,6 +326,36 @@ public class GeneradorAssembler {
         contenido = new StringBuilder(fstp+" "+variable);
         lineaCODE.add(contenido);
         extras+=3;
+    }
+    
+    private static void generarCodigoDatos() {
+        for (Entry<String, Atributo> e : TablaSimbolos.getTabla().entrySet()) {
+            //tomamos el atributo 'uso' del simbolo actual, desde la tabla de simbolos
+            Atributo a = TablaSimbolos.obtenerSimbolo(e.getKey());
+            
+            if (!a.getUso().equals("") && (a.getUso().equals("constante") || a.getUso().equals("funcion") )) continue;
+
+            String tipo_actual = e.getValue().getTipo();
+            String lexema_actual = e.getKey();
+            StringBuilder b = new StringBuilder();
+            
+            if (tipo_actual.equals("")) continue;
+
+            switch (tipo_actual) {
+                case TablaTipos.STR_TYPE:
+                    //tomo el valor de la tabla de simbolos
+                    String valor_actual = e.getKey();
+                    lineaCODE.add(b.append(lexema_actual.substring(1)).append(" db \"").append(valor_actual).append("\", 0\n"));
+                    break;
+                case TablaTipos.FLOAT_TYPE:
+                case TablaTipos.FUNC_TYPE:      
+                    lineaCODE.add(b.append(lexema_actual).append(" dd ? \n"));
+                    break;
+                case TablaTipos.INTEGER_TYPE:
+                    lineaCODE.add(b.append(lexema_actual).append(" dw ?\n"));
+                    break;
+            }
+        }
     }
     
     public static void imprimir() {

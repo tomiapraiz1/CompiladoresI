@@ -188,7 +188,7 @@ lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
 				| sentencia_ejecutable
 ;
 
-impresion:		OUT '(' CADENA ')'
+impresion:		OUT '(' CADENA ')' {crear_terceto("out", $3.sval, "_");}
 				| OUT '(' CADENA {erroresSintacticos.add("Falta un )");}
 				| OUT CADENA ')' {erroresSintacticos.add("Falta un (");}
 				| OUT '(' ')' {erroresSintacticos.add("Falta una cadena que imprimir");}
