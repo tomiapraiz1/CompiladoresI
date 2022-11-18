@@ -1,7 +1,15 @@
 program {
-	i16 a, b, d;
+	fun aaa(i16 miVar): f32{
+		
+		i16 x;
+		
+		x =: miVar + 3;
+		
+		return (x);
+	}
 	
-	b =: 3;
+	f32 x;
 	
-	a =: b;
+	x =: aaa();
+	
 }

@@ -2,6 +2,7 @@ package AnalizadorLexico;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import AnalizadorSintactico.Parser;
 import GeneracionCodigo.Ambito;
 
 public class TablaSimbolos {
@@ -48,7 +49,8 @@ public class TablaSimbolos {
 	public static String modificarNombre(String key) {
 		String nuevo = key + Ambito.getAmbitoActual();
 		if (tabla.containsKey(nuevo)) {
-			System.out.println("Error");
+			Parser.erroresSemanticos.add("Variable '" + key + "' redeclarada");
+			tabla.remove(key);
 			return "Null";
 		}
 		Atributo t = tabla.remove(key);

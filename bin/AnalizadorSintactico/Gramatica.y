@@ -44,28 +44,32 @@ sentencia_declarativa:	declaracion_variables
 declaracion_variables:	tipo lista_variables ';' 
 ;
 
-lista_variables:	ID	{setTipo($1.sval); setUso($1.sval, "Variable"); $1.sval = TablaSimbolos.modificarNombre($1.sval);}
-			| lista_variables ',' ID {setTipo($3.sval); setUso($3.sval, "Variable"); $3.sval = TablaSimbolos.modificarNombre($3.sval);}
+lista_variables:	ID	{setTipo($1.sval); setUso($1.sval, "Variable"); $1.sval = TablaSimbolos.modificarNombre($1.sval); comprobarID($1.sval);}
+			| lista_variables ',' ID {setTipo($3.sval); setUso($3.sval, "Variable"); $3.sval = TablaSimbolos.modificarNombre($3.sval); comprobarID($1.sval);}
 ;
 
 tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
 		| F32	{$$.sval = $1.sval; tipoAux = $1.sval;}
 ;
 
-declaracion_funcion:	header_funcion cuerpo_funcion 
+declaracion_funcion:	header_funcion complete_header_funcion cuerpo_funcion {setTipo(funcionAux, $1.sval); Ambito.removeAmbito();}
 ;
 
-header_funcion:		FUN ID '(' lista_parametros ')' ':' tipo {String ambitoAux = $2.sval; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); Ambito.concatenarAmbito(ambitoAux);}
-			| FUN ID '(' ')' ':' tipo	{String ambitoAux = $2.sval; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); Ambito.concatenarAmbito(ambitoAux);}
-			| FUN ID ')' ':' tipo	{erroresSintacticos.add("Falta un (");}
-			| FUN ID '(' ':' tipo	{erroresSintacticos.add("Falta un )");}
-			| FUN ID '(' ')' tipo	{erroresSintacticos.add("Falta un :");}
-			| FUN ID '(' ')' ':' 	{erroresSintacticos.add("Se esperaba un tipo de retorno");}
-			| FUN '(' ')' ':' tipo	{erroresSintacticos.add("Se esperaba un identificador de la funcion");}
+header_funcion:		FUN ID '(' {ambitoAux = $2.sval; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); comprobarID($2.sval); $$.sval = $2.sval; Ambito.concatenarAmbito(ambitoAux);}
+					| FUN '(' {erroresSintacticos.add("Se esperaba un identificador de la funcion");}
+					| FUN ID {erroresSintacticos.add("Falta un (");}
+					| FUN CTE '(' {erroresSintacticos.add("No se puede declarar una funcion con una constante como nombre");}
 ;
 
-lista_parametros:	tipo ID ',' tipo ID {setTipo($1.sval,$2.sval);setUso($2.sval, "Nombre_Parametro_Funcion"); setTipo($4.sval,$5.sval); setUso($5.sval, "Nombre_Parametro_Funcion"); }
-                	| tipo ID {setUso($2.sval, "Nombre_Parametro_Funcion");}
+complete_header_funcion:	lista_parametros ')' ':' tipo {funcionAux = $4.sval;}
+							| ')' ':' tipo	{funcionAux = $3.sval;}
+							|  ':' tipo	{erroresSintacticos.add("Falta un )");}
+							| ')' tipo	{erroresSintacticos.add("Falta un :");}
+							| ')' ':' 	{erroresSintacticos.add("Se esperaba un tipo de retorno");}
+;
+
+lista_parametros:	tipo ID ',' tipo ID {setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); setTipo($4.sval,$5.sval); setUso($5.sval, "Nombre_Parametro_Funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); $5.sval = TablaSimbolos.modificarNombre($5.sval);}
+                	| tipo ID {setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); $2.sval = TablaSimbolos.modificarNombre($2.sval);}
                 	| ID		{erroresSintacticos.add("Se esperaba un tipo para el identificador");}
                 	| ID ',' ID {erroresSintacticos.add("Los identificadores deben tener un tipo");}
 ;
@@ -77,10 +81,10 @@ cuerpo_funcion:		inicio_funcion bloque retorno_funcion fin_funcion
 inicio_funcion: '{' 
 ;
 
-fin_funcion: '}' {Ambito.removeAmbito();}
+fin_funcion: '}' 
 ;
 
-retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';'
+retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';' {}
 					| RETURN expresion_aritmetica ')' ';' {erroresSintacticos.add("Falta un (");}
 					| RETURN '(' expresion_aritmetica ';' {erroresSintacticos.add("Falta un )");}
 					| RETURN '(' expresion_aritmetica ')' {erroresSintacticos.add("Falta un ;");}
@@ -101,7 +105,7 @@ factor:		ID {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.s
       		| CTE 
       		| '-' CTE {$$.sval = "-" + $2.sval;}
       		| ID '(' lista_inv_func ')' {$1.sval = Ambito.getAmbito($1.sval); $$.sval = $1.sval;}
-			| ID '('')'	{$1.sval = Ambito.getAmbito($1.sval); $$.sval = $1.sval;}
+			| ID '('')'	{comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.sval = $1.sval;}
 ;
 
 lista_inv_func:		lista_inv_func ',' ID
@@ -188,7 +192,7 @@ lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
 				| sentencia_ejecutable
 ;
 
-impresion:		OUT '(' CADENA ')'
+impresion:		OUT '(' CADENA ')' {TercetoManager.crear_terceto("out", $3.sval, "_");}
 				| OUT '(' CADENA {erroresSintacticos.add("Falta un )");}
 				| OUT CADENA ')' {erroresSintacticos.add("Falta un (");}
 				| OUT '(' ')' {erroresSintacticos.add("Falta una cadena que imprimir");}
@@ -231,8 +235,11 @@ else_until:		ELSE CTE
 %%
 
 public String tipoAux = "";
+public String ambitoAux = "";
+public String funcionAux = "";
 public static ArrayList<String> erroresSintacticos = new ArrayList<String>();
 public static ArrayList<String> erroresLexicos = new ArrayList<String>();
+public static ArrayList<String> erroresSemanticos = new ArrayList<String>();
 
 public void verificarTipos(String arg1,String arg2, String operador){
 	String aux1 = arg1;
@@ -247,6 +254,17 @@ public void verificarTipos(String arg1,String arg2, String operador){
 		return;
 	else
 		TablaTipos.setTipoAbarcativo(aux1, aux2, operador);
+}
+
+void comprobarID(String identificador){
+	if (TablaSimbolos.contieneSimbolo(identificador)){
+		Atributo aux = TablaSimbolos.obtenerSimbolo(identificador);
+		if (aux.getUso().equals("funcion")){
+			erroresSemanticos.add("La funcion '" + Ambito.sinAmbito(identificador) + "' ya fue declarada");
+		} else if (aux.getUso().equals("variable")){
+			erroresSemanticos.add("Ya existe una variable con el nombre '" + Ambito.sinAmbito(identificador) + "'");
+		}
+	}
 }
 
 void setTipo(String simbolo){
@@ -264,7 +282,7 @@ void setUso(String simbolo, String uso){
 void comprobarAmbito(String simbolo){
 	String aux = Ambito.getAmbito(simbolo);
 	if (aux == null)
-		System.out.println("Error");
+		erroresSemanticos.add("La variable " + simbolo + " no esta al alcance");
 }
 
 void yyerror(String mensaje) {
@@ -279,6 +297,9 @@ public static void printErrores(){
 	if (!erroresSintacticos.isEmpty()) {
 		System.out.println(erroresSintacticos);
 	} else System.out.println("No hay errores sintacticos.");
+	if (!erroresSemanticos.isEmpty()) {
+		System.out.println(erroresSemanticos);
+	} else System.out.println("No hay errores semanticos.");
 }
 
 int yylex() {

@@ -1,3 +1,4 @@
-1- Falta incorporar a los parametros de funciones su Ambito
+
 2- Falta tema 10
 3- Tema 18
+4- Fijarse el retorno de las funciones
