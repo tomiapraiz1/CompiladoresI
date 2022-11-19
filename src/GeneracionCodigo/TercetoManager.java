@@ -53,18 +53,18 @@ public class TercetoManager {
 	
 	public static void add_seleccion_then(){
         int indice_cond = popTerceto(); //obtengo el indice del terceto incompleto de la condicion
-        getTerceto(indice_cond).setOperador2('['+Integer.toString(tercetos.size()+1)+']'); //completamos el terceto incompleto que se agrego por el void de arriba
+        getTerceto(indice_cond).setOperador2('['+Integer.toString(tercetos.size()+1)+']'); //completamos el terceto incompleto
         pushTerceto('['+Integer.toString(tercetos.size())+']'); // apilamos terceto para BI incompleto
-        crear_terceto("BI","_","_"); //generamos el terceto para la BI incompleto
-        crear_terceto("Label"+tercetos.size(), "_", "_");
+        crear_terceto("BI","_","_"); //creamos el terceto para la BI incompleto
+        crear_terceto("Label"+tercetos.size(), "_", "_"); //creamos el terceto para el salto
     }
 	
 	 public static void add_seleccion(){
 		 	if (!stackTercetos.isEmpty()) {
 		        int indice = popTerceto(); // obtengo el indice del terceto BI
-		        getTerceto(indice).setOperador1('['+Integer.toString(tercetos.size())+']'); // le seteamos al terceto de la BI, el terceto siguiente el cual es al que tiene que saltar una vez ejecutada la rama del then
+		        getTerceto(indice).setOperador1('['+Integer.toString(tercetos.size())+']'); // completamos el terceto de la BI, con el terceto siguiente al then
 		 	}
-	        crear_terceto("Label" + tercetos.size(), "_", "_");
+	        crear_terceto("Label" + tercetos.size(), "_", "_"); //creamos el terceto para el salto
 	 }	 
 
 	public static void add_inicio_do_until(){

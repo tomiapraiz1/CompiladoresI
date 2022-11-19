@@ -39,13 +39,14 @@ sentencia:	sentencia_ejecutable
 sentencia_declarativa:	declaracion_variables
 			| declaracion_funcion
 			| declaracion_constantes
+			| estruct_when
 ;
 
 declaracion_variables:	tipo lista_variables ';' 
 ;
 
-lista_variables:	ID	{setTipo($1.sval); setUso($1.sval, "Variable"); $1.sval = TablaSimbolos.modificarNombre($1.sval); comprobarID($1.sval);}
-			| lista_variables ',' ID {setTipo($3.sval); setUso($3.sval, "Variable"); $3.sval = TablaSimbolos.modificarNombre($3.sval); comprobarID($1.sval);}
+lista_variables:	ID	{setTipo($1.sval); setUso($1.sval, "variable"); $1.sval = TablaSimbolos.modificarNombre($1.sval);}
+			| lista_variables ',' ID {setTipo($3.sval); setUso($3.sval, "variable"); $3.sval = TablaSimbolos.modificarNombre($3.sval);}
 ;
 
 tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
@@ -55,21 +56,21 @@ tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
 declaracion_funcion:	header_funcion complete_header_funcion cuerpo_funcion {setTipo(funcionAux, $1.sval); Ambito.removeAmbito();}
 ;
 
-header_funcion:		FUN ID '(' {ambitoAux = $2.sval; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); comprobarID($2.sval); $$.sval = $2.sval; Ambito.concatenarAmbito(ambitoAux);}
+header_funcion:		FUN ID '(' {ambitoAux = $2.sval; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); idAux = $2.sval; $$.sval = $2.sval; Ambito.concatenarAmbito(ambitoAux);}
 					| FUN '(' {erroresSintacticos.add("Se esperaba un identificador de la funcion");}
 					| FUN ID {erroresSintacticos.add("Falta un (");}
 					| FUN CTE '(' {erroresSintacticos.add("No se puede declarar una funcion con una constante como nombre");}
 ;
 
 complete_header_funcion:	lista_parametros ')' ':' tipo {funcionAux = $4.sval;}
-							| ')' ':' tipo	{funcionAux = $3.sval;}
+							| ')' ':' tipo	{TablaSimbolos.modificarParametros(idAux, 0); funcionAux = $3.sval;}
 							|  ':' tipo	{erroresSintacticos.add("Falta un )");}
 							| ')' tipo	{erroresSintacticos.add("Falta un :");}
 							| ')' ':' 	{erroresSintacticos.add("Se esperaba un tipo de retorno");}
 ;
 
-lista_parametros:	tipo ID ',' tipo ID {setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); setTipo($4.sval,$5.sval); setUso($5.sval, "Nombre_Parametro_Funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); $5.sval = TablaSimbolos.modificarNombre($5.sval);}
-                	| tipo ID {setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); $2.sval = TablaSimbolos.modificarNombre($2.sval);}
+lista_parametros:	tipo ID ',' tipo ID {TablaSimbolos.modificarParametros(idAux, 2); setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); setTipo($4.sval,$5.sval); setUso($5.sval, "Nombre_Parametro_Funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); $5.sval = TablaSimbolos.modificarNombre($5.sval);}
+                	| tipo ID {TablaSimbolos.modificarParametros(idAux, 1); setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); $2.sval = TablaSimbolos.modificarNombre($2.sval);}
                 	| ID		{erroresSintacticos.add("Se esperaba un tipo para el identificador");}
                 	| ID ',' ID {erroresSintacticos.add("Los identificadores deben tener un tipo");}
 ;
@@ -104,25 +105,31 @@ termino:		termino '*' factor {verificarTipos($1.sval,$3.sval, "*"); $$.sval = '[
 factor:		ID {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.sval = $1.sval;}
       		| CTE 
       		| '-' CTE {$$.sval = "-" + $2.sval;}
-      		| ID '(' lista_inv_func ')' {$1.sval = Ambito.getAmbito($1.sval); $$.sval = $1.sval;}
-			| ID '('')'	{comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.sval = $1.sval;}
+      		| ID '(' lista_inv_func ')' {TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, $3.ival); else chequearParametros($1.sval, $3.ival); $$.sval = $1.sval;}
+			| ID '('')'	{TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, 0); else chequearParametros($1.sval, 0); $$.sval = $1.sval;}
 ;
 
-lista_inv_func:		lista_inv_func ',' ID
-	      		| lista_inv_func ',' CTE
-	      		| CTE
-	      		| ID
+lista_inv_func:		ID ',' ID {$$.ival = 2;}
+	      		| ID ',' CTE {$$.ival = 2;}
+	      		| CTE ',' CTE {$$.ival = 2;}
+	      		| CTE ',' ID {$$.ival = 2;}
+	      		| CTE {$$.ival = 1;}
+	      		| ID {$$.ival = 1;}
 ;
 
 declaracion_constantes:	CONST list_constantes ';'
 						| CONST list_constantes {erroresSintacticos.add("Falta un ;");}
 ;
 
-list_constantes:	list_constantes ',' asignacion 
-			| asignacion 
+list_constantes:	list_constantes ',' asignacion_constante 
+			| asignacion_constante
 ;
 
-asignacion:		ID ASIG expresion_aritmetica {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); verificarTipos($1.sval,$3.sval, "=:"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
+asignacion_constante:		ID ASIG CTE {Atributo aux = TablaSimbolos.obtenerSimbolo($3.sval); setTipo(aux.getTipo(),$1.sval); $1.sval = TablaSimbolos.modificarNombre($1.sval);  TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
+							| ID CTE {erroresSintacticos.add("Falta =:");}
+;
+
+asignacion:		ID ASIG expresion_aritmetica {if ($3.sval == null) break; comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); verificarTipos($1.sval,$3.sval, "=:"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
 				| ID expresion_aritmetica {erroresSintacticos.add("Falta =:");}
 ;
 
@@ -149,7 +156,7 @@ con_etiqueta:		BREAK ';' {TercetoManager.breakDoUntil();}
 			| CONTINUE ':' ID ';'
 			| CONTINUE ':' ID {erroresSintacticos.add("Falta un ;");}
 			| CONTINUE ':' ';' {erroresSintacticos.add("Falta un identificador");}
-			| ID ':' estruct_do_until ';'
+			| ID ':' estruct_do_until ';' {TablaSimbolos.agregarSimbolo($1.sval, 257, "", AnalizadorLexico.getLine()); setUso($1.sval,"etiqueta"); $1.sval = TablaSimbolos.modificarNombre($1.sval);}
 			| ID ':' estruct_do_until {erroresSintacticos.add("Falta un ;");}
 			| ID ':'  ';'{erroresSintacticos.add("Falta un cuerpo do until");}
 			| ID ASIG sentencia_ctr_expr ';'
@@ -190,6 +197,9 @@ cuerpo_else:		 '{' lista_sentencias_ejecutables '}'
 
 lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
 				| sentencia_ejecutable
+;
+
+estruct_when:	 WHEN condicion THEN '{' bloque '}'
 ;
 
 impresion:		OUT '(' CADENA ')' {TercetoManager.crear_terceto("out", $3.sval, "_");}
@@ -237,34 +247,38 @@ else_until:		ELSE CTE
 public String tipoAux = "";
 public String ambitoAux = "";
 public String funcionAux = "";
+public String idAux = "";
 public static ArrayList<String> erroresSintacticos = new ArrayList<String>();
 public static ArrayList<String> erroresLexicos = new ArrayList<String>();
 public static ArrayList<String> erroresSemanticos = new ArrayList<String>();
 
 public void verificarTipos(String arg1,String arg2, String operador){
-	String aux1 = arg1;
-	while (aux1.startsWith("[")){
-		aux1=TercetoManager.getTerceto(aux1).getOperador1();
+	if (arg1 != null && arg2 != null){	
+		String aux1 = arg1;
+		while (aux1.startsWith("[")){
+			aux1=TercetoManager.getTerceto(aux1).getOperador1();
+		}
+		String aux2=arg2;
+		while (aux2.startsWith("[")){
+			aux2=TercetoManager.getTerceto(aux2).getOperador1();
+		}
+		if (TablaSimbolos.obtenerSimbolo(aux1).getTipo().equals(TablaSimbolos.obtenerSimbolo(aux2).getTipo()))
+			return;
+		else
+			TablaTipos.setTipoAbarcativo(aux1, aux2, operador);
 	}
-	String aux2=arg2;
-	while (aux2.startsWith("[")){
-		aux2=TercetoManager.getTerceto(aux2).getOperador1();
-	}
-	if (TablaSimbolos.obtenerSimbolo(aux1).getTipo().equals(TablaSimbolos.obtenerSimbolo(aux2).getTipo()))
-		return;
-	else
-		TablaTipos.setTipoAbarcativo(aux1, aux2, operador);
 }
 
-void comprobarID(String identificador){
-	if (TablaSimbolos.contieneSimbolo(identificador)){
-		Atributo aux = TablaSimbolos.obtenerSimbolo(identificador);
+void chequearParametros(String simbolo, int cantidad){
+	if (TablaSimbolos.contieneSimbolo(simbolo)){
+		Atributo aux = TablaSimbolos.obtenerSimbolo(simbolo);
 		if (aux.getUso().equals("funcion")){
-			erroresSemanticos.add("La funcion '" + Ambito.sinAmbito(identificador) + "' ya fue declarada");
-		} else if (aux.getUso().equals("variable")){
-			erroresSemanticos.add("Ya existe una variable con el nombre '" + Ambito.sinAmbito(identificador) + "'");
-		}
-	}
+			if (aux.getCantidadParametros() != cantidad)
+				erroresSemanticos.add("No coinciden la cantidad de parametros de '" + Ambito.sinAmbito(simbolo) + "'");
+		} else
+			erroresSemanticos.add("'" + simbolo + "' no es una funcion");
+	} else
+		erroresSemanticos.add("La funcion '" + simbolo + "' no esta declarada");
 }
 
 void setTipo(String simbolo){
@@ -282,7 +296,7 @@ void setUso(String simbolo, String uso){
 void comprobarAmbito(String simbolo){
 	String aux = Ambito.getAmbito(simbolo);
 	if (aux == null)
-		erroresSemanticos.add("La variable " + simbolo + " no esta al alcance");
+		erroresSemanticos.add("'" + simbolo + "' no esta al alcance");
 }
 
 void yyerror(String mensaje) {

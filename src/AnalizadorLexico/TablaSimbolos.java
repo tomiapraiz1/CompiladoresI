@@ -40,6 +40,12 @@ public class TablaSimbolos {
         }  
     }
 	
+	public static void modificarParametros(String key, int cantidad) {
+		if (tabla.containsKey(key)) {
+			tabla.get(key).setCantidadParametros(cantidad);
+		}  
+	}
+	
 	public static void modificarUso(String key, String uso) {
         if (tabla.containsKey(key)) {
             tabla.get(key).setUso(uso);
@@ -49,7 +55,12 @@ public class TablaSimbolos {
 	public static String modificarNombre(String key) {
 		String nuevo = key + Ambito.getAmbitoActual();
 		if (tabla.containsKey(nuevo)) {
-			Parser.erroresSemanticos.add("Variable '" + key + "' redeclarada");
+			if (obtenerSimbolo(key).getUso().equals("etiqueta"))
+				Parser.erroresSemanticos.add("Etiqueta '" + key + "' redeclarada");
+			else if (obtenerSimbolo(key).getUso().equals("variable"))
+				Parser.erroresSemanticos.add("Variable '" + key + "' redeclarada");
+			else
+				Parser.erroresSemanticos.add("Funcion '" + key + "' redeclarada");
 			tabla.remove(key);
 			return "Null";
 		}

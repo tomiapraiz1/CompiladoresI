@@ -1,15 +1,7 @@
 program {
-	fun aaa(i16 miVar): f32{
-		
-		i16 x;
-		
-		x =: miVar + 3;
-		
-		return (x);
-	}
-	
-	f32 x;
-	
-	x =: aaa();
+	i16 a,b;
+	do {
+		continue;
+	} until (a<b);
 	
 }

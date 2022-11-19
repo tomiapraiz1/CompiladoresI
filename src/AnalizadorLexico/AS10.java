@@ -13,7 +13,7 @@ public class AS10 extends AccionSemantica {
 				token.delete(sl,sl+2);
 			}
 			String simbolo = token.toString();
-			TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CADENA, "Cadena", AnalizadorLexico.getLine());
+			TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CADENA, "cadena", AnalizadorLexico.getLine());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

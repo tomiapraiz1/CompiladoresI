@@ -8,6 +8,7 @@ public class Atributo {
     private int line;
     private String uso;
     private String ambito;
+    private int cantidadParametros = -1;
     
     //private String uso; Sugerido por la catedra (filminas)
     
@@ -75,10 +76,22 @@ public class Atributo {
 		this.ambito = ambito;
 	}
 
+	public int getCantidadParametros() {
+		return cantidadParametros;
+	}
+
+	public void setCantidadParametros(int cantidadParametros) {
+		this.cantidadParametros = cantidadParametros;
+	}
+
 	@Override
 	public String toString() {
-		return "Atributo [idToken=" + idToken + ", lexema=" + lexema + ", tipo=" + tipo + ", line=" + line + ", uso="
-				+ uso + ", ambito=" + ambito + "]";
+		if (cantidadParametros != -1)
+			return "Atributo [idToken=" + idToken + ", lexema=" + lexema + ", tipo=" + tipo + ", line=" + line + ", uso="
+				+ uso + ", ambito=" + ambito + ", cantidadParametros=" + cantidadParametros + "]";
+		else
+			return "Atributo [idToken=" + idToken + ", lexema=" + lexema + ", tipo=" + tipo + ", line=" + line + ", uso="
+			+ uso + ", ambito=" + ambito + "]";
 	}
 
 }
