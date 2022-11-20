@@ -1,7 +1,6 @@
 1- Para el tipo de los parámetros, se aplicará el chequeo de compatibilidad
-2- Falta terminar tema 10 (tercetos y generacion de assembler)
-3- Tema 18 
-4- Faltan tercetos para funciones y retorno
-5- Faltan tercetos para llamada a funciones
-6- Falta continue con etiqueta
-7- Falta completar generador de assembler
+2- Tema 18 
+3- Faltan tercetos para funciones y retorno
+4- Faltan tercetos para llamada a funciones
+5- Falta continue con etiqueta
+6- Falta completar generador de assembler
