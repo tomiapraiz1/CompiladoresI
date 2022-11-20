@@ -4,5 +4,4 @@
 4- Faltan tercetos para funciones y retorno
 5- Faltan tercetos para llamada a funciones
 6- Falta continue con etiqueta
-7- Faltan tercetos del when
-8- Falta completar generador de assembler
+7- Falta completar generador de assembler
