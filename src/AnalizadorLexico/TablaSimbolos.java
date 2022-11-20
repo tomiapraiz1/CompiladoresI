@@ -18,6 +18,11 @@ public class TablaSimbolos {
 		tabla.put(lexema, a);
 	}
 	
+	public static void agregarSimbolo(String identificador, String lexema,  String tipo) {
+		Atributo a = new Atributo(lexema, tipo);
+		tabla.put(identificador, a);
+	}
+	
 	public static Atributo obtenerSimbolo(String lexema) {
 	
 		if (tabla.containsKey(lexema))

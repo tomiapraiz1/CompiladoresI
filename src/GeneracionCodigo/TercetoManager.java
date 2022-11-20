@@ -9,6 +9,7 @@ public class TercetoManager {
 	private static Stack<String> stackTercetos = new Stack<String>();
 	private static Stack<String> stackTercetosContinue = new Stack<String>();
 	private static Stack<String> stackTercetosBreak = new Stack<String>();
+	private static Stack<String> stackFunciones = new Stack<String>();
 	
 	public static void crear_terceto(String operando, String operador1, String operador2) {
 		Terceto aux = new Terceto(operando,operador1,operador2);
@@ -74,20 +75,14 @@ public class TercetoManager {
 	}
 
 	public static void add_iter_do_until(){
-		int indice_cond = popTerceto();
-        getTerceto(indice_cond).setOperador2('['+Integer.toString(tercetos.size()+1)+']'); 
-        indice_cond = popTerceto();
+		crear_terceto("BF", '['+Integer.toString(tercetos.size() - 1)+']','['+Integer.toString(tercetos.size() + 2)+']');
+        int indice_cond = popTerceto();
 		crear_terceto("BI","["+Integer.toString(indice_cond)+"]","_"); 
 		crear_terceto("Label"+tercetos.size(), "_", "_");
 		if(!stackTercetosBreak.isEmpty()) {
 			indice_cond = popTercetoBreak();
 			getTerceto(indice_cond).setOperador1('['+Integer.toString(tercetos.size() - 1)+']'); 
 		}
-	}
-	
-	public static void add_inicio_when(){
-		pushTerceto('['+Integer.toString(tercetos.size())+']');
-		crear_terceto("Label"+tercetos.size(), "_", "_");
 	}
 	
 	public static void add_cond_when(){
@@ -98,9 +93,7 @@ public class TercetoManager {
 	
 	public static void add_iter_when(){
 		int indice_cond = popTerceto();
-        getTerceto(indice_cond).setOperador2('['+Integer.toString(tercetos.size()+1)+']'); 
-        indice_cond = popTerceto();
-		crear_terceto("BI","["+Integer.toString(indice_cond)+"]","_"); 
+        getTerceto(indice_cond).setOperador2('['+Integer.toString(tercetos.size())+']'); 
 		crear_terceto("Label"+tercetos.size(), "_", "_");
 	}
 	
@@ -130,7 +123,31 @@ public class TercetoManager {
 		crear_terceto("BI","_","_"); 
 	}
 	
+	public static void pushTercetoFuncion(String funcion) {
+		stackFunciones.push(funcion);
+	}
+	
+	public static int popTercetoFuncion() {
+		String aux = stackFunciones.pop();
+		aux = aux.substring(1, aux.length()-1);
+		return Integer.parseInt(aux);
+	}
+	
+	public static void add_funcion(String funcion) {
+		pushTercetoFuncion('['+Integer.toString(tercetos.size())+']');
+		crear_terceto("Funcion",funcion,"_");
+	}
+	
+	public static void add_return_funcion() {
+		crear_terceto("End_funcion", "_", "_"); //poner nombre de la funcion
+	}
 
+
+	public static void llamado_funcion() {
+		int indice_cond = popTercetoFuncion();
+		getTerceto(indice_cond).setOperador1('['+Integer.toString(tercetos.size())+']'); 
+	}
+	
 	public static void imprimirTercetos() {
 		for (Terceto t : tercetos) {
 			System.out.println((Integer.toString(tercetos.indexOf(t))) + ". " + t);

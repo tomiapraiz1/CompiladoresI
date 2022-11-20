@@ -19,6 +19,11 @@ public class Atributo {
     	this.idToken = id;
     }
     
+    public Atributo(String lexema, String tipo) {
+    	this.lexema = lexema;
+    	this.tipo = tipo;
+    }
+    
     public Atributo(String lexema, int idToken, String tipo, int line){
         this.lexema = lexema;
     	this.idToken = idToken;

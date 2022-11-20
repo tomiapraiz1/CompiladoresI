@@ -67,7 +67,7 @@ public class GeneradorAssembler {
         int xAnterior = 1;
         String operadorAnterior="";
         
-        HashMap<String,String> variablesPrevias = new HashMap<String,String>();
+        HashMap<String,String> variablesPrevias = new HashMap<String,String>(); //cambiar a la tabla de simbolos, asi ponemos @aux con tipo
         
         for (int i = 0; i < TercetoManager.getIndexTerceto(); i++) {
             
@@ -77,6 +77,7 @@ public class GeneradorAssembler {
             String sArg = tercetoProcesar.getOperador1();
             String tArg = tercetoProcesar.getOperador2();
             String variableAux= "@aux";
+            String lexema = "";
             
             if (operador.equals("Label"+i)) {
                 lineaCODE.add(new StringBuilder("Label"+ i +":"));
@@ -90,6 +91,7 @@ public class GeneradorAssembler {
                             System.out.println("Error en compilacion de assembler se esta intentando acceder al valor de una instruccion futura");
                         }else {
                             sArg=variablesPrevias.get(sArg);
+                            lexema =TablaSimbolos.obtenerSimbolo(sArg).getLexema();
                         }
                     }
                     if (tArg.startsWith("[")) {
@@ -99,19 +101,15 @@ public class GeneradorAssembler {
                             tArg=variablesPrevias.get(tArg);
                         }
                     }
-                    if (!sArg.startsWith("@")) {
-	                    if (TablaSimbolos.obtenerSimbolo(sArg).getTipo().equals("i16")) {
-	                        operador=add;
-	                        procesarTerceto(sArg, tArg, operador, (variableAux+x));
-	                    } else {
-	                        operador=fadd;
-	                        procesarTercetoDouble(sArg, tArg, operador, (variableAux+x));
-	                    }
-                    } else {
-                    	operador=add;
-                    	procesarTerceto(sArg, tArg, operador, (variableAux+x));
+                    if (!lexema.equals("") && lexema.startsWith("@")) {
+		                if (TablaSimbolos.obtenerSimbolo(sArg).getTipo().equals("i16")) {
+		                	operador=add;
+		                    procesarTerceto(sArg, tArg, operador, (variableAux+x), "["+i+"]");
+		                } else {
+		                    operador=fadd;
+		                    procesarTercetoDouble(sArg, tArg, operador, (variableAux+x), "["+i+"]");
+		                }
                     }
-                    variablesPrevias.put("["+i+"]",(variableAux+x));
                     x++;
                     break;
                 case "*": 
@@ -306,7 +304,8 @@ public class GeneradorAssembler {
         }
     }
     
-    public static void procesarTerceto(String sOp, String tOp, String funcion, String variable) {
+    public static void procesarTerceto(String sOp, String tOp, String funcion, String variable, String terceto) {
+    	 TablaSimbolos.agregarSimbolo(terceto, variable, "i16");
     	 StringBuilder contenido = new StringBuilder(mov + " AX, " +sOp);
          lineaCODE.add(contenido);
          contenido = new StringBuilder(funcion + " AX, " +tOp);
@@ -316,7 +315,8 @@ public class GeneradorAssembler {
          extras+=2;
     }
     
-    public static void procesarTercetoDouble(String sOp, String tOp, String funcion, String variable) {
+    public static void procesarTercetoDouble(String sOp, String tOp, String funcion, String variable, String terceto) {
+    	TablaSimbolos.agregarSimbolo(terceto, variable, "f32");
         StringBuilder contenido = new StringBuilder(fld+" "+sOp);
         lineaCODE.add(contenido);
         contenido = new StringBuilder(fld+" "+tOp);

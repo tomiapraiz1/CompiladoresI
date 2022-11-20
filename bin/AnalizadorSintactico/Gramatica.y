@@ -56,7 +56,7 @@ tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
 declaracion_funcion:	header_funcion complete_header_funcion cuerpo_funcion {setTipo(funcionAux, $1.sval); Ambito.removeAmbito();}
 ;
 
-header_funcion:		FUN ID '(' {ambitoAux = $2.sval; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); idAux = $2.sval; $$.sval = $2.sval; Ambito.concatenarAmbito(ambitoAux);}
+header_funcion:		FUN ID '(' {ambitoAux = $2.sval; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); idAux = $2.sval; $$.sval = $2.sval; TercetoManager.add_funcion($2.sval); Ambito.concatenarAmbito(ambitoAux);}
 					| FUN '(' {erroresSintacticos.add("Se esperaba un identificador de la funcion");}
 					| FUN ID {erroresSintacticos.add("Falta un (");}
 					| FUN CTE '(' {erroresSintacticos.add("No se puede declarar una funcion con una constante como nombre");}
@@ -76,6 +76,7 @@ lista_parametros:	tipo ID ',' tipo ID {TablaSimbolos.modificarParametros(idAux, 
 ;
 
 cuerpo_funcion:		inicio_funcion bloque retorno_funcion fin_funcion
+					| inicio_funcion retorno_funcion fin_funcion
 					| inicio_funcion bloque fin_funcion {erroresSintacticos.add("La funcion debe retornar un valor");}
 ;
 
@@ -85,7 +86,7 @@ inicio_funcion: '{'
 fin_funcion: '}' 
 ;
 
-retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';' {}
+retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';' {TercetoManager.add_return_funcion();}
 					| RETURN expresion_aritmetica ')' ';' {erroresSintacticos.add("Falta un (");}
 					| RETURN '(' expresion_aritmetica ';' {erroresSintacticos.add("Falta un )");}
 					| RETURN '(' expresion_aritmetica ')' {erroresSintacticos.add("Falta un ;");}
@@ -105,8 +106,8 @@ termino:		termino '*' factor {verificarTipos($1.sval,$3.sval, "*"); $$.sval = '[
 factor:		ID {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.sval = $1.sval;}
       		| CTE 
       		| '-' CTE {$$.sval = "-" + $2.sval;}
-      		| ID '(' lista_inv_func ')' {TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, $3.ival); else chequearParametros($1.sval, $3.ival); $$.sval = $1.sval;}
-			| ID '('')'	{TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, 0); else chequearParametros($1.sval, 0); $$.sval = $1.sval;}
+      		| ID '(' lista_inv_func ')' {TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, $3.ival); else chequearParametros($1.sval, $3.ival); $$.sval = $1.sval; TercetoManager.llamado_funcion();}
+			| ID '('')'	{TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, 0); else chequearParametros($1.sval, 0); $$.sval = $1.sval; TercetoManager.llamado_funcion();}
 ;
 
 lista_inv_func:		ID ',' ID {$$.ival = 2;}
@@ -153,16 +154,19 @@ con_etiqueta:		BREAK ';' {TercetoManager.breakDoUntil();}
 			| BREAK CTE {erroresSintacticos.add("Falta un ;");}
 			| CONTINUE ';' {TercetoManager.continueDoUntil();}
 			| CONTINUE {erroresSintacticos.add("Falta un ;");}
-			| CONTINUE ':' ID ';'
+			| CONTINUE ':' ID ';' {contieneEtiqueta($3.sval+Ambito.getAmbitoActual()); TercetoManager.continueDoUntil();}
 			| CONTINUE ':' ID {erroresSintacticos.add("Falta un ;");}
 			| CONTINUE ':' ';' {erroresSintacticos.add("Falta un identificador");}
-			| ID ':' estruct_do_until ';' {TablaSimbolos.agregarSimbolo($1.sval, 257, "", AnalizadorLexico.getLine()); setUso($1.sval,"etiqueta"); $1.sval = TablaSimbolos.modificarNombre($1.sval);}
-			| ID ':' estruct_do_until {erroresSintacticos.add("Falta un ;");}
-			| ID ':'  ';'{erroresSintacticos.add("Falta un cuerpo do until");}
+			| inicio_id_estruct estruct_do_until ';'
+			| inicio_id_estruct estruct_do_until {erroresSintacticos.add("Falta un ;");}
+			| inicio_id_estruct  ';'{erroresSintacticos.add("Falta un cuerpo do until");}
 			| ID ASIG sentencia_ctr_expr ';'
 			| ID ASIG sentencia_ctr_expr {erroresSintacticos.add("Falta un ;");}
 			| ID sentencia_ctr_expr ';' {erroresSintacticos.add("Falta un cuerpo do until");}
 			| ID ASIG ';' {erroresSintacticos.add("Falta un =:");}
+;
+
+inicio_id_estruct: ID ':' {TablaSimbolos.agregarSimbolo($1.sval, 257, "", AnalizadorLexico.getLine()); setUso($1.sval,"etiqueta"); $1.sval = TablaSimbolos.modificarNombre($1.sval);}
 ;
 
 seleccion:		inicio_if condicion_if cuerpo_if END_IF {TercetoManager.add_seleccion();}
@@ -205,7 +209,7 @@ lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
 estruct_when:	 inicio_when condicion_when THEN '{' bloque '}' {TercetoManager.add_iter_when();}
 ;
 
-inicio_when: WHEN {TercetoManager.add_inicio_when();}
+inicio_when: WHEN
 ;
 
 condicion_when: condicion {TercetoManager.add_cond_when();}
@@ -223,10 +227,10 @@ estruct_do_until:	DO inicion_estruct_do_until lista_sentencias_ejecutables fin_e
 					| DO inicion_estruct_do_until fin_estruct_do_until until_condicion {erroresSintacticos.add("Faltan sentencias de ejecucion");}
 ;
 
-inicion_estruct_do_until: '{' {Ambito.concatenarAmbito("doUntil"); TercetoManager.add_inicio_do_until();}
+inicion_estruct_do_until: '{' {TercetoManager.add_inicio_do_until();}
 ;
 
-fin_estruct_do_until: '}' {Ambito.removeAmbito();}
+fin_estruct_do_until: '}' 
 ;
 
 until_condicion:	UNTIL condicion
@@ -288,6 +292,15 @@ void chequearParametros(String simbolo, int cantidad){
 			erroresSemanticos.add("'" + simbolo + "' no es una funcion");
 	} else
 		erroresSemanticos.add("La funcion '" + simbolo + "' no esta declarada");
+}
+
+void contieneEtiqueta(String etiqueta){
+	if (TablaSimbolos.contieneSimbolo(etiqueta)){
+		if (!TablaSimbolos.obtenerSimbolo(etiqueta).getUso().equals("etiqueta"))
+			erroresSemanticos.add("'" + Ambito.sinAmbito(etiqueta) + "' no es una etiqueta valida");
+	} else
+		erroresSemanticos.add("'" + Ambito.sinAmbito(etiqueta) + "' no esta declarada");
+
 }
 
 void setTipo(String simbolo){

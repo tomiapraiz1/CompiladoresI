@@ -1,15 +1,12 @@
 program {
-	i16 a,b;
-	a =: 10;
-	b =: 0;
 	
-	when (b <= a) then{
-		
-		b =: b + 1;
-		
-		b =: b + 2;
-		
-		b =: b + 3;
+	fun suma(i16 a, i16 b) : i16 {
+		i16 c;
+		c =: a + b;
+		return (c);
 	}
-	
+
+	i16 z;
+
+	z =: suma(1,2);
 }
