@@ -165,13 +165,16 @@ con_etiqueta:		BREAK ';' {TercetoManager.breakDoUntil();}
 			| ID ASIG ';' {erroresSintacticos.add("Falta un =:");}
 ;
 
-seleccion:		IF condicion cuerpo_if END_IF {TercetoManager.add_seleccion();}
-				| IF cuerpo_if END_IF {erroresSintacticos.add("Falta la condicion del if");}
-				| IF condicion END_IF {erroresSintacticos.add("Falta el cuerpo del if");}
-				| IF condicion cuerpo_if {erroresSintacticos.add("Falta un end_if");}
+seleccion:		inicio_if condicion_if cuerpo_if END_IF {TercetoManager.add_seleccion();}
 ;
 
-condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')' {verificarTipos($2.sval, $4.sval, $3.sval); TercetoManager.crear_terceto($3.sval, $2.sval, $4.sval); TercetoManager.add_seleccion_cond();}
+inicio_if: IF
+;
+
+condicion_if: condicion {TercetoManager.add_seleccion_cond();}
+;
+
+condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')' {verificarTipos($2.sval, $4.sval, $3.sval); TercetoManager.crear_terceto($3.sval, $2.sval, $4.sval);}
 				| '(' operador expresion_aritmetica ')' {erroresSintacticos.add("Falta un valor con que comparar");}
 				| '(' expresion_aritmetica operador ')' {erroresSintacticos.add("Falta un valor con que comparar");}
 ;
@@ -199,7 +202,13 @@ lista_sentencias_ejecutables:	lista_sentencias_ejecutables sentencia_ejecutable
 				| sentencia_ejecutable
 ;
 
-estruct_when:	 WHEN condicion THEN '{' bloque '}'
+estruct_when:	 inicio_when condicion_when THEN '{' bloque '}' {TercetoManager.add_iter_when();}
+;
+
+inicio_when: WHEN {TercetoManager.add_inicio_when();}
+;
+
+condicion_when: condicion {TercetoManager.add_cond_when();}
 ;
 
 impresion:		OUT '(' CADENA ')' {TercetoManager.crear_terceto("out", $3.sval, "_");}

@@ -85,6 +85,25 @@ public class TercetoManager {
 		}
 	}
 	
+	public static void add_inicio_when(){
+		pushTerceto('['+Integer.toString(tercetos.size())+']');
+		crear_terceto("Label"+tercetos.size(), "_", "_");
+	}
+	
+	public static void add_cond_when(){
+		int anterior = tercetos.size()-1;
+        crear_terceto("BF", "["+anterior+"]", "_");
+		pushTerceto('['+Integer.toString(tercetos.size() - 1)+']');
+	}
+	
+	public static void add_iter_when(){
+		int indice_cond = popTerceto();
+        getTerceto(indice_cond).setOperador2('['+Integer.toString(tercetos.size()+1)+']'); 
+        indice_cond = popTerceto();
+		crear_terceto("BI","["+Integer.toString(indice_cond)+"]","_"); 
+		crear_terceto("Label"+tercetos.size(), "_", "_");
+	}
+	
 	public static int popTercetoContinue() { //da el numero del terceto
 		String aux = stackTercetosContinue.pop();
 		
