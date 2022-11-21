@@ -11,6 +11,10 @@ public class TercetoManager {
 	private static Stack<String> stackTercetosBreak = new Stack<String>();
 	private static Stack<String> stackFunciones = new Stack<String>();
 	
+	public static ArrayList<Terceto> getLista(){
+		return tercetos;
+	}
+	
 	public static void crear_terceto(String operando, String operador1, String operador2) {
 		Terceto aux = new Terceto(operando,operador1,operador2);
 		tercetos.add(aux);

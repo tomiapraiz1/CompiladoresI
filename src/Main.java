@@ -38,8 +38,8 @@ public class Main {
 			Parser.printErrores();
 			TercetoManager.imprimirTercetos();
 			//TercetoManager.imprimirTercetosSinAmbito();
-			//GeneradorAssembler.procesarArchivo();
-			//GeneradorAssembler.imprimir();
+			GeneradorAssembler.procesarArchivo();
+			GeneradorAssembler.imprimir();
 	
 	}
 
