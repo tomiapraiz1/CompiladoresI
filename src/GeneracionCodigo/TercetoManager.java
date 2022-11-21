@@ -3,6 +3,9 @@ package GeneracionCodigo;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import AnalizadorLexico.Atributo;
+import AnalizadorLexico.TablaSimbolos;
+
 public class TercetoManager {
 	
 	private static ArrayList<Terceto> tercetos = new ArrayList<Terceto>();
@@ -10,6 +13,7 @@ public class TercetoManager {
 	private static Stack<String> stackTercetosContinue = new Stack<String>();
 	private static Stack<String> stackTercetosBreak = new Stack<String>();
 	private static Stack<String> stackFunciones = new Stack<String>();
+	private static Stack<String> stackAsignacion = new Stack<String>();
 	
 	public static ArrayList<Terceto> getLista(){
 		return tercetos;
@@ -120,6 +124,56 @@ public class TercetoManager {
 			int indice = popTercetoContinue();
 			crear_terceto("BI","[" + Integer.toString(indice) + "]","_"); 
 		}
+	}
+	
+	public static void continueDoUntilEtiqueta(String etiqueta) {
+		String aux = etiqueta+Ambito.getAmbitoActual();
+		if (TablaSimbolos.contieneSimbolo(aux)) {
+			Atributo t = TablaSimbolos.obtenerSimbolo(aux);
+			if (t.getUso().equals("etiqueta")) {
+				crear_terceto("BI", t.getTercetoSalto(), "_");
+			}
+		}
+	}
+	
+	public static int popTercetoAsignacion() { //da el numero del terceto
+		String aux = stackAsignacion.pop();
+		aux = aux.substring(1, aux.length()-1);
+		return Integer.parseInt(aux);		
+	}
+	
+	public static void pushTercetoAsignacion(String indexTerceto) {
+		
+		stackAsignacion.push(indexTerceto);
+		
+	}
+	
+	public static void add_inicio_id_asig() {
+		crear_terceto("Label"+tercetos.size()+":", "_", "_");
+		pushTercetoAsignacion("["+ (tercetos.size()-1)+ "]");
+	}
+	
+	public static void add_break_cte(String id, String cte){
+		crear_terceto("=:", id, cte);
+		crear_terceto("BI", "_", "_");
+		pushTercetoAsignacion("["+(tercetos.size()-1)+"]");
+	}
+	
+	public static void add_else_cte(String id, String cte){
+		crear_terceto("=:", id, cte);
+	}
+	
+	public static void add_condicion_id_asig() {
+		crear_terceto("BF", "["+ (tercetos.size()-1)+ "]","["+ (tercetos.size()+2)+ "]");
+		int indice = popTercetoAsignacion();
+		int indiceAux = popTercetoAsignacion();
+		crear_terceto("BI", "["+ (indiceAux)+ "]","_");
+		pushTercetoAsignacion("["+indice+"]");
+	}
+	public static void add_fin_id_asig() {
+		crear_terceto("Label"+tercetos.size()+":", "_", "_");
+		int indice = popTercetoAsignacion();
+		getTerceto(indice).setOperador1('['+Integer.toString(tercetos.size()-1)+']');
 	}
 	
 	public static void breakDoUntil() {

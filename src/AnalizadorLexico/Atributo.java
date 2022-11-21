@@ -9,17 +9,40 @@ public class Atributo {
     private String uso;
     private String ambito;
     private int cantidadParametros = -1;
-    
-    //private String uso; Sugerido por la catedra (filminas)
-    
-
+    private String tipoP1 = "";
+    private String tipoP2 = "";
+    private String tercetoSalto = "";   
     
     public Atributo(String lexema, int id) {
     	this.lexema = lexema;
     	this.idToken = id;
     }
     
-    public Atributo(String lexema, String tipo) {
+    public String getTipoP1() {
+		return tipoP1;
+	}
+
+	public void setTipoP1(String tipoP1) {
+		this.tipoP1 = tipoP1;
+	}
+
+	public String getTipoP2() {
+		return tipoP2;
+	}
+
+	public void setTipoP2(String tipoP2) {
+		this.tipoP2 = tipoP2;
+	}
+
+	public String getTercetoSalto() {
+		return tercetoSalto;
+	}
+
+	public void setTercetoSalto(String tercetoSalto) {
+		this.tercetoSalto = tercetoSalto;
+	}
+
+	public Atributo(String lexema, String tipo) {
     	this.lexema = lexema;
     	this.tipo = tipo;
     }
@@ -93,10 +116,15 @@ public class Atributo {
 	public String toString() {
 		if (cantidadParametros != -1)
 			return "Atributo [idToken=" + idToken + ", lexema=" + lexema + ", tipo=" + tipo + ", line=" + line + ", uso="
-				+ uso + ", ambito=" + ambito + ", cantidadParametros=" + cantidadParametros + "]";
+				+ uso + ", ambito=" + ambito + ", cantidadParametros=" + cantidadParametros + ", tercetoSalto="
+						+ tercetoSalto +  ", tipoP1=" + tipoP1 + ", tipoP2=" + tipoP2 +"]";
 		else
 			return "Atributo [idToken=" + idToken + ", lexema=" + lexema + ", tipo=" + tipo + ", line=" + line + ", uso="
-			+ uso + ", ambito=" + ambito + "]";
+			+ uso + ", ambito=" + ambito + ", tercetoSalto=" + tercetoSalto + "]";
 	}
+
+	
+
+	
 
 }

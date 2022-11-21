@@ -36,10 +36,10 @@ public class Main {
 			
 			TablaSimbolos.imprimirTabla();
 			Parser.printErrores();
-			TercetoManager.imprimirTercetos();
-			//TercetoManager.imprimirTercetosSinAmbito();
-			GeneradorAssembler.procesarArchivo();
-			GeneradorAssembler.imprimir();
+			//TercetoManager.imprimirTercetos();
+			TercetoManager.imprimirTercetosSinAmbito();
+			//GeneradorAssembler.procesarArchivo();
+			//GeneradorAssembler.imprimir();
 	
 	}
 

@@ -1,4 +1,1 @@
-1- Para el tipo de los parámetros, se aplicará el chequeo de compatibilidad
-2- Arreglar etiquetas do until
-3- Faltan tercetos para funciones
-4- Falta completar generador de assembler
+1- Falta completar generador de assembler (con funciones).

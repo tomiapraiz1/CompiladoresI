@@ -13,6 +13,21 @@ public class TablaSimbolos {
 		return tabla;
 	}
 	
+	public static void setTercetoSalto(String key, String tercetoSalto) {
+		if(tabla.containsKey(key)) {
+			Atributo aux = tabla.get(key);
+			aux.setTercetoSalto(tercetoSalto);
+		}
+	}
+	
+	public static void modificarTipoParametros(String key, String tipo1, String tipo2) {
+		if (tabla.containsKey(key)) {
+			Atributo aux = tabla.get(key);
+			aux.setTipoP1(tipo1);
+			aux.setTipoP2(tipo2);
+		}
+	}
+	
 	public static void agregarSimbolo(String lexema, int id, String tipo, int line) {
 		Atributo a = new Atributo(lexema, id, tipo, line);
 		tabla.put(lexema, a);
