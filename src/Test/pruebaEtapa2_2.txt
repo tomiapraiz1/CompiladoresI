@@ -1,0 +1,9 @@
+program{
+	const a =: 3, b =: 5, c=:7;
+	i16 z;
+	
+	when(a < b + c)then{
+		z =: 5 + a;
+	}
+
+}

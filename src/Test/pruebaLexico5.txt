@@ -1,3 +1,0 @@
-program {
-	i16 jhak*;
-}

@@ -1,0 +1,6 @@
+program {
+	i16 a,b,c;
+	f32 d,e,f;
+	
+	f =: a + b;
+}
