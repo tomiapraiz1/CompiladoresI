@@ -65,7 +65,7 @@ public class GeneradorAssembler {
     		String operador = t.getOperando();
     		Atributo auxOp1;
         	Atributo auxOp2;
-        	    	
+        	        	    	
         	if (esTerceto(op1)) {
     			String aux = variablesAuxiliares.get(op1);
     			auxOp1 = TablaSimbolos.obtenerSimbolo(aux);
@@ -76,8 +76,13 @@ public class GeneradorAssembler {
     			auxOp2 = TablaSimbolos.obtenerSimbolo(aux);
     		} else
     			auxOp2 = TablaSimbolos.obtenerSimbolo(op2);
-    				
     		
+    		String auxiliar = "Label"+numero;
+    		
+    		if (operador.equals(auxiliar)) {
+    			codigo.add(new StringBuilder(auxiliar).append(":\n"));
+    		}
+    				
     		switch(operador) {
     			case "+":
     			case "-":
@@ -91,8 +96,15 @@ public class GeneradorAssembler {
     			case "=!":
     				generarOperador(operador, auxOp1, auxOp2);
     				break;
+    			case "BI":
+    				codigo.add(new StringBuilder("JMP Label").append(devolverNumeroTerceto(op1)+"\n"));
+    				break;
+    			case "BF":
+    				codigo.add(new StringBuilder("MOV AX, ").append(auxOp1.getLexema()+"\n"));
+	    			codigo.add(new StringBuilder("OR AX, $0\n"));
+    				codigo.add(new StringBuilder("JNE Label").append(devolverNumeroTerceto(op2)+"\n"));
+    				break;
     			default:
-    				
     				break;
     		}
     		
@@ -103,6 +115,7 @@ public class GeneradorAssembler {
     	
     	
     }
+  
     
     public static void generarOperador(String operador, Atributo  auxOp1, Atributo auxOp2) {
     	switch(operador) {
@@ -276,9 +289,24 @@ public class GeneradorAssembler {
 				break;
 			case "=!":
 				if (auxOp1.getTipo().equals("i16")) {
-					
+					codigo.add(new StringBuilder("MOV AX, ").append(auxOp2.getLexema()+"\n"));
+					codigo.add(new StringBuilder("CMP ").append(auxOp1.getLexema()+", AX\n"));
+					String auxiliar = obtenerAuxiliar("i16");
+					codigo.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigo.add(new StringBuilder("JNE ").append("Label"+auxiliar+"\n"));
+					codigo.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigo.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
-					
+					codigo.add(new StringBuilder("FLD ").append(auxOp1.getLexema()+"\n"));
+					codigo.add(new StringBuilder("FCOM ").append(auxOp2.getLexema()+"\n"));
+					codigo.add(new StringBuilder("FSTSW ").append(auxDivision+"\n"));
+					codigo.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
+					codigo.add(new StringBuilder("SAHF\n"));
+					String auxiliar = obtenerAuxiliar("f32");
+					codigo.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigo.add(new StringBuilder("JNE ").append("Label"+auxiliar+"\n"));
+					codigo.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigo.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				}
 				break;
 			case "=":
@@ -318,6 +346,10 @@ public class GeneradorAssembler {
 
 	private static boolean esTerceto(String simbolo) {
 		return simbolo.startsWith("[");
+	}
+	
+	private static String devolverNumeroTerceto(String terceto) {
+		return terceto.substring(1, terceto.length()-1);
 	}
 
 	//Dado que esta la usamos para bifurcaciones por falso devolvemos el opuesto
