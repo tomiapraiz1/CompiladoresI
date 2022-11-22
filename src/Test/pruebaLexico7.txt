@@ -1,6 +1,22 @@
 program {
-	<< Esto es un comentario
-	i16 a;
-	<< Esto es otro comentario
-	< Esto no es un comentario
+	
+	f32 a;
+	i16 b, c, d;
+	
+	b =: a;
+	d =: 1;
+	c =: 2;
+	
+	fun suma(i16 a, i16 b) : i16 {
+		return (a+b);
+	}
+	
+	
+	b =: suma();
+	
+	b =: suma(d,c);
+	
+	b =: suma(a,a);
+	
 }
+

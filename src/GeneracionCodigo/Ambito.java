@@ -10,10 +10,10 @@ public class Ambito {
 	private static ArrayList<String> ambito = new ArrayList<String>();
 	
     public static String sinAmbito(String simbolo) {
-    	if (simbolo.contains(":"))
-    		return simbolo.substring(0, simbolo.indexOf(':'));
-    	else
-    		return simbolo;
+	    if (TablaSimbolos.contieneSimbolo(simbolo))
+    		if (simbolo.contains(":"))
+	    		return simbolo.substring(0, simbolo.indexOf(':'));
+	    return simbolo;
     }
 	
 	public static String getAmbito(String simbolo) { //verifica el ambito de un simbolo

@@ -126,11 +126,11 @@ list_constantes:	list_constantes ',' asignacion_constante
 			| asignacion_constante
 ;
 
-asignacion_constante:		ID ASIG CTE {Atributo aux = TablaSimbolos.obtenerSimbolo($3.sval); setTipo(aux.getTipo(),$1.sval); $1.sval = TablaSimbolos.modificarNombre($1.sval);  TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
+asignacion_constante:		ID ASIG CTE {Atributo aux = TablaSimbolos.obtenerSimbolo($3.sval); setTipo(aux.getTipo(),$1.sval); setUso($1.sval, "constante"); $1.sval = TablaSimbolos.modificarNombre($1.sval);  TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
 							| ID CTE {erroresSintacticos.add("Falta =:");}
 ;
 
-asignacion:		ID ASIG expresion_aritmetica {if ($3.sval == null) break; comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); verificarTipos($1.sval,$3.sval, "=:"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
+asignacion:		ID ASIG expresion_aritmetica {if ($3.sval == null) break; comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); esConstante($1.sval); verificarTipos($1.sval,$3.sval, "=:"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
 				| ID expresion_aritmetica {erroresSintacticos.add("Falta =:");}
 ;
 
@@ -308,7 +308,7 @@ void chequearTipoParametros(String funcion, String p1, String p2){
 		System.out.println(p2);
 		if (aux.getUso().equals("funcion")){
 			if (!p1.equals(aux.getTipoP1()) || !p2.equals(aux.getTipoP2()))
-				erroresSemanticos.add("Los tipos de los parametros no coinciden");
+				erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": Los tipos de los parametros no coinciden");
 		}
 	}
 }
@@ -318,20 +318,28 @@ void chequearParametros(String simbolo, int cantidad){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(simbolo);
 		if (aux.getUso().equals("funcion")){
 			if (aux.getCantidadParametros() != cantidad)
-				erroresSemanticos.add("No coinciden la cantidad de parametros de '" + Ambito.sinAmbito(simbolo) + "'");
+				erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": No coinciden la cantidad de parametros de '" + Ambito.sinAmbito(simbolo) + "'");
 		} else
-			erroresSemanticos.add("'" + simbolo + "' no es una funcion");
+			erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": '" + simbolo + "' no es una funcion");
 	} else
-		erroresSemanticos.add("La funcion '" + simbolo + "' no esta declarada");
+		erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": La funcion '" + simbolo + "' no esta declarada");
 }
 
 void contieneEtiqueta(String etiqueta){
 	if (TablaSimbolos.contieneSimbolo(etiqueta)){
 		if (!TablaSimbolos.obtenerSimbolo(etiqueta).getUso().equals("etiqueta"))
-			erroresSemanticos.add("'" + Ambito.sinAmbito(etiqueta) + "' no es una etiqueta valida");
+			erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": '" + Ambito.sinAmbito(etiqueta) + "' no es una etiqueta valida");
 	} else
-		erroresSemanticos.add("'" + Ambito.sinAmbito(etiqueta) + "' no esta declarada");
+		erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": '" + Ambito.sinAmbito(etiqueta) + "' no esta declarada");
 
+}
+
+void esConstante(String simbolo){
+	if (TablaSimbolos.contieneSimbolo(simbolo)){
+		Atributo aux = TablaSimbolos.obtenerSimbolo(simbolo);
+		if (aux.getUso().equals("constante"))
+			erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": No se puede asignar un valor a una constante");
+	}
 }
 
 void setTipo(String simbolo){
@@ -349,7 +357,7 @@ void setUso(String simbolo, String uso){
 void comprobarAmbito(String simbolo){
 	String aux = Ambito.getAmbito(simbolo);
 	if (aux == null)
-		erroresSemanticos.add("'" + simbolo + "' no esta al alcance");
+		erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": '" + simbolo + "' no esta al alcance");
 }
 
 void yyerror(String mensaje) {
@@ -359,12 +367,15 @@ void yyerror(String mensaje) {
 
 public static void printErrores(){
 	if (!erroresLexicos.isEmpty()) {
+		System.out.println("ERRORES LEXICOS:");
 		System.out.println(erroresLexicos);
 	} else System.out.println("No hay errores lexicos.");
 	if (!erroresSintacticos.isEmpty()) {
+		System.out.println("ERRORES SINTACTICOS:");
 		System.out.println(erroresSintacticos);
 	} else System.out.println("No hay errores sintacticos.");
 	if (!erroresSemanticos.isEmpty()) {
+		System.out.println("ERRORES SEMANTICOS:");
 		System.out.println(erroresSemanticos);
 	} else System.out.println("No hay errores semanticos.");
 }

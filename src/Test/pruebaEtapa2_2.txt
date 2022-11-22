@@ -2,6 +2,8 @@ program{
 	const a =: 3, b =: 5, c=:7;
 	i16 z;
 	
+	a =: 1;
+	
 	when(a < b + c)then{
 		z =: 5 + a;
 	}

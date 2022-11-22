@@ -1,7 +1,0 @@
-program{
-	i16 a, b, c;
-	
-	do {
-		a =: a + 1;
-	} until (a < b);
-}

@@ -186,9 +186,12 @@ public class TercetoManager {
 	}
 	
 	public static int popTercetoFuncion() {
-		String aux = stackFunciones.pop();
-		aux = aux.substring(1, aux.length()-1);
-		return Integer.parseInt(aux);
+		if (!stackFunciones.isEmpty()) {
+			String aux = stackFunciones.pop();
+			aux = aux.substring(1, aux.length()-1);
+			return Integer.parseInt(aux);
+		}
+		return -1;
 	}
 	
 	public static void add_funcion(String funcion) {
@@ -203,7 +206,8 @@ public class TercetoManager {
 
 	public static void llamado_funcion() {
 		int indice_cond = popTercetoFuncion();
-		getTerceto(indice_cond).setOperador1('['+Integer.toString(tercetos.size())+']'); 
+		if (indice_cond != -1)	
+			getTerceto(indice_cond).setOperador1('['+Integer.toString(tercetos.size())+']'); 
 	}
 	
 	public static void imprimirTercetos() {

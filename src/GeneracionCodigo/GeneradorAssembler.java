@@ -1,5 +1,7 @@
 package GeneracionCodigo;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -391,6 +393,35 @@ public class GeneradorAssembler {
                     codigo.add(b.append(lexema_actual).append(" dw ?\n"));
                     break;
             }
+        }
+        for (int i=0; i<10; i++) {
+        	codigo.add(new StringBuilder("@aux").append(i+" dw ?\n"));
+        }
+    }
+    
+    public static void crearArchivoASM() {
+    	try {
+            //Crear un objeto File se encarga de crear o abrir acceso a un archivo que se especifica en su constructor  		
+    		File archivo = new File("salida.asm");
+    		archivo.delete();
+    		archivo = new File("salida.asm");
+            //Crear objeto FileWriter que sera el que nos ayude a escribir sobre archivo
+            FileWriter escribir = new FileWriter(archivo, true);
+
+
+            //Escribimos en el archivo con el metodo write 
+            for (int i = 0; i < datos.size(); i++) {
+                escribir.write(datos.get(i).toString());
+            }
+            for (int i = 0; i < codigo.size(); i++) {
+            	escribir.write(codigo.get(i).toString());
+            }
+
+            //Cerramos la conexion
+            escribir.close();
+        } //Si existe un problema al escribir cae aqui
+        catch (Exception e) {
+            System.out.println("Error al escribir");
         }
     }
     

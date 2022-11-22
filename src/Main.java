@@ -35,11 +35,12 @@ public class Main {
 			
 			
 			TablaSimbolos.imprimirTabla();
+			System.out.println("\nErrores:");
 			Parser.printErrores();
-			//TercetoManager.imprimirTercetos();
+			System.out.println("\nTercetos:");
 			TercetoManager.imprimirTercetosSinAmbito();
 			GeneradorAssembler.procesarArchivo();
-			GeneradorAssembler.imprimir();
+			GeneradorAssembler.crearArchivoASM();
 	
 	}
 

@@ -37,7 +37,7 @@ public class TablaTipos {
 
 	        String tipoFinal = tipoResultante(tipoOp1, tipoOp2, operador);
 	        if (tipoFinal.equals(ERROR_TYPE)) {
-	            Parser.erroresSintacticos.add("No se puede realizar la operacion " + operador + " entre los tipos " + tipoOp1 + " y " + tipoOp2);
+	            Parser.erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": No se puede realizar la operacion " + operador + " entre los tipos " + tipoOp1 + " y " + tipoOp2);
 	        } else if (tipoFinal.equals(tipoOp2)) {
         		TercetoManager.crear_terceto("to"+tipoFinal, op1, "_");
         	} else if (tipoFinal.equals(tipoOp1)){

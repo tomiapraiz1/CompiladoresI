@@ -76,11 +76,11 @@ public class TablaSimbolos {
 		String nuevo = key + Ambito.getAmbitoActual();
 		if (tabla.containsKey(nuevo)) {
 			if (obtenerSimbolo(key).getUso().equals("etiqueta"))
-				Parser.erroresSemanticos.add("Etiqueta '" + key + "' redeclarada");
+				Parser.erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": Etiqueta '" + key + "' redeclarada");
 			else if (obtenerSimbolo(key).getUso().equals("variable"))
-				Parser.erroresSemanticos.add("Variable '" + key + "' redeclarada");
+				Parser.erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": Variable '" + key + "' redeclarada");
 			else
-				Parser.erroresSemanticos.add("Funcion '" + key + "' redeclarada");
+				Parser.erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": Funcion '" + key + "' redeclarada");
 			tabla.remove(key);
 			return "Null";
 		}
