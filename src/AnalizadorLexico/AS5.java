@@ -2,7 +2,6 @@ package AnalizadorLexico;
 import java.io.Reader;
 
 import AnalizadorSintactico.Parser;
-import GeneracionCodigo.Ambito;
 
 public class AS5 extends AccionSemantica{
 

@@ -23,8 +23,6 @@ public class GeneradorAssembler {
     private static ArrayList<StringBuilder> datos =new ArrayList<StringBuilder>();
     private static HashMap<String, String> variablesAuxiliares = new HashMap<String, String>();
     private static Integer auxDisponible = 0;
-    private static Integer etiquetas=0;
-    private static Integer extras=0;
     private static Integer numero=0;
     //Errores
     private static String DIVISIONPORCERO = "Error division por cero";

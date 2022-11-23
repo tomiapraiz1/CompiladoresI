@@ -1,7 +1,6 @@
 package AnalizadorLexico;
 import java.io.Reader;
 import AnalizadorSintactico.Parser;
-import GeneracionCodigo.Ambito;
 
 public class AS3 extends AccionSemantica{
 	
