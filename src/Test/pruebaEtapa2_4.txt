@@ -6,6 +6,7 @@ program {
 				break 1;
  			}else{
  				i =: i + 1;
+				continue;
  			}end_if;
 		}until (i> end) else 3 ;
 }
