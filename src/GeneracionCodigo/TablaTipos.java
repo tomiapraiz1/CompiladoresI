@@ -49,9 +49,26 @@ public class TablaTipos {
 	    	return TablaSimbolos.obtenerSimbolo(op).getTipo(); 
 	    }
 
-	    private static String tipoResultante(String op1, String op2, String operador) {
-	        int fil = getNumeroTipo(op1);
-	        int col = getNumeroTipo(op2);
+	    public static String tipoResultante(String op1, String op2, String operador) {
+	        int fil = -1;
+	        int col = -1;
+	        
+	        
+	        
+	        if (TablaSimbolos.contieneSimbolo(op1) && TablaSimbolos.contieneSimbolo(op2)) {
+	    		fil = getNumeroTipo(TablaSimbolos.obtenerSimbolo(op1).getTipo());
+	        	col = getNumeroTipo(TablaSimbolos.obtenerSimbolo(op2).getTipo());
+	    	}else if (TablaSimbolos.contieneSimbolo(op1)){
+	    		fil = getNumeroTipo(TablaSimbolos.obtenerSimbolo(op1).getTipo());
+		        col = getNumeroTipo(TercetoManager.getTerceto(Integer.parseInt(op2.substring(1, op2.length()-1))).getTipoTerceto());
+	    	}else if (TablaSimbolos.contieneSimbolo(op2)){
+	    		fil = getNumeroTipo(TercetoManager.getTerceto(Integer.parseInt(op1.substring(1, op1.length()-1))).getTipoTerceto());
+		        col = getNumeroTipo(TablaSimbolos.obtenerSimbolo(op2).getTipo());
+	    	}else {
+	    		fil = getNumeroTipo(TercetoManager.getTerceto(Integer.parseInt(op1.substring(1, op1.length()-1))).getTipoTerceto());
+		        col = getNumeroTipo(TercetoManager.getTerceto(Integer.parseInt(op2.substring(1, op2.length()-1))).getTipoTerceto());
+	    		
+	    	}
 
 	        switch (operador) {
 	            case ("+"):
@@ -72,11 +89,15 @@ public class TablaTipos {
 	            default:
 	                return ERROR_TYPE;
 	        }
+	       
+
 	    }
 
 	    private static int getNumeroTipo(String tipo) {
-	        if (tipo.equals(INTEGER_TYPE)) return INTEGER;
-	        else if (tipo.equals(FLOAT_TYPE)) return FLOAT;
+	        if (tipo.equals(INTEGER_TYPE)) 
+	        	return INTEGER;
+	        else if (tipo.equals(FLOAT_TYPE)) 
+	        	return FLOAT;
 	        else return FUNC;
 	    }
 }

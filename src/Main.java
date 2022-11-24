@@ -32,15 +32,13 @@ public class Main {
 					e2.printStackTrace();
 				}
 			}
-			
-			
 			TablaSimbolos.imprimirTabla();
 			System.out.println("\nErrores:");
 			Parser.printErrores();
 			System.out.println("\nTercetos:");
-			TercetoManager.imprimirTercetosSinAmbito();
-			GeneradorAssembler.procesarArchivo();
-			GeneradorAssembler.crearArchivoASM();
+			TercetoManager.imprimirTercetos();
+			//GeneradorAssembler.procesarArchivo();
+			//GeneradorAssembler.crearArchivoASM();
 	
 	}
 

@@ -16,7 +16,7 @@
 
 
 
-//#line 2 "gramatica.y"
+//#line 2 "Gramatica.y"
 package AnalizadorSintactico;
 import java.io.IOException;
 import java.io.Reader;
@@ -670,7 +670,7 @@ final static String yyrule[] = {
 "else_until : CTE",
 };
 
-//#line 266 "gramatica.y"
+//#line 266 "Gramatica.y"
 
 public String tipoAux = "";
 public String ambitoAux = "";
@@ -692,23 +692,19 @@ public String getTipoParametro(String p){
 	return "";
 }
 
-public void verificarTipos(String arg1,String arg2, String operador){
-	if (arg1 != null && arg2 != null){	
-		String aux1 = arg1;
-		while (aux1.startsWith("[")){
-			aux1=TercetoManager.getTerceto(aux1).getOperador1();
-		}
-		String aux2=arg2;
-		while (aux2.startsWith("[")){
-			aux2=TercetoManager.getTerceto(aux2).getOperador1();
-		}
-		if (TablaSimbolos.obtenerSimbolo(aux1).getTipo().equals(TablaSimbolos.obtenerSimbolo(aux2).getTipo()))
-			return;
-		else
-			TablaTipos.setTipoAbarcativo(aux1, aux2, operador);
-	}
-}
+/*public void verificarTipos(String arg1,String arg2, String operador){
+	if (TablaSimbolos.contieneSimbolo(arg1) || TablaSimbolos.contieneSimbolo(arg2)){
+		Atributo a1 = TablaSimbolos.obtenerSimbolo(arg1);
+		Atributo a2 = TablaSimbolos.obtenerSimbolo(arg2);
 
+		if (a1.getTipo().equals(a2.getTipo()))
+			return;
+		else{
+			TablaTipos.setTipoAbarcativo(a1.getTipo(),a2.getTipo(),operador);
+		}
+	}
+
+}*/
 void chequearTipoParametros(String funcion, String p1, String p2){
 	if (TablaSimbolos.contieneSimbolo(funcion)){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(funcion);
@@ -816,7 +812,7 @@ int yylex() {
 
 	    return identificador_token;
 }
-//#line 748 "Parser.java"
+//#line 744 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -971,430 +967,430 @@ boolean doaction;
       {
 //########## USER-SUPPLIED ACTIONS ##########
 case 2:
-//#line 17 "gramatica.y"
+//#line 17 "Gramatica.y"
 {erroresSintacticos.add("Se esperaba un {");}
 break;
 case 3:
-//#line 18 "gramatica.y"
+//#line 18 "Gramatica.y"
 {erroresSintacticos.add("Se esperaba un }");}
 break;
 case 4:
-//#line 21 "gramatica.y"
+//#line 21 "Gramatica.y"
 {Ambito.concatenarAmbito("main");}
 break;
 case 5:
-//#line 24 "gramatica.y"
+//#line 24 "Gramatica.y"
 {Ambito.removeAmbito();}
 break;
 case 7:
-//#line 28 "gramatica.y"
+//#line 28 "Gramatica.y"
 {erroresSintacticos.add("El nombre del programa no puede ser una constante");}
 break;
 case 17:
-//#line 48 "gramatica.y"
+//#line 48 "Gramatica.y"
 {setTipo(val_peek(0).sval); setUso(val_peek(0).sval, "variable"); val_peek(0).sval = TablaSimbolos.modificarNombre(val_peek(0).sval);}
 break;
 case 18:
-//#line 49 "gramatica.y"
+//#line 49 "Gramatica.y"
 {setTipo(val_peek(0).sval); setUso(val_peek(0).sval, "variable"); val_peek(0).sval = TablaSimbolos.modificarNombre(val_peek(0).sval);}
 break;
 case 19:
-//#line 52 "gramatica.y"
+//#line 52 "Gramatica.y"
 {yyval.sval = val_peek(0).sval; tipoAux = val_peek(0).sval;}
 break;
 case 20:
-//#line 53 "gramatica.y"
+//#line 53 "Gramatica.y"
 {yyval.sval = val_peek(0).sval; tipoAux = val_peek(0).sval;}
 break;
 case 21:
-//#line 56 "gramatica.y"
+//#line 56 "Gramatica.y"
 {setTipo(funcionAux, val_peek(2).sval); Ambito.removeAmbito();}
 break;
 case 22:
-//#line 59 "gramatica.y"
+//#line 59 "Gramatica.y"
 {ambitoAux = val_peek(1).sval; setTipo(val_peek(1).sval); setUso(val_peek(1).sval, "funcion"); val_peek(1).sval = TablaSimbolos.modificarNombre(val_peek(1).sval); idAux = val_peek(1).sval; yyval.sval = val_peek(1).sval; TercetoManager.add_funcion(val_peek(1).sval); Ambito.concatenarAmbito(ambitoAux);}
 break;
 case 23:
-//#line 60 "gramatica.y"
+//#line 60 "Gramatica.y"
 {erroresSintacticos.add("Se esperaba un identificador de la funcion");}
 break;
 case 24:
-//#line 61 "gramatica.y"
+//#line 61 "Gramatica.y"
 {erroresSintacticos.add("Falta un (");}
 break;
 case 25:
-//#line 62 "gramatica.y"
+//#line 62 "Gramatica.y"
 {erroresSintacticos.add("No se puede declarar una funcion con una constante como nombre");}
 break;
 case 26:
-//#line 65 "gramatica.y"
+//#line 65 "Gramatica.y"
 {funcionAux = val_peek(0).sval;}
 break;
 case 27:
-//#line 66 "gramatica.y"
+//#line 66 "Gramatica.y"
 {TablaSimbolos.modificarParametros(idAux, 0); funcionAux = val_peek(0).sval;}
 break;
 case 28:
-//#line 67 "gramatica.y"
+//#line 67 "Gramatica.y"
 {erroresSintacticos.add("Falta un )");}
 break;
 case 29:
-//#line 68 "gramatica.y"
+//#line 68 "Gramatica.y"
 {erroresSintacticos.add("Falta un :");}
 break;
 case 30:
-//#line 69 "gramatica.y"
+//#line 69 "Gramatica.y"
 {erroresSintacticos.add("Se esperaba un tipo de retorno");}
 break;
 case 31:
-//#line 72 "gramatica.y"
+//#line 72 "Gramatica.y"
 {TablaSimbolos.modificarParametros(idAux, 2); TablaSimbolos.modificarTipoParametros(idAux, val_peek(4).sval, val_peek(1).sval); setTipo(val_peek(4).sval,val_peek(3).sval);setUso(val_peek(3).sval, "ParametroFuncion"); setTipo(val_peek(1).sval,val_peek(0).sval); setUso(val_peek(0).sval, "Nombre_Parametro_Funcion"); val_peek(3).sval = TablaSimbolos.modificarNombre(val_peek(3).sval); val_peek(0).sval = TablaSimbolos.modificarNombre(val_peek(0).sval);}
 break;
 case 32:
-//#line 73 "gramatica.y"
+//#line 73 "Gramatica.y"
 {TablaSimbolos.modificarParametros(idAux, 1); TablaSimbolos.modificarTipoParametros(idAux, val_peek(1).sval, ""); setTipo(val_peek(1).sval,val_peek(0).sval);setUso(val_peek(0).sval, "ParametroFuncion"); val_peek(0).sval = TablaSimbolos.modificarNombre(val_peek(0).sval);}
 break;
 case 33:
-//#line 74 "gramatica.y"
+//#line 74 "Gramatica.y"
 {erroresSintacticos.add("Se esperaba un tipo para el identificador");}
 break;
 case 34:
-//#line 75 "gramatica.y"
+//#line 75 "Gramatica.y"
 {erroresSintacticos.add("Los identificadores deben tener un tipo");}
 break;
 case 37:
-//#line 80 "gramatica.y"
+//#line 80 "Gramatica.y"
 {erroresSintacticos.add("La funcion debe retornar un valor");}
 break;
 case 40:
-//#line 89 "gramatica.y"
+//#line 89 "Gramatica.y"
 {TercetoManager.add_return_funcion();}
 break;
 case 41:
-//#line 90 "gramatica.y"
+//#line 90 "Gramatica.y"
 {erroresSintacticos.add("Falta un (");}
 break;
 case 42:
-//#line 91 "gramatica.y"
+//#line 91 "Gramatica.y"
 {erroresSintacticos.add("Falta un )");}
 break;
 case 43:
-//#line 92 "gramatica.y"
+//#line 92 "Gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
 case 44:
-//#line 93 "gramatica.y"
+//#line 93 "Gramatica.y"
 {erroresSintacticos.add("Falta un valor que devolver");}
 break;
 case 45:
-//#line 96 "gramatica.y"
-{verificarTipos(val_peek(2).sval,val_peek(0).sval,"+"); yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("+", val_peek(2).sval, val_peek(0).sval);}
+//#line 96 "Gramatica.y"
+{/*verificarTipos($1.sval,$3.sval,"+");*/ yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("+", val_peek(2).sval, val_peek(0).sval);}
 break;
 case 46:
-//#line 97 "gramatica.y"
-{verificarTipos(val_peek(2).sval,val_peek(0).sval, "-"); yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("-", val_peek(2).sval, val_peek(0).sval);}
+//#line 97 "Gramatica.y"
+{/*verificarTipos($1.sval,$3.sval, "-")*/; yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("-", val_peek(2).sval, val_peek(0).sval);}
 break;
 case 48:
-//#line 101 "gramatica.y"
-{verificarTipos(val_peek(2).sval,val_peek(0).sval, "*"); yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("*", val_peek(2).sval, val_peek(0).sval);}
+//#line 101 "Gramatica.y"
+{/*verificarTipos($1.sval,$3.sval, "*");*/ yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("*", val_peek(2).sval, val_peek(0).sval);}
 break;
 case 49:
-//#line 102 "gramatica.y"
-{verificarTipos(val_peek(2).sval,val_peek(0).sval, "/"); yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("/", val_peek(2).sval, val_peek(0).sval);}
+//#line 102 "Gramatica.y"
+{/*verificarTipos($1.sval,$3.sval, "/");*/ yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("/", val_peek(2).sval, val_peek(0).sval);}
 break;
 case 51:
-//#line 106 "gramatica.y"
+//#line 106 "Gramatica.y"
 {comprobarAmbito(val_peek(0).sval); val_peek(0).sval = Ambito.getAmbito(val_peek(0).sval); yyval.sval = val_peek(0).sval;}
 break;
 case 53:
-//#line 108 "gramatica.y"
+//#line 108 "Gramatica.y"
 {yyval.sval = "-" + val_peek(0).sval;}
 break;
 case 54:
-//#line 109 "gramatica.y"
+//#line 109 "Gramatica.y"
 {TablaSimbolos.eliminarSimbolo(val_peek(3).sval); comprobarAmbito(val_peek(3).sval); val_peek(2).sval = val_peek(3).sval; val_peek(3).sval = Ambito.getAmbito(val_peek(3).sval); if (val_peek(3).sval == null) chequearParametros(val_peek(2).sval, val_peek(1).ival); else chequearParametros(val_peek(3).sval, val_peek(1).ival); yyval.sval = val_peek(3).sval; chequearTipoParametros(val_peek(3).sval, parametro1, parametro2); TercetoManager.llamado_funcion();}
 break;
 case 55:
-//#line 110 "gramatica.y"
+//#line 110 "Gramatica.y"
 {TablaSimbolos.eliminarSimbolo(val_peek(2).sval); comprobarAmbito(val_peek(2).sval); val_peek(1).sval = val_peek(2).sval; val_peek(2).sval = Ambito.getAmbito(val_peek(2).sval); if (val_peek(2).sval == null) chequearParametros(val_peek(1).sval, 0); else chequearParametros(val_peek(2).sval, 0); yyval.sval = val_peek(2).sval; TercetoManager.llamado_funcion();}
 break;
 case 56:
-//#line 113 "gramatica.y"
+//#line 113 "Gramatica.y"
 {TablaSimbolos.eliminarSimbolo(val_peek(2).sval); TablaSimbolos.eliminarSimbolo(val_peek(0).sval);yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro(val_peek(0).sval + Ambito.getAmbitoActual());}
 break;
 case 57:
-//#line 114 "gramatica.y"
+//#line 114 "Gramatica.y"
 {yyval.ival = 2; parametro1 = val_peek(2).sval; parametro2 = val_peek(0).sval;}
 break;
 case 58:
-//#line 115 "gramatica.y"
+//#line 115 "Gramatica.y"
 {yyval.ival = 2; parametro1 = val_peek(2).sval; parametro2 = val_peek(0).sval;}
 break;
 case 59:
-//#line 116 "gramatica.y"
+//#line 116 "Gramatica.y"
 {yyval.ival = 2; parametro1 = val_peek(2).sval; parametro2 = val_peek(0).sval;}
 break;
 case 60:
-//#line 117 "gramatica.y"
+//#line 117 "Gramatica.y"
 {yyval.ival = 1; parametro1 = val_peek(0).sval;}
 break;
 case 61:
-//#line 118 "gramatica.y"
+//#line 118 "Gramatica.y"
 {yyval.ival = 1; parametro1 = val_peek(0).sval;}
 break;
 case 63:
-//#line 122 "gramatica.y"
+//#line 122 "Gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
 case 66:
-//#line 129 "gramatica.y"
+//#line 129 "Gramatica.y"
 {Atributo aux = TablaSimbolos.obtenerSimbolo(val_peek(0).sval); setTipo(aux.getTipo(),val_peek(2).sval); setUso(val_peek(2).sval, "constante"); val_peek(2).sval = TablaSimbolos.modificarNombre(val_peek(2).sval);  TercetoManager.crear_terceto("=:", val_peek(2).sval, val_peek(0).sval);}
 break;
 case 67:
-//#line 130 "gramatica.y"
+//#line 130 "Gramatica.y"
 {erroresSintacticos.add("Falta =:");}
 break;
 case 68:
-//#line 133 "gramatica.y"
-{if (val_peek(0).sval == null) break; comprobarAmbito(val_peek(2).sval); val_peek(2).sval = Ambito.getAmbito(val_peek(2).sval); esConstante(val_peek(2).sval); verificarTipos(val_peek(2).sval,val_peek(0).sval, "=:"); yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("=:", val_peek(2).sval, val_peek(0).sval);}
+//#line 133 "Gramatica.y"
+{if (val_peek(0).sval == null) break; comprobarAmbito(val_peek(2).sval); val_peek(2).sval = Ambito.getAmbito(val_peek(2).sval); esConstante(val_peek(2).sval); /*verificarTipos($1.sval,$3.sval, "=:");*/ yyval.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("=:", val_peek(2).sval, val_peek(0).sval);}
 break;
 case 69:
-//#line 134 "gramatica.y"
+//#line 134 "Gramatica.y"
 {erroresSintacticos.add("Falta =:");}
 break;
 case 73:
-//#line 142 "gramatica.y"
+//#line 142 "Gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
 case 75:
-//#line 144 "gramatica.y"
+//#line 144 "Gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
 case 77:
-//#line 146 "gramatica.y"
+//#line 146 "Gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
 case 79:
-//#line 148 "gramatica.y"
+//#line 148 "Gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
 case 80:
-//#line 151 "gramatica.y"
+//#line 151 "Gramatica.y"
 {TercetoManager.breakDoUntil();}
 break;
 case 81:
-//#line 152 "gramatica.y"
+//#line 152 "Gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
 case 82:
-//#line 153 "gramatica.y"
+//#line 153 "Gramatica.y"
 {TercetoManager.add_break_cte(idAux, val_peek(1).sval);}
 break;
 case 83:
-//#line 154 "gramatica.y"
+//#line 154 "Gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
 case 84:
-//#line 155 "gramatica.y"
+//#line 155 "Gramatica.y"
 {TercetoManager.continueDoUntil();}
 break;
 case 85:
-//#line 156 "gramatica.y"
+//#line 156 "Gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
 case 86:
-//#line 157 "gramatica.y"
+//#line 157 "Gramatica.y"
 {contieneEtiqueta(val_peek(1).sval+Ambito.getAmbitoActual()); TercetoManager.continueDoUntilEtiqueta(val_peek(1).sval);}
 break;
 case 87:
-//#line 158 "gramatica.y"
+//#line 158 "Gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
 case 88:
-//#line 159 "gramatica.y"
+//#line 159 "Gramatica.y"
 {erroresSintacticos.add("Falta un identificador");}
 break;
 case 89:
-//#line 160 "gramatica.y"
+//#line 160 "Gramatica.y"
 {}
 break;
 case 90:
-//#line 161 "gramatica.y"
+//#line 161 "Gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
 case 91:
-//#line 162 "gramatica.y"
+//#line 162 "Gramatica.y"
 {erroresSintacticos.add("Falta un cuerpo do until");}
 break;
 case 92:
-//#line 163 "gramatica.y"
+//#line 163 "Gramatica.y"
 {TercetoManager.add_fin_id_asig();}
 break;
 case 93:
-//#line 164 "gramatica.y"
+//#line 164 "Gramatica.y"
 {erroresSintacticos.add("Falta un ;");}
 break;
 case 94:
-//#line 165 "gramatica.y"
+//#line 165 "Gramatica.y"
 {erroresSintacticos.add("Falta un cuerpo do until");}
 break;
 case 95:
-//#line 166 "gramatica.y"
+//#line 166 "Gramatica.y"
 {erroresSintacticos.add("Falta un =:");}
 break;
 case 96:
-//#line 169 "gramatica.y"
+//#line 169 "Gramatica.y"
 {idAux = val_peek(1).sval; TercetoManager.add_inicio_id_asig();}
 break;
 case 97:
-//#line 172 "gramatica.y"
+//#line 172 "Gramatica.y"
 {TablaSimbolos.agregarSimbolo(val_peek(1).sval, 257, "", AnalizadorLexico.getLine()); setUso(val_peek(1).sval,"etiqueta"); val_peek(1).sval = TablaSimbolos.modificarNombre(val_peek(1).sval); TablaSimbolos.setTercetoSalto(val_peek(1).sval,"[" + TercetoManager.getIndexTerceto() + "]");}
 break;
 case 98:
-//#line 175 "gramatica.y"
+//#line 175 "Gramatica.y"
 {TercetoManager.add_seleccion();}
 break;
 case 100:
-//#line 181 "gramatica.y"
+//#line 181 "Gramatica.y"
 {TercetoManager.add_seleccion_cond();}
 break;
 case 101:
-//#line 184 "gramatica.y"
-{verificarTipos(val_peek(3).sval, val_peek(1).sval, val_peek(2).sval); TercetoManager.crear_terceto(val_peek(2).sval, val_peek(3).sval, val_peek(1).sval);}
+//#line 184 "Gramatica.y"
+{/*verificarTipos($2.sval, $4.sval, $3.sval);*/ TercetoManager.crear_terceto(val_peek(2).sval, val_peek(3).sval, val_peek(1).sval);}
 break;
 case 102:
-//#line 185 "gramatica.y"
+//#line 185 "Gramatica.y"
 {erroresSintacticos.add("Falta un valor con que comparar");}
 break;
 case 103:
-//#line 186 "gramatica.y"
+//#line 186 "Gramatica.y"
 {erroresSintacticos.add("Falta un valor con que comparar");}
 break;
 case 104:
-//#line 189 "gramatica.y"
+//#line 189 "Gramatica.y"
 {yyval.sval = "<";}
 break;
 case 105:
-//#line 190 "gramatica.y"
+//#line 190 "Gramatica.y"
 {yyval.sval = "<=";}
 break;
 case 106:
-//#line 191 "gramatica.y"
+//#line 191 "Gramatica.y"
 {yyval.sval = ">";}
 break;
 case 107:
-//#line 192 "gramatica.y"
+//#line 192 "Gramatica.y"
 {yyval.sval = ">=";}
 break;
 case 108:
-//#line 193 "gramatica.y"
+//#line 193 "Gramatica.y"
 {yyval.sval = "=";}
 break;
 case 109:
-//#line 194 "gramatica.y"
+//#line 194 "Gramatica.y"
 {yyval.sval = "=!";}
 break;
 case 112:
-//#line 199 "gramatica.y"
+//#line 199 "Gramatica.y"
 {erroresSintacticos.add("Falta un cuerpo de else");}
 break;
 case 113:
-//#line 202 "gramatica.y"
+//#line 202 "Gramatica.y"
 {TercetoManager.add_seleccion_then(); }
 break;
 case 117:
-//#line 212 "gramatica.y"
+//#line 212 "Gramatica.y"
 {TercetoManager.add_iter_when();}
 break;
 case 119:
-//#line 218 "gramatica.y"
+//#line 218 "Gramatica.y"
 {TercetoManager.add_cond_when();}
 break;
 case 120:
-//#line 221 "gramatica.y"
+//#line 221 "Gramatica.y"
 {TercetoManager.crear_terceto("out", val_peek(1).sval, "_");}
 break;
 case 121:
-//#line 222 "gramatica.y"
+//#line 222 "Gramatica.y"
 {erroresSintacticos.add("Falta un )");}
 break;
 case 122:
-//#line 223 "gramatica.y"
+//#line 223 "Gramatica.y"
 {erroresSintacticos.add("Falta un (");}
 break;
 case 123:
-//#line 224 "gramatica.y"
+//#line 224 "Gramatica.y"
 {erroresSintacticos.add("Falta una cadena que imprimir");}
 break;
 case 124:
-//#line 227 "gramatica.y"
+//#line 227 "Gramatica.y"
 {TercetoManager.add_iter_do_until();}
 break;
 case 125:
-//#line 228 "gramatica.y"
+//#line 228 "Gramatica.y"
 {erroresSintacticos.add("Falta un {");}
 break;
 case 126:
-//#line 229 "gramatica.y"
+//#line 229 "Gramatica.y"
 {erroresSintacticos.add("Falta un }");}
 break;
 case 127:
-//#line 230 "gramatica.y"
+//#line 230 "Gramatica.y"
 {erroresSintacticos.add("Faltan sentencias de ejecucion");}
 break;
 case 128:
-//#line 233 "gramatica.y"
+//#line 233 "Gramatica.y"
 {TercetoManager.add_inicio_do_until();}
 break;
 case 130:
-//#line 239 "gramatica.y"
+//#line 239 "Gramatica.y"
 {}
 break;
 case 131:
-//#line 240 "gramatica.y"
+//#line 240 "Gramatica.y"
 {erroresSintacticos.add("Falta una condicion");}
 break;
 case 132:
-//#line 243 "gramatica.y"
+//#line 243 "Gramatica.y"
 {TercetoManager.add_condicion_id_asig();}
 break;
 case 133:
-//#line 244 "gramatica.y"
+//#line 244 "Gramatica.y"
 {erroresSintacticos.add("Falta una condicion");}
 break;
 case 135:
-//#line 248 "gramatica.y"
+//#line 248 "Gramatica.y"
 {erroresSintacticos.add("Falta un {");}
 break;
 case 136:
-//#line 249 "gramatica.y"
+//#line 249 "Gramatica.y"
 {erroresSintacticos.add("Falta un }");}
 break;
 case 137:
-//#line 250 "gramatica.y"
+//#line 250 "Gramatica.y"
 {erroresSintacticos.add("Faltan sentencias de ejecucion");}
 break;
 case 138:
-//#line 254 "gramatica.y"
+//#line 254 "Gramatica.y"
 {Ambito.concatenarAmbito("doUntilExpr");}
 break;
 case 139:
-//#line 257 "gramatica.y"
+//#line 257 "Gramatica.y"
 {Ambito.removeAmbito();}
 break;
 case 140:
-//#line 260 "gramatica.y"
+//#line 260 "Gramatica.y"
 {TercetoManager.add_else_cte(idAux, val_peek(0).sval);}
 break;
 case 141:
-//#line 261 "gramatica.y"
+//#line 261 "Gramatica.y"
 {erroresSintacticos.add("Falta una constante para asignar");}
 break;
 case 142:
-//#line 262 "gramatica.y"
+//#line 262 "Gramatica.y"
 {erroresSintacticos.add("Se esperaba un else");}
 break;
-//#line 1321 "Parser.java"
+//#line 1317 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

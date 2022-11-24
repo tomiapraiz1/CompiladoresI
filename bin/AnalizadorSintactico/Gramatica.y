@@ -93,13 +93,13 @@ retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';' {TercetoManager.add_ret
 					| RETURN '('  ')' ';' {erroresSintacticos.add("Falta un valor que devolver");}
 ;
 
-expresion_aritmetica:		expresion_aritmetica '+' termino {verificarTipos($1.sval,$3.sval,"+"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("+", $1.sval, $3.sval);}
-		    		| expresion_aritmetica '-' termino {verificarTipos($1.sval,$3.sval, "-"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("-", $1.sval, $3.sval);}
+expresion_aritmetica:		expresion_aritmetica '+' termino {/*verificarTipos($1.sval,$3.sval,"+");*/ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("+", $1.sval, $3.sval);}
+		    		| expresion_aritmetica '-' termino {/*verificarTipos($1.sval,$3.sval, "-")*/; $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("-", $1.sval, $3.sval);}
 	            		| termino
 ;
 
-termino:		termino '*' factor {verificarTipos($1.sval,$3.sval, "*"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("*", $1.sval, $3.sval);}
-       			| termino '/' factor {verificarTipos($1.sval,$3.sval, "/"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("/", $1.sval, $3.sval);}
+termino:		termino '*' factor {/*verificarTipos($1.sval,$3.sval, "*");*/ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("*", $1.sval, $3.sval);}
+       			| termino '/' factor {/*verificarTipos($1.sval,$3.sval, "/");*/ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("/", $1.sval, $3.sval);}
        			| factor 
 ;
 
@@ -130,7 +130,7 @@ asignacion_constante:		ID ASIG CTE {Atributo aux = TablaSimbolos.obtenerSimbolo(
 							| ID CTE {erroresSintacticos.add("Falta =:");}
 ;
 
-asignacion:		ID ASIG expresion_aritmetica {if ($3.sval == null) break; comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); esConstante($1.sval); verificarTipos($1.sval,$3.sval, "=:"); $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
+asignacion:		ID ASIG expresion_aritmetica {if ($3.sval == null) break; comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); esConstante($1.sval); /*verificarTipos($1.sval,$3.sval, "=:");*/ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
 				| ID expresion_aritmetica {erroresSintacticos.add("Falta =:");}
 ;
 
@@ -181,7 +181,7 @@ inicio_if: IF
 condicion_if: condicion {TercetoManager.add_seleccion_cond();}
 ;
 
-condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')' {verificarTipos($2.sval, $4.sval, $3.sval); TercetoManager.crear_terceto($3.sval, $2.sval, $4.sval);}
+condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')' {/*verificarTipos($2.sval, $4.sval, $3.sval);*/ TercetoManager.crear_terceto($3.sval, $2.sval, $4.sval);}
 				| '(' operador expresion_aritmetica ')' {erroresSintacticos.add("Falta un valor con que comparar");}
 				| '(' expresion_aritmetica operador ')' {erroresSintacticos.add("Falta un valor con que comparar");}
 ;
@@ -284,23 +284,19 @@ public String getTipoParametro(String p){
 	return "";
 }
 
-public void verificarTipos(String arg1,String arg2, String operador){
-	if (arg1 != null && arg2 != null){	
-		String aux1 = arg1;
-		while (aux1.startsWith("[")){
-			aux1=TercetoManager.getTerceto(aux1).getOperador1();
-		}
-		String aux2=arg2;
-		while (aux2.startsWith("[")){
-			aux2=TercetoManager.getTerceto(aux2).getOperador1();
-		}
-		if (TablaSimbolos.obtenerSimbolo(aux1).getTipo().equals(TablaSimbolos.obtenerSimbolo(aux2).getTipo()))
-			return;
-		else
-			TablaTipos.setTipoAbarcativo(aux1, aux2, operador);
-	}
-}
+/*public void verificarTipos(String arg1,String arg2, String operador){
+	if (TablaSimbolos.contieneSimbolo(arg1) || TablaSimbolos.contieneSimbolo(arg2)){
+		Atributo a1 = TablaSimbolos.obtenerSimbolo(arg1);
+		Atributo a2 = TablaSimbolos.obtenerSimbolo(arg2);
 
+		if (a1.getTipo().equals(a2.getTipo()))
+			return;
+		else{
+			TablaTipos.setTipoAbarcativo(a1.getTipo(),a2.getTipo(),operador);
+		}
+	}
+
+}*/
 void chequearTipoParametros(String funcion, String p1, String p2){
 	if (TablaSimbolos.contieneSimbolo(funcion)){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(funcion);
