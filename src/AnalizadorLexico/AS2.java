@@ -17,6 +17,9 @@ public class AS2 extends AccionSemantica{
 				simbolo = token.substring(0, AnalizadorLexico.longitud_id);
 				Parser.erroresLexicos.add("Warning linea " + AnalizadorLexico.getLine() + ": el identificador " + token + 
 						" fue truncado porque supera la longitud maxima de caracteres");
+				AnalizadorLexico.token_actual.setLength(0);
+				for(int i=0;i<25;i++)
+					AnalizadorLexico.token_actual.append(simbolo.charAt(i));
 			}
 			TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.IDENTIFICADOR, "", AnalizadorLexico.getLine());
 			id = AnalizadorLexico.IDENTIFICADOR;

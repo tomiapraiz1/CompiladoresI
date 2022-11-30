@@ -14,6 +14,9 @@ public class AS3 extends AccionSemantica{
 				Parser.erroresLexicos.add("Warning linea " + AnalizadorLexico.getLine() + " : el valor del simbolo sobrepasa el valor maximo."
 						+ " El mismo fue truncado al maximo.");
 				simbolo = Integer.toString(AnalizadorLexico.maxInt);
+				AnalizadorLexico.token_actual.setLength(0);
+				for(int i=0;i<simbolo.length();i++)
+					AnalizadorLexico.token_actual.append(simbolo.charAt(i));
 			} 
 		} catch(Exception e){
 			e.printStackTrace();

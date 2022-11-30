@@ -105,7 +105,7 @@ termino:		termino '*' factor {/*verificarTipos($1.sval,$3.sval, "*");*/ $$.sval 
 
 factor:		ID {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.sval = $1.sval;}
       		| CTE 
-      		| '-' CTE {$$.sval = "-" + $2.sval;}
+      		| '-' CTE {System.out.println($2.sval);/*ChequearRangoNegativo($2.sval)*/;$$.sval = "-" + $2.sval;}
       		| ID '(' lista_inv_func ')' {TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, $3.ival); else chequearParametros($1.sval, $3.ival); $$.sval = $1.sval; chequearTipoParametros($1.sval, parametro1, parametro2); TercetoManager.llamado_funcion();}
 			| ID '('')'	{TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, 0); else chequearParametros($1.sval, 0); $$.sval = $1.sval; TercetoManager.llamado_funcion();}
 ;
@@ -273,6 +273,11 @@ public String parametro2 = "";
 public static ArrayList<String> erroresSintacticos = new ArrayList<String>();
 public static ArrayList<String> erroresLexicos = new ArrayList<String>();
 public static ArrayList<String> erroresSemanticos = new ArrayList<String>();
+
+/*public void ChequearRangoNegativo(String numNegativo){
+	
+
+}*/
 
 public String getTipoParametro(String p){
 	System.out.println(p);

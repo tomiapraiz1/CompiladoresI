@@ -682,6 +682,11 @@ public static ArrayList<String> erroresSintacticos = new ArrayList<String>();
 public static ArrayList<String> erroresLexicos = new ArrayList<String>();
 public static ArrayList<String> erroresSemanticos = new ArrayList<String>();
 
+/*public void ChequearRangoNegativo(String numNegativo){
+	
+
+}*/
+
 public String getTipoParametro(String p){
 	System.out.println(p);
 	if (TablaSimbolos.contieneSimbolo(p)){
@@ -812,7 +817,7 @@ int yylex() {
 
 	    return identificador_token;
 }
-//#line 744 "Parser.java"
+//#line 749 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1104,7 +1109,7 @@ case 51:
 break;
 case 53:
 //#line 108 "Gramatica.y"
-{yyval.sval = "-" + val_peek(0).sval;}
+{System.out.println(val_peek(0).sval);/*ChequearRangoNegativo($2.sval)*/;yyval.sval = "-" + val_peek(0).sval;}
 break;
 case 54:
 //#line 109 "Gramatica.y"
@@ -1390,7 +1395,7 @@ case 142:
 //#line 262 "Gramatica.y"
 {erroresSintacticos.add("Se esperaba un else");}
 break;
-//#line 1317 "Parser.java"
+//#line 1322 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

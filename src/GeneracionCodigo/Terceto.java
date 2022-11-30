@@ -18,8 +18,6 @@ public class Terceto {
 		this.operando = _operando;
 		this.operador1 = _operador1;
 		this.operador2 = _operador2;
-		if (_operando.equals("+") || _operando.equals("-") || _operando.equals("/") || _operando.equals("*"))
-		this.tipoTerceto = TablaTipos.tipoResultante(_operador1, _operador2 , _operando);
 	}
 
 	public String getOperando() {

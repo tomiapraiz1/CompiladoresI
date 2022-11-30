@@ -1,5 +1,12 @@
 program {
-	i16 a,i,number,end;
+	i16 a,i,number,end,HoLaQ;
+	
+	number =: a - -300000;
+	
+	<<Esto es un comentario
+	
+	out('Esto es/ 
+		una cadena');
 	
 	a =: do {
 			 if (i = number)then{
