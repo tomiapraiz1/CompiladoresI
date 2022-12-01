@@ -1,1 +1,2 @@
 1- Falta completar generador de assembler (con funciones).
+2- Falta chequeo cte negativa.
