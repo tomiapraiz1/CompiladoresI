@@ -27,70 +27,49 @@ public class TablaTipos {
 	                                                  { FLOAT_TYPE, FLOAT_TYPE, FLOAT_TYPE },
 	                                                  { ERROR_TYPE, ERROR_TYPE, ERROR_TYPE } };
 
-	    public static void setTipoAbarcativo(String op1, String op2, String operador){
-
+	    public static String getTipoAbarcativo(String op1, String op2, String operador){
+	        // mirar en la tabla del operando que tipo queda entre esos 2 tipos
+	    	System.out.println(op1 + "-----" + op2);
 	        String tipoOp1 = getTipo(op1);
 	        String tipoOp2 = getTipo(op2);
-	        
-	        if (tipoOp1.equalsIgnoreCase(tipoOp2))
-	        	return;
 
 	        String tipoFinal = tipoResultante(tipoOp1, tipoOp2, operador);
+
 	        if (tipoFinal.equals(ERROR_TYPE)) {
-	            Parser.erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": No se puede realizar la operacion " + operador + " entre los tipos " + tipoOp1 + " y " + tipoOp2);
-	        } else if (tipoFinal.equals(tipoOp2)) {
-        		TercetoManager.crear_terceto("to"+tipoFinal, op1, "_");
-        	} else if (tipoFinal.equals(tipoOp1)){
-        		TercetoManager.crear_terceto("to"+tipoFinal, op2, "_");
-        	}
+	            Parser.erroresSemanticos.add("No se puede realizar la operacion " + operador + " entre los tipos " + tipoOp1 + " y " + tipoOp2);
+	        }
+
+	        return tipoFinal;
 	    }
 
 	    public static String getTipo(String op) {
 	    	return TablaSimbolos.obtenerSimbolo(op).getTipo(); 
 	    }
 
-	    public static String tipoResultante(String op1, String op2, String operador) {
-	        int fil = -1;
-	        int col = -1;
-	        
-	        
-	        
-	        if (TablaSimbolos.contieneSimbolo(op1) && TablaSimbolos.contieneSimbolo(op2)) {
-	    		fil = getNumeroTipo(TablaSimbolos.obtenerSimbolo(op1).getTipo());
-	        	col = getNumeroTipo(TablaSimbolos.obtenerSimbolo(op2).getTipo());
-	    	}else if (TablaSimbolos.contieneSimbolo(op1)){
-	    		fil = getNumeroTipo(TablaSimbolos.obtenerSimbolo(op1).getTipo());
-		        col = getNumeroTipo(TercetoManager.getTerceto(Integer.parseInt(op2.substring(1, op2.length()-1))).getTipoTerceto());
-	    	}else if (TablaSimbolos.contieneSimbolo(op2)){
-	    		fil = getNumeroTipo(TercetoManager.getTerceto(Integer.parseInt(op1.substring(1, op1.length()-1))).getTipoTerceto());
-		        col = getNumeroTipo(TablaSimbolos.obtenerSimbolo(op2).getTipo());
-	    	}else {
-	    		fil = getNumeroTipo(TercetoManager.getTerceto(Integer.parseInt(op1.substring(1, op1.length()-1))).getTipoTerceto());
-		        col = getNumeroTipo(TercetoManager.getTerceto(Integer.parseInt(op2.substring(1, op2.length()-1))).getTipoTerceto());
-	    		
-	    	}
+	    private static String tipoResultante(String op1, String op2, String operador) {
+	        int fil = getNumeroTipo(op1);
+	        int col = getNumeroTipo(op2);
 
+	          
 	        switch (operador) {
-	            case ("+"):
-	            case ("-"):
-	                return tiposSumaResta[fil][col];
-	            case ("*"):
-	            case ("/"):
-	                return tiposMultDiv[fil][col];
-	            case ("=:"):
-	                return tiposAsig[fil][col];
-	            case ("<="):
-	            case ("<"):
-	            case (">="):
-	            case (">"):
-	            case ("=!"):
-	            case ("="):
-	                return tiposComparadores[fil][col];
-	            default:
-	                return ERROR_TYPE;
+            case ("+"):
+            case ("-"):
+                return tiposSumaResta[fil][col];
+            case ("*"):
+            case ("/"):
+                return tiposMultDiv[fil][col];
+            case ("=:"):
+                return tiposAsig[fil][col];
+            case ("<="):
+            case ("<"):
+            case (">="):
+            case (">"):
+            case ("=!"):
+            case ("="):
+                return tiposComparadores[fil][col];
+            default:
+                return ERROR_TYPE;
 	        }
-	       
-
 	    }
 
 	    private static int getNumeroTipo(String tipo) {

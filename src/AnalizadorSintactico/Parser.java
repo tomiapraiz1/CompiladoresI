@@ -828,7 +828,7 @@ int yylex() {
 
 	    return identificador_token;
 }
-//#line 760 "Parser.java"
+//#line 768 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1402,7 +1402,7 @@ case 141:
 //#line 261 "Gramatica.y"
 {erroresSintacticos.add("Se esperaba un else");}
 break;
-//#line 1329 "Parser.java"
+//#line 1337 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

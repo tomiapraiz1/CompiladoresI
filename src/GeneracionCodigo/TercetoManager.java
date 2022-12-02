@@ -21,6 +21,7 @@ public class TercetoManager {
 	
 	public static void crear_terceto(String operando, String operador1, String operador2) {
 		Terceto aux = new Terceto(operando,operador1,operador2);
+		aux.setTipoTerceto(TablaTipos.getTipoAbarcativo(operador1, operador2, operando));
 		tercetos.add(aux);
 	}
 	
