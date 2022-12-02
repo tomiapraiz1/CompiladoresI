@@ -1,4 +1,7 @@
 program {
+
+	out('Hola/
+	 mundo');
 	fun f3 () : f32{
 		f32 x;
 		x =: 1.2;

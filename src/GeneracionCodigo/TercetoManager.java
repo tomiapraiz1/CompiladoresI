@@ -87,7 +87,7 @@ public class TercetoManager {
         int indice_cond = popTerceto();
 		crear_terceto("BI","["+Integer.toString(indice_cond)+"]","_"); 
 		crear_terceto("Label"+tercetos.size(), "_", "_");
-		if(!stackTercetosBreak.isEmpty()) {
+		while(!stackTercetosBreak.isEmpty()) {
 			indice_cond = popTercetoBreak();
 			getTerceto(indice_cond).setOperador1('['+Integer.toString(tercetos.size() - 1)+']'); 
 		}
@@ -107,6 +107,8 @@ public class TercetoManager {
 	
 	public static int popTercetoContinue() { //da el numero del terceto
 		String aux = stackTercetosContinue.pop();
+		
+		stackTercetosContinue.push(aux);
 		
 		aux = aux.substring(1, aux.length()-1);
 		

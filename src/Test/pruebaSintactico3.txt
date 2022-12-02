@@ -1,17 +1,24 @@
 program{
 	<<Temas particulares
 	
-	x =: 999999999;
-	
-	const c1 =: 10, x =: 5;
-	outer: do {
-			x =: 3;
-			continue: outer ;
-		} until ( a < b );
+	i16 i,number,end,a,b,c;
 
-	a =: do {
- 			if (i = number) then {
- 				break 1;
- 			} end_if;
- 		} until (i > end) else 3 ;
+	do {
+		a =: b + c * i;
+ 		
+ 		if (i = number) then {
+ 			i =: i + 1;
+ 			continue;
+ 			continue;
+ 			continue;
+ 			continue;
+ 			break;
+ 			break;
+ 			break;
+ 			break;
+ 		} end_if;
+ 		
+ 		a =: c + b * i;
+ 	
+ 	} until (i > end);
 }
