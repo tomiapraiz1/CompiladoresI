@@ -75,9 +75,7 @@ lista_parametros:	tipo ID ',' tipo ID {TablaSimbolos.modificarParametros(idAux, 
                 	| ID ',' ID {erroresSintacticos.add("Los identificadores deben tener un tipo");}
 ;
 
-cuerpo_funcion:		inicio_funcion bloque retorno_funcion fin_funcion
-					| inicio_funcion retorno_funcion fin_funcion
-					| inicio_funcion bloque fin_funcion {erroresSintacticos.add("La funcion debe retornar un valor");}
+cuerpo_funcion:		inicio_funcion bloque fin_funcion
 ;
 
 inicio_funcion: '{' 
@@ -146,6 +144,7 @@ ejecutable:		asignacion ';'
 			| impresion {erroresSintacticos.add("Falta un ;");}
 			| estruct_do_until ';'
 			| estruct_do_until {erroresSintacticos.add("Falta un ;");}
+			| retorno_funcion
 ;
 
 con_etiqueta:		BREAK ';' {TercetoManager.breakDoUntil();}

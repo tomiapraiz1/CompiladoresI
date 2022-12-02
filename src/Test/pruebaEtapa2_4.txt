@@ -1,19 +1,14 @@
 program {
-	i16 a,i,number,end,HoLaQ;
-	
-	number =: a - -300000;
-	
-	<<Esto es un comentario
-	
-	out('Esto es/ 
-		una cadena');
-	
-	a =: do {
-			 if (i = number)then{
-				break 1;
- 			}else{
- 				i =: i + 1;
-				continue;
- 			}end_if;
-		}until (i> end) else 3 ;
+	fun f3 () : f32{
+		f32 x;
+		x =: 1.2;
+		
+		if (x > 0.0) then{
+			return (x);
+		}else{
+			return (x + 1.2);
+		}end_if;
+		
+		return(x);
+	} 
 }
