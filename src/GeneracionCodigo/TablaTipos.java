@@ -30,8 +30,21 @@ public class TablaTipos {
 	    public static String getTipoAbarcativo(String op1, String op2, String operador){
 	        // mirar en la tabla del operando que tipo queda entre esos 2 tipos
 	    	System.out.println(op1 + "-----" + op2);
-	        String tipoOp1 = getTipo(op1);
-	        String tipoOp2 = getTipo(op2);
+	        String tipoOp1;
+	        String tipoOp2;
+	        
+	        if(op1.startsWith("[")) {
+	        	int indexTerceto = Integer.parseInt(op1.substring(1, op1.length() - 1));
+	        	tipoOp1 = TercetoManager.getTerceto(indexTerceto).getTipoTerceto();
+	        }else
+	        	tipoOp1 = getTipo(op1);
+	        	
+	        
+	        if(op2.startsWith("[")) {
+	        	int indexTerceto = Integer.parseInt(op2.substring(1, op2.length() - 1));
+	        	tipoOp2 = TercetoManager.getTerceto(indexTerceto).getTipoTerceto();
+	        }else
+	        	tipoOp2 = getTipo(op2);
 
 	        String tipoFinal = tipoResultante(tipoOp1, tipoOp2, operador);
 

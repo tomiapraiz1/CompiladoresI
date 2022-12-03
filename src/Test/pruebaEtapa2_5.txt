@@ -3,5 +3,5 @@ program {
 	f32 d,e,f;
 	
 	f =: a/b;
-	b =: c * d;
+	e =: c * d;
 }
