@@ -21,8 +21,13 @@ public class TercetoManager {
 	
 	public static void crear_terceto(String operando, String operador1, String operador2) {
 		Terceto aux = new Terceto(operando,operador1,operador2);
-		if(operando.equals("+") || operando.equals("-") || operando.equals("/") || operando.equals("*") || operando.equals("=:"))
+		if (!operando.equals("BF") && !operando.equals("BI") && !operando.startsWith("Label"))
 			aux.setTipoTerceto(TablaTipos.getTipoAbarcativo(operador1, operador2, operando));
+		tercetos.add(aux);
+	}
+	
+	public static void crear_terceto(String operando, String operador1, String operador2, String tipo) {
+		Terceto aux = new Terceto(operando,operador1,operador2,tipo);
 		tercetos.add(aux);
 	}
 	

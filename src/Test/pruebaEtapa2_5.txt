@@ -2,6 +2,10 @@ program {
 	i16 a,b,c;
 	f32 d,e,f;
 	
-	f =: a/b;
-	e =: c * d;
+	<< f =: a/b;
+	<< e =: c * d;
+	
+	if ( d < a ) then {
+		d =: 1;
+	} end_if;
 }

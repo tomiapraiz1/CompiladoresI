@@ -91,13 +91,21 @@ retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';' {TercetoManager.add_ret
 					| RETURN '('  ')' ';' {erroresSintacticos.add("Falta un valor que devolver");}
 ;
 
-expresion_aritmetica:		expresion_aritmetica '+' termino {/*verificarTipos($1.sval,$3.sval,"+");*/ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("+", $1.sval, $3.sval);}
-		    		| expresion_aritmetica '-' termino {/*verificarTipos($1.sval,$3.sval, "-")*/; $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("-", $1.sval, $3.sval);}
-	            		| termino
+expresion_aritmetica:		expresion_aritmetica '+' termino {int indice = TercetoManager.getIndexTerceto(); verificarTipos($1.sval,$3.sval, "+");
+								if (indice == TercetoManager.getIndexTerceto()){ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("+", $1.sval, $3.sval);}
+								else {$$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()-1) + ']';}}
+		    				| expresion_aritmetica '-' termino {int indice = TercetoManager.getIndexTerceto(); verificarTipos($1.sval,$3.sval, "-");
+								if (indice == TercetoManager.getIndexTerceto()){ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("-", $1.sval, $3.sval);}
+								else {$$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()-1) + ']';}}
+	            			| termino
 ;
 
-termino:		termino '*' factor {/*verificarTipos($1.sval,$3.sval, "*");*/ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("*", $1.sval, $3.sval);}
-       			| termino '/' factor {/*verificarTipos($1.sval,$3.sval, "/");*/ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("/", $1.sval, $3.sval);}
+termino:		termino '*' factor {int indice = TercetoManager.getIndexTerceto(); verificarTipos($1.sval,$3.sval, "*");
+					if (indice == TercetoManager.getIndexTerceto()){ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("*", $1.sval, $3.sval);}
+					else {$$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()-1) + ']';}}
+       			| termino '/' factor {int indice = TercetoManager.getIndexTerceto(); verificarTipos($1.sval,$3.sval, "/");
+					if (indice == TercetoManager.getIndexTerceto()){ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("/", $1.sval, $3.sval);}
+					else {$$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()-1) + ']';}}
        			| factor 
 ;
 
@@ -128,7 +136,9 @@ asignacion_constante:		ID ASIG CTE {Atributo aux = TablaSimbolos.obtenerSimbolo(
 							| ID CTE {erroresSintacticos.add("Falta =:");}
 ;
 
-asignacion:		ID ASIG expresion_aritmetica {if ($3.sval == null) break; comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); esConstante($1.sval); /*verificarTipos($1.sval,$3.sval, "=:");*/ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
+asignacion:		ID ASIG expresion_aritmetica {if ($3.sval == null) break; comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); esConstante($1.sval); int indice = TercetoManager.getIndexTerceto();
+					verificarTipos($1.sval,$3.sval, "=:"); if (indice == TercetoManager.getIndexTerceto()){ $$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()) + ']'; TercetoManager.crear_terceto("=:", $1.sval, $3.sval);}
+					else {$$.sval = '[' + Integer.toString(TercetoManager.getIndexTerceto()-1) + ']';}}
 				| ID expresion_aritmetica {erroresSintacticos.add("Falta =:");}
 ;
 
@@ -180,7 +190,7 @@ inicio_if: IF
 condicion_if: condicion {TercetoManager.add_seleccion_cond();}
 ;
 
-condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')' {/*verificarTipos($2.sval, $4.sval, $3.sval);*/ TercetoManager.crear_terceto($3.sval, $2.sval, $4.sval);}
+condicion:		'(' expresion_aritmetica operador expresion_aritmetica ')' {int indice = TercetoManager.getIndexTerceto(); verificarTipos($2.sval, $4.sval, $3.sval); if (indice == TercetoManager.getIndexTerceto()) TercetoManager.crear_terceto($3.sval, $2.sval, $4.sval);}
 				| '(' operador expresion_aritmetica ')' {erroresSintacticos.add("Falta un valor con que comparar");}
 				| '(' expresion_aritmetica operador ')' {erroresSintacticos.add("Falta un valor con que comparar");}
 ;
@@ -288,19 +298,11 @@ public String getTipoParametro(String p){
 	return "";
 }
 
-/*public void verificarTipos(String arg1,String arg2, String operador){
-	if (TablaSimbolos.contieneSimbolo(arg1) || TablaSimbolos.contieneSimbolo(arg2)){
-		Atributo a1 = TablaSimbolos.obtenerSimbolo(arg1);
-		Atributo a2 = TablaSimbolos.obtenerSimbolo(arg2);
+public void verificarTipos(String arg1,String arg2, String operador){
+	TablaTipos.setTipoAbarcativo(arg1, arg2, operador);
+}
 
-		if (a1.getTipo().equals(a2.getTipo()))
-			return;
-		else{
-			TablaTipos.setTipoAbarcativo(a1.getTipo(),a2.getTipo(),operador);
-		}
-	}
 
-}*/
 void chequearTipoParametros(String funcion, String p1, String p2){
 	if (TablaSimbolos.contieneSimbolo(funcion)){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(funcion);

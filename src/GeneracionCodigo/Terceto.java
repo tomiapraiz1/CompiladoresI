@@ -19,6 +19,13 @@ public class Terceto {
 		this.operador1 = _operador1;
 		this.operador2 = _operador2;
 	}
+	
+	Terceto(String _operando, String _operador1, String _operador2, String tipo){
+		this.operando = _operando;
+		this.operador1 = _operador1;
+		this.operador2 = _operador2;
+		this.tipoTerceto = tipo;
+	}
 
 	public String getOperando() {
 		return operando;
