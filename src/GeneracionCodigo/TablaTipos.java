@@ -29,7 +29,6 @@ public class TablaTipos {
 
 	    public static void setTipoAbarcativo(String op1, String op2, String operador){
 	        // mirar en la tabla del operando que tipo queda entre esos 2 tipos
-	    	System.out.println(op1 + "-----" + op2);
 	        String tipoOp1;
 	        String tipoOp2;
 	        

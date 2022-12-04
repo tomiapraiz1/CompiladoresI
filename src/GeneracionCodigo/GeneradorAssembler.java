@@ -148,7 +148,7 @@ public class GeneradorAssembler {
 			case "*":
 				if (auxOp1.getTipo().equals("i16")) {
 					codigo.add(new StringBuilder("MOV AX, ").append(auxOp1.getLexema()+"\n"));
-					codigo.add(new StringBuilder("MUL AX, ").append(auxOp2.getLexema()+"\n"));
+					codigo.add(new StringBuilder("MUL ").append(auxOp2.getLexema()+"\n"));
 					String auxiliar = obtenerAuxiliar("i16");
 					codigo.add(new StringBuilder("MOV ").append(auxiliar+", AX\n"));
 				} else {
@@ -168,8 +168,7 @@ public class GeneradorAssembler {
 					codigo.add(new StringBuilder("invoke ExitProcess, 0\n"));
 					codigo.add(new StringBuilder("Label"+auxiliar+":\n"));
 					codigo.add(new StringBuilder("MOV AX, ").append(auxOp1.getLexema()+"\n"));
-					codigo.add(new StringBuilder("MOV AH, ").append(auxOp2.getLexema()+"\n"));
-					codigo.add(new StringBuilder("DIV AH\n"));
+					codigo.add(new StringBuilder("DIV ").append(auxOp2.getLexema()+"\n"));
 					codigo.add(new StringBuilder("MOV ").append(auxiliar+", AX\n"));
 				} else {
 					String auxiliar = obtenerAuxiliar("f32");					
@@ -190,7 +189,6 @@ public class GeneradorAssembler {
 				}
 				break;
 			case "=:":
-				System.out.println(auxOp2);
 				if (auxOp1.getTipo().equals("i16")) {
 					codigo.add(new StringBuilder("MOV AX, ").append(auxOp2.getLexema()).append("\n"));
 					codigo.add(new StringBuilder("MOV ").append(auxOp1.getLexema()+", AX\n"));			

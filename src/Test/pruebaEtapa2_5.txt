@@ -1,11 +1,6 @@
 program {
-	i16 a,b,c;
-	f32 d,e,f;
+	i16 a,b,d,e,f,z;
 	
-	<< f =: a/b;
-	<< e =: c * d;
-	
-	if ( d < a ) then {
-		d =: 1;
-	} end_if;
+	z =: a / b + d * e - f + 20;
+
 }
