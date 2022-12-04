@@ -117,11 +117,11 @@ factor:		ID {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.s
 ;
 
 lista_inv_func:		ID ',' ID {TablaSimbolos.eliminarSimbolo($1.sval); TablaSimbolos.eliminarSimbolo($3.sval);$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
-	      		| ID ',' CTE {$$.ival = 2; parametro1 = $1.sval; parametro2 = $3.sval;}
-	      		| CTE ',' CTE {$$.ival = 2; parametro1 = $1.sval; parametro2 = $3.sval;}
-	      		| CTE ',' ID {$$.ival = 2; parametro1 = $1.sval; parametro2 = $3.sval;}
-	      		| CTE {$$.ival = 1; parametro1 = $1.sval;}
-	      		| ID {$$.ival = 1; parametro1 = $1.sval;}
+	      		| ID ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual())}
+	      		| CTE ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
+	      		| CTE ',' ID {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
+	      		| CTE {$$.ival = 1; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual());}
+	      		| ID {$$.ival = 1; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual());}
 ;
 
 declaracion_constantes:	CONST list_constantes ';'
