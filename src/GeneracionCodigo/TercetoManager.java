@@ -3,8 +3,10 @@ package GeneracionCodigo;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import AnalizadorLexico.AnalizadorLexico;
 import AnalizadorLexico.Atributo;
 import AnalizadorLexico.TablaSimbolos;
+import AnalizadorSintactico.Parser;
 
 public class TercetoManager {
 	
@@ -20,8 +22,8 @@ public class TercetoManager {
 	}
 	
 	public static void crear_terceto(String operando, String operador1, String operador2) {
-		Terceto aux = new Terceto(operando,operador1,operador2);
-		if (!operando.equals("BF") && !operando.equals("BI") && !operando.startsWith("Label"))
+		Terceto aux = new Terceto(operando,operador1,operador2, "");
+		if (!operando.equals("CALL") && !operando.equals("Funcion") && !operando.equals("End_funcion") && !operando.equals("Return") && !operando.equals("BF") && !operando.equals("BI") && !operando.startsWith("Label"))
 			aux.setTipoTerceto(TablaTipos.getTipoAbarcativo(operador1, operador2, operando));
 		tercetos.add(aux);
 	}
@@ -205,19 +207,39 @@ public class TercetoManager {
 	}
 	
 	public static void add_funcion(String funcion) {
-		pushTercetoFuncion('['+Integer.toString(tercetos.size())+']');
 		crear_terceto("Funcion",funcion,"_");
 	}
 	
-	public static void add_return_funcion() {
+	public static void add_return_funcion(String id, String retorno) {
+		String tipo = id;
+		System.out.println(tipo);
+		String tipoOp1;
+		if(retorno.startsWith("[")) {
+        	int indexTerceto = Integer.parseInt(retorno.substring(1, retorno.length() - 1));
+        	tipoOp1 = TercetoManager.getTerceto(indexTerceto).getTipoTerceto();
+        }else
+        	tipoOp1 = TablaTipos.getTipo(retorno);
+		
+		System.out.println(tipoOp1);
+		
+		if (!tipo.equals(tipoOp1)) {
+			if (tipo.equals("f32")) {
+				crear_terceto("tof32", retorno, "_", "f32");
+				crear_terceto("Return", "["+(getIndexTerceto()-1)+"]", "_", tipo);
+			} else if (tipo.equals("i16")) {
+				Parser.erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": no se puede convertir entre i16 y f32");
+			}
+		} else {
+			crear_terceto("Return", retorno, "_", tipo);
+
+		}
 		crear_terceto("End_funcion", "_", "_"); //poner nombre de la funcion
 	}
 
 
-	public static void llamado_funcion() {
-		int indice_cond = popTercetoFuncion();
-		if (indice_cond != -1)	
-			getTerceto(indice_cond).setOperador1('['+Integer.toString(tercetos.size())+']'); 
+	public static void llamado_funcion(String funcion) {
+		String tipo = TablaSimbolos.obtenerSimbolo(funcion).getTipo();
+		crear_terceto("CALL", funcion, "_", tipo);
 	}
 	
 	public static void imprimirTercetos() {

@@ -1,6 +1,10 @@
 program {
-	i16 a,b,d,e,f,z;
+	i16 a,b,c;
+	f32 d,e,f;
 	
-	z =: a / b + d * e - f + 20;
-
+	fun aa():i16{
+		return (1);
+	}
+	
+	d =: aa() + 1.0;
 }

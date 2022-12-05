@@ -56,7 +56,7 @@ tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
 declaracion_funcion:	header_funcion complete_header_funcion cuerpo_funcion {setTipo(funcionAux, $1.sval); Ambito.removeAmbito();}
 ;
 
-header_funcion:		FUN ID '(' {ambitoAux = $2.sval; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); idAux = $2.sval; $$.sval = $2.sval; TercetoManager.add_funcion($2.sval); Ambito.concatenarAmbito(ambitoAux);}
+header_funcion:		FUN ID '(' {ambitoAux = $2.sval;  System.out.println($2.sval); setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); idAux = $2.sval; $$.sval = $2.sval; TercetoManager.add_funcion($2.sval); Ambito.concatenarAmbito(ambitoAux);}
 					| FUN '(' {erroresSintacticos.add("Se esperaba un identificador de la funcion");}
 					| FUN ID {erroresSintacticos.add("Falta un (");}
 					| FUN CTE '(' {erroresSintacticos.add("No se puede declarar una funcion con una constante como nombre");}
@@ -84,7 +84,7 @@ inicio_funcion: '{'
 fin_funcion: '}' 
 ;
 
-retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';' {TercetoManager.add_return_funcion();}
+retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';' {TercetoManager.add_return_funcion(funcionAux, $3.sval);}
 					| RETURN expresion_aritmetica ')' ';' {erroresSintacticos.add("Falta un (");}
 					| RETURN '(' expresion_aritmetica ';' {erroresSintacticos.add("Falta un )");}
 					| RETURN '(' expresion_aritmetica ')' {erroresSintacticos.add("Falta un ;");}
@@ -112,12 +112,12 @@ termino:		termino '*' factor {int indice = TercetoManager.getIndexTerceto(); ver
 factor:		ID {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.sval = $1.sval;}
       		| CTE 
       		| '-' CTE {System.out.println($2.sval);/*ChequearRangoNegativo($2.sval)*/;$$.sval = "-" + $2.sval;}
-      		| ID '(' lista_inv_func ')' {TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, $3.ival); else chequearParametros($1.sval, $3.ival); $$.sval = $1.sval; chequearTipoParametros($1.sval, parametro1, parametro2); TercetoManager.llamado_funcion();}
-			| ID '('')'	{TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, 0); else chequearParametros($1.sval, 0); $$.sval = $1.sval; TercetoManager.llamado_funcion();}
+      		| ID '(' lista_inv_func ')' {TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, $3.ival); else chequearParametros($1.sval, $3.ival); chequearTipoParametros($1.sval, parametro1, parametro2); TercetoManager.llamado_funcion($1.sval); $$.sval = "["+(TercetoManager.getIndexTerceto()-1)+"]";}
+			| ID '('')'	{TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, 0); else chequearParametros($1.sval, 0); TercetoManager.llamado_funcion($1.sval); $$.sval = "["+(TercetoManager.getIndexTerceto()-1)+"]";}
 ;
 
 lista_inv_func:		ID ',' ID {TablaSimbolos.eliminarSimbolo($1.sval); TablaSimbolos.eliminarSimbolo($3.sval);$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
-	      		| ID ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual())}
+	      		| ID ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
 	      		| CTE ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
 	      		| CTE ',' ID {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
 	      		| CTE {$$.ival = 1; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual());}
