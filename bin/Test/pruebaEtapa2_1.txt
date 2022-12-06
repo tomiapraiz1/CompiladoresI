@@ -1,0 +1,19 @@
+pepe{
+	fun aa(): i16{
+		fun cc(): i16{
+			i16 z;
+			z =: 5;
+			return (z);
+		}
+				
+		i16 x;
+		x =: 4;
+		return (x);
+	}
+	
+	fun bb(): f32{
+		f32 y;
+		y =: 3;
+		return (y);
+	}
+}

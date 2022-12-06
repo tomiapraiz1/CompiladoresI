@@ -1,0 +1,9 @@
+program {
+	i16 i, end, number, a;
+	
+	a =: do {
+	 	if (i = number) then  {
+			break 1;
+ 		} end_if;
+	}until (i> end) else 3 ;
+}
