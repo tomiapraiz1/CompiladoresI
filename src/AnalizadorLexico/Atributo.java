@@ -11,7 +11,7 @@ public class Atributo {
     private int cantidadParametros = -1;
     private String tipoP1 = "";
     private String tipoP2 = "";
-    private String tercetoSalto = "";   
+    private String tercetoSalto = "";
     
     public Atributo(String lexema, int id) {
     	this.lexema = lexema;

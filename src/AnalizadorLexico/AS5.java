@@ -22,9 +22,13 @@ public class AS5 extends AccionSemantica{
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		simbolo = simbolo.replace("d", "");
 		
 		TablaSimbolos.agregarSimbolo(simbolo, AnalizadorLexico.CONSTANTE, "f32", AnalizadorLexico.getLine());
 		TablaSimbolos.modificarUso(simbolo, "constante");
+		
+		AnalizadorLexico.token_actual.setLength(0);
+		AnalizadorLexico.token_actual.append(simbolo);
 		
 		return AnalizadorLexico.CONSTANTE;
 	}

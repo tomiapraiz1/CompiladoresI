@@ -117,10 +117,10 @@ factor:		ID {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.s
 ;
 
 lista_inv_func:		ID ',' ID {TablaSimbolos.eliminarSimbolo($1.sval); TablaSimbolos.eliminarSimbolo($3.sval);$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
-	      		| ID ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
-	      		| CTE ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
-	      		| CTE ',' ID {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
-	      		| CTE {$$.ival = 1; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual());}
+	      		| ID ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval);}
+	      		| CTE ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval); parametro2 = getTipoParametro($3.sval);}
+	      		| CTE ',' ID {$$.ival = 2; parametro1 = getTipoParametro($1.sval); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
+	      		| CTE {$$.ival = 1; parametro1 = getTipoParametro($1.sval);}
 	      		| ID {$$.ival = 1; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual());}
 ;
 
@@ -159,7 +159,7 @@ ejecutable:		asignacion ';'
 
 con_etiqueta:		BREAK ';' {TercetoManager.breakDoUntil();}
 			| BREAK {erroresSintacticos.add("Falta un ;");}
-			| BREAK CTE ';' {TercetoManager.add_break_cte(idAux, $2.sval);}
+			| BREAK CTE ';' {TercetoManager.add_break_cte(idAux, $2.sval, TablaSimbolos.obtenerSimbolo($2.sval).getTipo());}
 			| BREAK CTE {erroresSintacticos.add("Falta un ;");}
 			| CONTINUE ';' {TercetoManager.continueDoUntil();}
 			| CONTINUE {erroresSintacticos.add("Falta un ;");}
@@ -175,7 +175,7 @@ con_etiqueta:		BREAK ';' {TercetoManager.breakDoUntil();}
 			| inicio_id_asignacion ';' {erroresSintacticos.add("Falta un =:");}
 ;
 
-inicio_id_asignacion: ID ASIG {idAux = $1.sval; TercetoManager.add_inicio_id_asig();}
+inicio_id_asignacion: ID ASIG {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); idAux = $1.sval; TercetoManager.add_inicio_id_asig();}
 ;
 
 inicio_id_estruct: ID ':' {TablaSimbolos.agregarSimbolo($1.sval, 257, "", AnalizadorLexico.getLine()); setUso($1.sval,"etiqueta"); $1.sval = TablaSimbolos.modificarNombre($1.sval); TablaSimbolos.setTercetoSalto($1.sval,"[" + TercetoManager.getIndexTerceto() + "]");}
@@ -260,13 +260,13 @@ sentencia_ctr_expr:	DO inicio_sentencia_ctr_expr lista_sentencias_ejecutables fi
 
 ;
 
-inicio_sentencia_ctr_expr: '{' {Ambito.concatenarAmbito("doUntilExpr");}
+inicio_sentencia_ctr_expr: '{' 
 ;
 
-fin_sentencia_ctr_expr: '}' {Ambito.removeAmbito();}
+fin_sentencia_ctr_expr: '}' 
 ;
 
-else_until:		ELSE CTE {TercetoManager.add_else_cte(idAux, $2.sval);}
+else_until:		ELSE CTE {TercetoManager.add_else_cte(idAux, $2.sval, TablaSimbolos.obtenerSimbolo($2.sval).getTipo());}
 				| ELSE {erroresSintacticos.add("Falta una constante para asignar");}
 				| CTE {erroresSintacticos.add("Se esperaba un else");}
 ;

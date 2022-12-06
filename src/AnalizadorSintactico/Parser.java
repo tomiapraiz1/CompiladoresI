@@ -1132,19 +1132,19 @@ case 54:
 break;
 case 55:
 //#line 120 "gramatica.y"
-{yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro(val_peek(0).sval + Ambito.getAmbitoActual());}
+{yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro(val_peek(0).sval);}
 break;
 case 56:
 //#line 121 "gramatica.y"
-{yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro(val_peek(0).sval + Ambito.getAmbitoActual());}
+{yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval); parametro2 = getTipoParametro(val_peek(0).sval);}
 break;
 case 57:
 //#line 122 "gramatica.y"
-{yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro(val_peek(0).sval + Ambito.getAmbitoActual());}
+{yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval); parametro2 = getTipoParametro(val_peek(0).sval + Ambito.getAmbitoActual());}
 break;
 case 58:
 //#line 123 "gramatica.y"
-{yyval.ival = 1; parametro1 = getTipoParametro(val_peek(0).sval + Ambito.getAmbitoActual());}
+{yyval.ival = 1; parametro1 = getTipoParametro(val_peek(0).sval);}
 break;
 case 59:
 //#line 124 "gramatica.y"
@@ -1198,7 +1198,7 @@ case 80:
 break;
 case 81:
 //#line 162 "gramatica.y"
-{TercetoManager.add_break_cte(idAux, val_peek(1).sval);}
+{TercetoManager.add_break_cte(idAux, val_peek(1).sval, TablaSimbolos.obtenerSimbolo(val_peek(1).sval).getTipo());}
 break;
 case 82:
 //#line 163 "gramatica.y"
@@ -1254,7 +1254,7 @@ case 94:
 break;
 case 95:
 //#line 178 "gramatica.y"
-{idAux = val_peek(1).sval; TercetoManager.add_inicio_id_asig();}
+{comprobarAmbito(val_peek(1).sval); val_peek(1).sval = Ambito.getAmbito(val_peek(1).sval); idAux = val_peek(1).sval; TercetoManager.add_inicio_id_asig();}
 break;
 case 96:
 //#line 181 "gramatica.y"
@@ -1384,17 +1384,9 @@ case 136:
 //#line 259 "gramatica.y"
 {erroresSintacticos.add("Faltan sentencias de ejecucion");}
 break;
-case 137:
-//#line 263 "gramatica.y"
-{Ambito.concatenarAmbito("doUntilExpr");}
-break;
-case 138:
-//#line 266 "gramatica.y"
-{Ambito.removeAmbito();}
-break;
 case 139:
 //#line 269 "gramatica.y"
-{TercetoManager.add_else_cte(idAux, val_peek(0).sval);}
+{TercetoManager.add_else_cte(idAux, val_peek(0).sval, TablaSimbolos.obtenerSimbolo(val_peek(0).sval).getTipo());}
 break;
 case 140:
 //#line 270 "gramatica.y"
@@ -1404,7 +1396,7 @@ case 141:
 //#line 271 "gramatica.y"
 {erroresSintacticos.add("Se esperaba un else");}
 break;
-//#line 1331 "Parser.java"
+//#line 1323 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

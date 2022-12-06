@@ -1,17 +1,9 @@
 program {
-
-	out('Hola/
-	 mundo');
-	fun f3 () : f32{
-		f32 x;
-		x =: 1.2;
-		
-		if (x > 0.0) then{
-			return (x);
-		}else{
-			return (x + 1.2);
-		}end_if;
-		
-		return(x);
-	} 
+	i16 i, end, number, a;
+	
+	a =: do {
+	 	if (i = number) then  {
+			break 1;
+ 		} end_if;
+	}until (i> end) else 3 ;
 }

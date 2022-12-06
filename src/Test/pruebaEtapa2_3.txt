@@ -10,8 +10,7 @@ program {
 			a =: a + 2;
 			
 			b =: b + 1; 
-		
-			continue: outer;
+			
 		}until (a < b);
 	}until (i < 100);
 }

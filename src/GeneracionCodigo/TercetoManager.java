@@ -96,6 +96,10 @@ public class TercetoManager {
         int indice_cond = popTerceto();
 		crear_terceto("BI","["+Integer.toString(indice_cond)+"]","_"); 
 		crear_terceto("Label"+tercetos.size(), "_", "_");
+		if(!stackTercetosContinue.isEmpty()){
+			int aux = popTercetoContinue();
+			System.out.println(aux);
+		}
 		while(!stackTercetosBreak.isEmpty()) {
 			indice_cond = popTercetoBreak();
 			getTerceto(indice_cond).setOperador1('['+Integer.toString(tercetos.size() - 1)+']'); 
@@ -117,7 +121,6 @@ public class TercetoManager {
 	public static int popTercetoContinue() { //da el numero del terceto
 		String aux = stackTercetosContinue.pop();
 		
-		stackTercetosContinue.push(aux);
 		
 		aux = aux.substring(1, aux.length()-1);
 		
@@ -133,7 +136,8 @@ public class TercetoManager {
 	public static void continueDoUntil() {
 		if(!stackTercetosContinue.isEmpty()){
 			int indice = popTercetoContinue();
-			crear_terceto("BI","[" + Integer.toString(indice) + "]","_"); 
+			crear_terceto("BI","[" + Integer.toString(indice) + "]","_");
+			stackTercetosContinue.push("["+indice+"]");
 		}
 	}
 	
@@ -165,14 +169,14 @@ public class TercetoManager {
 		stackTercetosContinue.push('['+Integer.toString(tercetos.size() - 1 )+']');
 	}
 	
-	public static void add_break_cte(String id, String cte){
-		crear_terceto("=:", id, cte);
+	public static void add_break_cte(String id, String cte, String tipo){
+		crear_terceto("=:", id, cte, tipo);
 		crear_terceto("BI", "_", "_");
 		pushTercetoAsignacion("["+(tercetos.size()-1)+"]");
 	}
 	
-	public static void add_else_cte(String id, String cte){
-		crear_terceto("=:", id, cte);
+	public static void add_else_cte(String id, String cte, String tipo){
+		crear_terceto("=:", id, cte, tipo);
 	}
 	
 	public static void add_condicion_id_asig() {
@@ -212,7 +216,6 @@ public class TercetoManager {
 	
 	public static void add_return_funcion(String id, String retorno) {
 		String tipo = id;
-		System.out.println(tipo);
 		String tipoOp1;
 		if(retorno.startsWith("[")) {
         	int indexTerceto = Integer.parseInt(retorno.substring(1, retorno.length() - 1));
@@ -220,7 +223,6 @@ public class TercetoManager {
         }else
         	tipoOp1 = TablaTipos.getTipo(retorno);
 		
-		System.out.println(tipoOp1);
 		
 		if (!tipo.equals(tipoOp1)) {
 			if (tipo.equals("f32")) {
