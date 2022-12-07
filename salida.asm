@@ -12,83 +12,61 @@ DIVISIONPORCERO db "Error division por cero", 0
 OVERFLOW db "Error overflow de suma", 0
 INVOCACION db "Error la funcion no puede volver a ser invocada", 0
 @auxDivision dw ?
-x dd ?
-e dd ?
-d dd ?
-a dd ?
-t dd ?
-z dd ?
-b dd ?
-f dd ?
-@aux0 dd ?
-@aux1 dd ?
-@aux2 dd ?
-@aux3 dd ?
-@aux4 dd ?
-@aux5 dd ?
-@aux6 dd ?
-@aux7 dd ?
-@aux8 dd ?
-@aux9 dd ?
+@aux5 dw ?
+@aux4 dw ?
+d dw ?
+t dw ?
+z dw ?
+b dw ?
+x dw ?
+e dw ?
+a dw ?
+@aux3 dw ?
+@aux2 dw ?
+@aux1 dw ?
+f dw ?
+@aux0 dw ?
 .code
 START:
 FNINIT
-FILD 1
-FSTP @aux0
-FLD @aux0
-FSTP a
-FILD 1
-FSTP @aux1
-FLD @aux1
-FSTP b
-FILD 1
-FSTP @aux2
-FLD @aux2
-FSTP z
-FILD 1
-FSTP @aux3
-FLD @aux3
-FSTP d
-FILD 1
-FSTP @aux4
-FLD @aux4
-FSTP e
-FILD 1
-FSTP @aux5
-FLD @aux5
-FSTP f
-FLD b
-FLD z
-FMUL
-FSTP @aux6
-FLD a
-FLD @aux6
-FADD
-FSTP @aux7
-FLD e
-FTST
-JNE Label@aux8
+MOV AX, 1
+MOV a, AX
+MOV AX, 1
+MOV b, AX
+MOV AX, 1
+MOV z, AX
+MOV AX, 1
+MOV d, AX
+MOV AX, 1
+MOV e, AX
+MOV AX, 1
+MOV f, AX
+MOV AX, b
+MOV DX, b
+MUL z
+MOV @aux0, AX
+MOV AX, a
+ADD AX, @aux0
+MOV @aux1, AX
+MOV AX, e
+CMP AX, 00h
+JNE Label@aux2
 invoke MessageBox, NULL, addr DIVISIONPORCERO, addr DIVISIONPORCERO, MB_OK
 invoke ExitProcess, 0
-Label@aux8:
-FLD d
-FLD e
-FDIV
-FSTP @aux8
-FLD @aux7
-FLD @aux8
-FADD
-FSTP @aux9
-FLD @aux9
-FLD f
-FADD
-FSTP @aux10
-FILD 20
-FSTP @aux11
-FLD @aux10
-FLD @aux11
-FADD
-FSTP @aux12
-FLD @aux12
-FSTP x
+Label@aux2:
+MOV AX, d
+MOV DX, d
+DIV e
+MOV @aux2, AX
+MOV AX, @aux1
+ADD AX, @aux2
+MOV @aux3, AX
+MOV AX, @aux3
+ADD AX, f
+MOV @aux4, AX
+MOV AX, @aux4
+ADD AX, 20
+MOV @aux5, AX
+MOV AX, @aux5
+MOV x, AX
 END START

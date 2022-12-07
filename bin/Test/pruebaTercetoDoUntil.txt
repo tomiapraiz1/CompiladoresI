@@ -1,6 +1,6 @@
 program{
 
-	f32 a,b,t,d,e,f,x,z;
+	i16 a,b,t,d,e,f,x,z;
 	
 	a =: 1;
 	b =: 1;
