@@ -1,3 +1,24 @@
+/*-------Instrucciones Assembler para pasar de un registro de 16 bits a uno de 32 sin signo----------
+	MOV BX, D2
+	MOV ECX, 0
+	MOV CX, BX
+	MOV EBX, ECX
+	
+	resultado EBX
+	
+	-------Instrucciones Assembler para pasar de un registro de 16 bits a uno de 32 con signo----------
+	MOV AX, D2
+	CWD
+	
+	resultado DX:AX
+	
+	-------Instrucciones Assembler para pasar de entero a float----------
+	FILD D2 -> entero de 16 bits
+	FILD D4 -> entero de 32 bits 
+	
+	resultado: ST
+*/
+
 package GeneracionCodigo;
 
 import java.io.File;
@@ -65,8 +86,8 @@ public class GeneradorAssembler {
     		String operando = t.getOperando();
     		String tipoTerceto = t.getTipoTerceto();
     		Atributo auxOp1;
-        	Atributo auxOp2;
-        	        	    	
+        	Atributo auxOp2;       	
+        	
         	if (esTerceto(op1)) {
     			String aux = variablesAuxiliares.get(op1);
     			auxOp1 = TablaSimbolos.obtenerSimbolo(aux);
@@ -105,6 +126,10 @@ public class GeneradorAssembler {
 	    			codigo.add(new StringBuilder("OR AX, $0\n"));
     				codigo.add(new StringBuilder("JNE Label").append(devolverNumeroTerceto(op2)+"\n"));
     				break;
+    			case "tof32":
+    				codigo.add(new StringBuilder("FILD ").append(auxOp1.getLexema()+"\n"));
+    				String aux = obtenerAuxiliar("f32");
+    				codigo.add(new StringBuilder("FSTP ").append(aux+"\n"));
     			default:
     				break;
     		}

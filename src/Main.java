@@ -37,8 +37,8 @@ public class Main {
 			Parser.printErrores();
 			System.out.println("\nTercetos:");
 			TercetoManager.imprimirTercetosSinAmbito();
-			//GeneradorAssembler.procesarArchivo();
-			//GeneradorAssembler.crearArchivoASM();
+			GeneradorAssembler.procesarArchivo();
+			GeneradorAssembler.crearArchivoASM();
 	
 	}
 
