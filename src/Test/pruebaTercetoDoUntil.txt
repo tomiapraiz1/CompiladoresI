@@ -1,14 +1,7 @@
 program{
 
-	i16 a,b,t,d,e,f,x,z;
+	f32 a,b,t,d,e,f,x,z;
 	
-	a =: 1;
-	b =: 1;
-	z =: 1;
-	d =: 1;
-	e =: 1;
-	f =: 1;
-	
-	x =: a + b * z + d / e + f + 20;
+	x =: a + b * z + d / e + f;
 	
 }

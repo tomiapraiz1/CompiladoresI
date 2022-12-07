@@ -413,7 +413,8 @@ public class GeneradorAssembler {
             	String lexema_actual = a.getLexema();
             	StringBuilder b = new StringBuilder();
             	switch(tipo) {
-            	case TablaTipos.FUNC_TYPE:      
+            	case TablaTipos.FLOAT_TYPE:
+                case TablaTipos.FUNC_TYPE:      
                     codigo.add(b.append(lexema_actual).append(" dd ?\n"));
                     break;
                 case TablaTipos.INTEGER_TYPE:
