@@ -6,11 +6,6 @@
 	
 	resultado EBX
 	
-	-------Instrucciones Assembler para pasar de un registro de 16 bits a uno de 32 con signo----------
-	MOV AX, D2
-	CWD
-	
-	resultado DX:AX
 	
 	-------Instrucciones Assembler para pasar de entero a float----------
 	FILD D2 -> entero de 16 bits
@@ -44,7 +39,9 @@ public class GeneradorAssembler {
     private static ArrayList<StringBuilder> codigoAux = new ArrayList<StringBuilder>();
     private static ArrayList<StringBuilder> datos =new ArrayList<StringBuilder>();
     private static HashMap<String, String> variablesAuxiliares = new HashMap<String, String>();
+    private static HashMap<String, String> floatAuxiliares = new HashMap<String, String>();
     private static Integer auxDisponible = 0;
+    private static Integer floatDisponible = 0;
     private static Integer numero=0;
     //Errores
     private static String DIVISIONPORCERO = "Error division por cero";
@@ -83,7 +80,7 @@ public class GeneradorAssembler {
     		String operando = t.getOperando();
     		String tipoTerceto = t.getTipoTerceto();
     		Atributo auxOp1;
-        	Atributo auxOp2;       	
+        	Atributo auxOp2;    
         	
         	if (esTerceto(op1)) {
     			String aux = variablesAuxiliares.get(op1);
@@ -101,7 +98,7 @@ public class GeneradorAssembler {
     		if (operando.equals(auxiliar)) {
     			codigoAux.add(new StringBuilder(auxiliar).append(":\n"));
     		}
-    				
+    					
     		switch(operando) {
     			case "+":
     			case "-":
@@ -120,13 +117,14 @@ public class GeneradorAssembler {
     				break;
     			case "BF":
     				codigoAux.add(new StringBuilder("MOV AX, ").append(auxOp1.getLexema()+"\n"));
-    				codigoAux.add(new StringBuilder("OR AX, $0\n"));
+    				codigoAux.add(new StringBuilder("OR AX, 0\n"));
 	    			codigoAux.add(new StringBuilder("JNE Label").append(devolverNumeroTerceto(op2)+"\n"));
     				break;
     			case "tof32":
     				codigoAux.add(new StringBuilder("FILD ").append(auxOp1.getLexema()+"\n"));
     				String aux = obtenerAuxiliar("f32");
     				codigoAux.add(new StringBuilder("FSTP ").append(aux+"\n"));
+    				break;
     			default:
     				break;
     		}
@@ -154,14 +152,32 @@ public class GeneradorAssembler {
 		    case "+":
 		    	if (tipoTerceto.equals("i16")) {
 		    		codigoAux.add(new StringBuilder("MOV AX, ").append(auxOp1.getLexema()+"\n"));
-					codigoAux.add(new StringBuilder("ADD AX, ").append(auxOp2.getLexema()+"\n"));
+					codigoAux.add(new StringBuilder("ADD AX, ").append(auxOp2.getLexema()+"\n"));					
 					String auxiliar = obtenerAuxiliar("i16");
+					codigoAux.add(new StringBuilder("JC Label").append(auxiliar+"\n"));
+					codigoAux.add(new StringBuilder("invoke MessageBox, NULL, addr OVERFLOW, addr OVERFLOW, MB_OK\n"));
+					codigoAux.add(new StringBuilder("invoke ExitProcess, 0\n"));
+					codigoAux.add(new StringBuilder("Label"+auxiliar+":\n"));
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", AX\n"));
 				} else {
-					codigoAux.add(new StringBuilder("FLD ").append(auxOp1.getLexema()+"\n"));
-					codigoAux.add(new StringBuilder("FLD ").append(auxOp2.getLexema()+"\nFADD\n"));
-					String auxiliar = obtenerAuxiliar("f32");
-					codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					if(auxOp2.getIdToken() == 258){
+						String auxiliar = obtenerFloat(auxOp2.getLexema()); 
+						codigoAux.add(new StringBuilder("FLD ").append(auxOp1.getLexema()+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(auxiliar+"\nFADD\n"));
+						auxiliar = obtenerAuxiliar("f32");
+						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					}else if(auxOp1.getIdToken() == 258){
+						String auxiliar = obtenerFloat(auxOp1.getLexema()); 
+						codigoAux.add(new StringBuilder("FLD ").append(auxiliar+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(auxOp2.getLexema()+"\nFADD\n"));
+						auxiliar = obtenerAuxiliar("f32");
+						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					} else {
+						codigoAux.add(new StringBuilder("FLD ").append(auxOp1.getLexema()+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(auxOp2.getLexema()+"\nFADD\n"));
+						String auxiliar = obtenerAuxiliar("f32");
+						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					}
 				}
 		    	break;
 			case "-":
@@ -218,7 +234,7 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
 				}
 				break;
-			case "=:":  // Falta la asignacion
+			case "=:": 
 				if (tipoTerceto.equals("i16")) {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxOp2.getLexema()).append("\n"));
 					codigoAux.add(new StringBuilder("MOV ").append(auxOp1.getLexema()+", AX\n"));			
@@ -227,12 +243,12 @@ public class GeneradorAssembler {
 						codigoAux.add(new StringBuilder("FLD ").append(auxOp2.getLexema()).append("\n"));
 						codigoAux.add(new StringBuilder("FSTP ").append(auxOp1.getLexema()+"\n"));
 					}else {
-						if(auxOp2.getUso().equals("variable") ||auxOp2.getUso().isEmpty()) {
-							codigoAux.add(new StringBuilder("FLD ").append(auxOp2.getLexema()).append("\n"));
+						if(auxOp2.getIdToken() == 258){
+							String auxiliar = obtenerFloat(auxOp2.getLexema()); 
+							codigoAux.add(new StringBuilder("FLD ").append(auxiliar+"\n"));
 							codigoAux.add(new StringBuilder("FSTP ").append(auxOp1.getLexema()+"\n"));
-						}else {
-							codigoAux.add(new StringBuilder("MOV @auxDivision, ").append(auxOp2.getLexema()).append("\n"));
-							codigoAux.add(new StringBuilder("FLD @auxDivision\n"));
+						} else {
+							codigoAux.add(new StringBuilder("FLD ").append(auxOp2.getLexema()).append("\n"));
 							codigoAux.add(new StringBuilder("FSTP ").append(auxOp1.getLexema()+"\n"));
 						}
 					}
@@ -243,9 +259,9 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxOp2.getLexema()+"\n"));
 					codigoAux.add(new StringBuilder("CMP ").append(auxOp1.getLexema()+", AX\n"));
 					String auxiliar = obtenerAuxiliar("i16");
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFh\n"));
 					codigoAux.add(new StringBuilder("JA ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
 					codigoAux.add(new StringBuilder("FLD ").append(auxOp1.getLexema()+"\n"));
@@ -254,9 +270,9 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("SAHF\n"));
 					String auxiliar = obtenerAuxiliar("f32");
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFFFFFh\n"));
 					codigoAux.add(new StringBuilder("JA ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00000000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				}
 				break;
@@ -265,9 +281,9 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxOp2.getLexema()+"\n"));
 					codigoAux.add(new StringBuilder("CMP ").append(auxOp1.getLexema()+", AX\n"));
 					String auxiliar = obtenerAuxiliar("i16");
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFh\n"));
 					codigoAux.add(new StringBuilder("JAE ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
 					codigoAux.add(new StringBuilder("FLD ").append(auxOp1.getLexema()+"\n"));
@@ -276,9 +292,9 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("SAHF\n"));
 					String auxiliar = obtenerAuxiliar("f32");
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFFFFFh\n"));
 					codigoAux.add(new StringBuilder("JAE ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00000000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				}
 				break;
@@ -287,9 +303,9 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxOp2.getLexema()+"\n"));
 					codigoAux.add(new StringBuilder("CMP ").append(auxOp1.getLexema()+", AX\n"));
 					String auxiliar = obtenerAuxiliar("i16");
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFh\n"));
 					codigoAux.add(new StringBuilder("JB ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
 					codigoAux.add(new StringBuilder("FLD ").append(auxOp1.getLexema()+"\n"));
@@ -298,9 +314,9 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("SAHF\n"));
 					String auxiliar = obtenerAuxiliar("f32");
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFFFFFh\n"));
 					codigoAux.add(new StringBuilder("JB ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00000000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				}
 				break;
@@ -309,9 +325,9 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxOp2.getLexema()+"\n"));
 					codigoAux.add(new StringBuilder("CMP ").append(auxOp1.getLexema()+", AX\n"));
 					String auxiliar = obtenerAuxiliar("i16");
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFh\n"));
 					codigoAux.add(new StringBuilder("JBE ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
 					codigoAux.add(new StringBuilder("FLD ").append(auxOp1.getLexema()+"\n"));
@@ -320,9 +336,9 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("SAHF\n"));
 					String auxiliar = obtenerAuxiliar("f32");
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFFFFFh\n"));
 					codigoAux.add(new StringBuilder("JBE ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00000000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				}
 				break;
@@ -331,9 +347,9 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxOp2.getLexema()+"\n"));
 					codigoAux.add(new StringBuilder("CMP ").append(auxOp1.getLexema()+", AX\n"));
 					String auxiliar = obtenerAuxiliar("i16");
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFh\n"));
 					codigoAux.add(new StringBuilder("JNE ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
 					codigoAux.add(new StringBuilder("FLD ").append(auxOp1.getLexema()+"\n"));
@@ -342,9 +358,9 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("SAHF\n"));
 					String auxiliar = obtenerAuxiliar("f32");
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFFFFFh\n"));
 					codigoAux.add(new StringBuilder("JNE ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00000000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				}
 				break;
@@ -353,9 +369,9 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxOp2.getLexema()+"\n"));
 					codigoAux.add(new StringBuilder("CMP ").append(auxOp1.getLexema()+", AX\n"));
 					String auxiliar = obtenerAuxiliar("i16");
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFh\n"));
 					codigoAux.add(new StringBuilder("JE ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
 					codigoAux.add(new StringBuilder("FLD ").append(auxOp1.getLexema()+"\n"));
@@ -364,15 +380,22 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("SAHF\n"));
 					String auxiliar = obtenerAuxiliar("f32");
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", FFh\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFFFFFh\n"));
 					codigoAux.add(new StringBuilder("JE ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00h\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 00000000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				}
 				break;
 			default:
 				break;
     	}
+	}
+    
+    public static String obtenerFloat(String valor) {
+		String aux = "@auxf" + floatDisponible;
+		floatDisponible++;
+		floatAuxiliares.put(valor, aux);
+		return aux;
 	}
 
 	public static String obtenerAuxiliar(String tipo) {
@@ -423,7 +446,15 @@ public class GeneradorAssembler {
             	}
             	continue;
             }
-            if (!a.getUso().equals("") && (a.getUso().equals("constante") || a.getUso().equals("funcion") )) continue;
+            
+            if(a.getIdToken() == 258 && a.getTipo().equals("f32")){
+            	String lexema_actual = a.getLexema();
+            	String auxiliar = floatAuxiliares.get(lexema_actual);
+            	codigo.add(new StringBuilder(auxiliar).append(" dd " + lexema_actual+ "\n"));
+            	continue;
+            }
+            
+            if (!a.getUso().equals("") && (a.getIdToken() == 258 || a.getUso().equals("funcion") )) continue;
 
             String tipo_actual = e.getValue().getTipo();
             String lexema_actual = e.getValue().getLexema();

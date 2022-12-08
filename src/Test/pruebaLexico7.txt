@@ -1,12 +1,9 @@
 program {
 	
-	fun aaa(i16 x, i16 y) : i16{
-		return (x+y);
-	}
+	f32 z, a, b;
 	
-	i16 z, a, b;
+	a =: 2.2;
 	
-	z =: aaa(a,2) + 1;
-	
+	a =: b + 1.1;
 }
 

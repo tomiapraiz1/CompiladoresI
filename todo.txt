@@ -1,3 +1,1 @@
-1- Falta completar generador de assembler (con funciones).
-2- Falta chequeo cte negativa.
-3- Falta valor a const
+1- Falta completar funciones en assembler

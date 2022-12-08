@@ -69,7 +69,7 @@ complete_header_funcion:	lista_parametros ')' ':' tipo {funcionAux = $4.sval;}
 							| ')' ':' 	{erroresSintacticos.add("Se esperaba un tipo de retorno");}
 ;
 
-lista_parametros:	tipo ID ',' tipo ID {TablaSimbolos.modificarParametros(idAux, 2); TablaSimbolos.modificarTipoParametros(idAux, $1.sval, $4.sval); setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); setTipo($4.sval,$5.sval); setUso($5.sval, "Nombre_Parametro_Funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); $5.sval = TablaSimbolos.modificarNombre($5.sval);}
+lista_parametros:	tipo ID ',' tipo ID {TablaSimbolos.modificarParametros(idAux, 2); TablaSimbolos.modificarTipoParametros(idAux, $1.sval, $4.sval); setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); setTipo($4.sval,$5.sval); setUso($5.sval, "ParametroFuncion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); $5.sval = TablaSimbolos.modificarNombre($5.sval);}
                 	| tipo ID {TablaSimbolos.modificarParametros(idAux, 1); TablaSimbolos.modificarTipoParametros(idAux, $1.sval, ""); setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); $2.sval = TablaSimbolos.modificarNombre($2.sval);}
                 	| ID		{erroresSintacticos.add("Se esperaba un tipo para el identificador");}
                 	| ID ',' ID {erroresSintacticos.add("Los identificadores deben tener un tipo");}
