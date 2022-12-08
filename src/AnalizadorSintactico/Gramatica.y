@@ -116,12 +116,12 @@ factor:		ID {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.s
 			| ID '('')'	{TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, 0); else chequearParametros($1.sval, 0); TercetoManager.llamado_funcion($1.sval); $$.sval = "["+(TercetoManager.getIndexTerceto()-1)+"]";}
 ;
 
-lista_inv_func:		ID ',' ID {TablaSimbolos.eliminarSimbolo($1.sval); TablaSimbolos.eliminarSimbolo($3.sval);$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
-	      		| ID ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval);}
-	      		| CTE ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval); parametro2 = getTipoParametro($3.sval);}
-	      		| CTE ',' ID {$$.ival = 2; parametro1 = getTipoParametro($1.sval); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual());}
-	      		| CTE {$$.ival = 1; parametro1 = getTipoParametro($1.sval);}
-	      		| ID {$$.ival = 1; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual());}
+lista_inv_func:		ID ',' ID {TablaSimbolos.eliminarSimbolo($1.sval); TablaSimbolos.eliminarSimbolo($3.sval);$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual()); TercetoManager.crear_terceto("Parametros", $1.sval, $3.sval, "");}
+	      		| ID ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro($3.sval); TercetoManager.crear_terceto("Parametros", $1.sval, $3.sval, "");}
+	      		| CTE ',' CTE {$$.ival = 2; parametro1 = getTipoParametro($1.sval); parametro2 = getTipoParametro($3.sval); TercetoManager.crear_terceto("Parametros", $1.sval, $3.sval, "");}
+	      		| CTE ',' ID {$$.ival = 2; parametro1 = getTipoParametro($1.sval); parametro2 = getTipoParametro($3.sval + Ambito.getAmbitoActual()); TercetoManager.crear_terceto("Parametros", $1.sval, $3.sval, "");}
+	      		| CTE {$$.ival = 1; parametro1 = getTipoParametro($1.sval); TercetoManager.crear_terceto("Parametros", $1.sval, "", "");}
+	      		| ID {$$.ival = 1; parametro1 = getTipoParametro($1.sval + Ambito.getAmbitoActual()); TercetoManager.crear_terceto("Parametros", $1.sval, "", "");}
 ;
 
 declaracion_constantes:	CONST list_constantes ';'

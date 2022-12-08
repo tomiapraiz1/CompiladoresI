@@ -1128,27 +1128,27 @@ case 53:
 break;
 case 54:
 //#line 119 "gramatica.y"
-{TablaSimbolos.eliminarSimbolo(val_peek(2).sval); TablaSimbolos.eliminarSimbolo(val_peek(0).sval);yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro(val_peek(0).sval + Ambito.getAmbitoActual());}
+{TablaSimbolos.eliminarSimbolo(val_peek(2).sval); TablaSimbolos.eliminarSimbolo(val_peek(0).sval);yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro(val_peek(0).sval + Ambito.getAmbitoActual()); TercetoManager.crear_terceto("Parametros", val_peek(2).sval, val_peek(0).sval, "");}
 break;
 case 55:
 //#line 120 "gramatica.y"
-{yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro(val_peek(0).sval);}
+{yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval + Ambito.getAmbitoActual()); parametro2 = getTipoParametro(val_peek(0).sval); TercetoManager.crear_terceto("Parametros", val_peek(2).sval, val_peek(0).sval, "");}
 break;
 case 56:
 //#line 121 "gramatica.y"
-{yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval); parametro2 = getTipoParametro(val_peek(0).sval);}
+{yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval); parametro2 = getTipoParametro(val_peek(0).sval); TercetoManager.crear_terceto("Parametros", val_peek(2).sval, val_peek(0).sval, "");}
 break;
 case 57:
 //#line 122 "gramatica.y"
-{yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval); parametro2 = getTipoParametro(val_peek(0).sval + Ambito.getAmbitoActual());}
+{yyval.ival = 2; parametro1 = getTipoParametro(val_peek(2).sval); parametro2 = getTipoParametro(val_peek(0).sval + Ambito.getAmbitoActual()); TercetoManager.crear_terceto("Parametros", val_peek(2).sval, val_peek(0).sval, "");}
 break;
 case 58:
 //#line 123 "gramatica.y"
-{yyval.ival = 1; parametro1 = getTipoParametro(val_peek(0).sval);}
+{yyval.ival = 1; parametro1 = getTipoParametro(val_peek(0).sval); TercetoManager.crear_terceto("Parametros", val_peek(0).sval, "", "");}
 break;
 case 59:
 //#line 124 "gramatica.y"
-{yyval.ival = 1; parametro1 = getTipoParametro(val_peek(0).sval + Ambito.getAmbitoActual());}
+{yyval.ival = 1; parametro1 = getTipoParametro(val_peek(0).sval + Ambito.getAmbitoActual()); TercetoManager.crear_terceto("Parametros", val_peek(0).sval, "", "");}
 break;
 case 61:
 //#line 128 "gramatica.y"

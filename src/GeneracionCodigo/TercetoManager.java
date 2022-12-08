@@ -241,7 +241,7 @@ public class TercetoManager {
 
 	public static void llamado_funcion(String funcion) {
 		String tipo = TablaSimbolos.obtenerSimbolo(funcion).getTipo();
-		crear_terceto("CALL", funcion, "_", tipo);
+		crear_terceto("CALL", funcion, "["+(getIndexTerceto()-1)+"]", tipo);
 	}
 	
 	public static void imprimirTercetos() {
