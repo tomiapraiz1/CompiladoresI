@@ -154,7 +154,7 @@ public class GeneradorAssembler {
 		    		codigoAux.add(new StringBuilder("MOV AX, ").append(auxOp1.getLexema()+"\n"));
 					codigoAux.add(new StringBuilder("ADD AX, ").append(auxOp2.getLexema()+"\n"));					
 					String auxiliar = obtenerAuxiliar("i16");
-					codigoAux.add(new StringBuilder("JC Label").append(auxiliar+"\n"));
+					codigoAux.add(new StringBuilder("JNC Label").append(auxiliar+"\n"));
 					codigoAux.add(new StringBuilder("invoke MessageBox, NULL, addr OVERFLOW, addr OVERFLOW, MB_OK\n"));
 					codigoAux.add(new StringBuilder("invoke ExitProcess, 0\n"));
 					codigoAux.add(new StringBuilder("Label"+auxiliar+":\n"));

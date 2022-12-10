@@ -56,7 +56,7 @@ tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
 declaracion_funcion:	header_funcion complete_header_funcion cuerpo_funcion {setTipo(funcionAux, $1.sval); Ambito.removeAmbito();}
 ;
 
-header_funcion:		FUN ID '(' {ambitoAux = $2.sval;  System.out.println($2.sval); setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); idAux = $2.sval; $$.sval = $2.sval; TercetoManager.add_funcion($2.sval); Ambito.concatenarAmbito(ambitoAux);}
+header_funcion:		FUN ID '(' {ambitoAux = $2.sval;; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); idAux = $2.sval; $$.sval = $2.sval; TercetoManager.add_funcion($2.sval); Ambito.concatenarAmbito(ambitoAux);}
 					| FUN '(' {erroresSintacticos.add("Se esperaba un identificador de la funcion");}
 					| FUN ID {erroresSintacticos.add("Falta un (");}
 					| FUN CTE '(' {erroresSintacticos.add("No se puede declarar una funcion con una constante como nombre");}
