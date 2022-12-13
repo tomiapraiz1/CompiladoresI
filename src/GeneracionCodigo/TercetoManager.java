@@ -98,7 +98,6 @@ public class TercetoManager {
 		crear_terceto("Label"+tercetos.size(), "_", "_");
 		if(!stackTercetosContinue.isEmpty()){
 			int aux = popTercetoContinue();
-			System.out.println(aux);
 		}
 		while(!stackTercetosBreak.isEmpty()) {
 			indice_cond = popTercetoBreak();
@@ -120,7 +119,6 @@ public class TercetoManager {
 	
 	public static int popTercetoContinue() { //da el numero del terceto
 		String aux = stackTercetosContinue.pop();
-		
 		
 		aux = aux.substring(1, aux.length()-1);
 		
@@ -166,7 +164,7 @@ public class TercetoManager {
 	public static void add_inicio_id_asig() {
 		crear_terceto("Label"+tercetos.size()+":", "_", "_");
 		pushTercetoAsignacion("["+ (tercetos.size()-1)+ "]");
-		stackTercetosContinue.push('['+Integer.toString(tercetos.size() - 1 )+']');
+		stackAsignacion.push('['+Integer.toString(tercetos.size() - 1 )+']');
 	}
 	
 	public static void add_break_cte(String id, String cte, String tipo){
@@ -214,6 +212,7 @@ public class TercetoManager {
 		crear_terceto("Funcion",funcion,"_");
 	}
 	
+	//Chequear este metodo con el archivo pruebaTercetoDoUntil porque tira error
 	public static void add_return_funcion(String id, String retorno) {
 		String tipo = id;
 		String tipoOp1;
@@ -222,7 +221,6 @@ public class TercetoManager {
         	tipoOp1 = TercetoManager.getTerceto(indexTerceto).getTipoTerceto();
         }else
         	tipoOp1 = TablaTipos.getTipo(retorno);
-		
 		
 		if (!tipo.equals(tipoOp1)) {
 			if (tipo.equals("f32")) {
@@ -240,8 +238,10 @@ public class TercetoManager {
 
 
 	public static void llamado_funcion(String funcion) {
-		String tipo = TablaSimbolos.obtenerSimbolo(funcion).getTipo();
-		crear_terceto("CALL", funcion, "["+(getIndexTerceto()-1)+"]", tipo);
+		if(TablaSimbolos.contieneSimbolo(funcion)) {
+			String tipo = TablaSimbolos.obtenerSimbolo(funcion).getTipo();
+			crear_terceto("CALL", funcion, "["+(getIndexTerceto()-1)+"]", tipo);
+		}
 	}
 	
 	public static void imprimirTercetos() {

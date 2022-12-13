@@ -699,7 +699,6 @@ public static ArrayList<String> erroresSemanticos = new ArrayList<String>();
 }*/
 
 public String getTipoParametro(String p){
-	System.out.println(p);
 	if (TablaSimbolos.contieneSimbolo(p)){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(p);
 		return aux.getTipo();
@@ -716,8 +715,6 @@ public void verificarTipos(String arg1,String arg2, String operador){
 void chequearTipoParametros(String funcion, String p1, String p2){
 	if (TablaSimbolos.contieneSimbolo(funcion)){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(funcion);
-		System.out.println(p1);
-		System.out.println(p2);
 		if (aux.getUso().equals("funcion")){
 			if (!p1.equals(aux.getTipoP1()) || !p2.equals(aux.getTipoP2()))
 				erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": Los tipos de los parametros no coinciden");
@@ -820,7 +817,7 @@ int yylex() {
 
 	    return identificador_token;
 }
-//#line 752 "Parser.java"
+//#line 749 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1116,7 +1113,7 @@ case 49:
 break;
 case 51:
 //#line 114 "Gramatica.y"
-{System.out.println(val_peek(0).sval);/*ChequearRangoNegativo($2.sval)*/;yyval.sval = "-" + val_peek(0).sval;}
+{/*ChequearRangoNegativo($2.sval)*/;yyval.sval = "-" + val_peek(0).sval;}
 break;
 case 52:
 //#line 115 "Gramatica.y"
@@ -1396,7 +1393,7 @@ case 141:
 //#line 271 "Gramatica.y"
 {erroresSintacticos.add("Se esperaba un else");}
 break;
-//#line 1323 "Parser.java"
+//#line 1320 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

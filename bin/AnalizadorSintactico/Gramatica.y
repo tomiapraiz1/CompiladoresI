@@ -81,7 +81,7 @@ cuerpo_funcion:		inicio_funcion bloque fin_funcion
 inicio_funcion: '{' 
 ;
 
-fin_funcion: '}' 
+fin_funcion: '}'
 ;
 
 retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';' {TercetoManager.add_return_funcion(funcionAux, $3.sval);}
@@ -111,7 +111,7 @@ termino:		termino '*' factor {int indice = TercetoManager.getIndexTerceto(); ver
 
 factor:		ID {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.sval = $1.sval;}
       		| CTE 
-      		| '-' CTE {System.out.println($2.sval);/*ChequearRangoNegativo($2.sval)*/;$$.sval = "-" + $2.sval;}
+      		| '-' CTE {/*ChequearRangoNegativo($2.sval)*/;$$.sval = "-" + $2.sval;}
       		| ID '(' lista_inv_func ')' {TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, $3.ival); else chequearParametros($1.sval, $3.ival); chequearTipoParametros($1.sval, parametro1, parametro2); TercetoManager.llamado_funcion($1.sval); $$.sval = "["+(TercetoManager.getIndexTerceto()-1)+"]";}
 			| ID '('')'	{TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, 0); else chequearParametros($1.sval, 0); TercetoManager.llamado_funcion($1.sval); $$.sval = "["+(TercetoManager.getIndexTerceto()-1)+"]";}
 ;
@@ -289,7 +289,6 @@ public static ArrayList<String> erroresSemanticos = new ArrayList<String>();
 }*/
 
 public String getTipoParametro(String p){
-	System.out.println(p);
 	if (TablaSimbolos.contieneSimbolo(p)){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(p);
 		return aux.getTipo();
@@ -306,8 +305,6 @@ public void verificarTipos(String arg1,String arg2, String operador){
 void chequearTipoParametros(String funcion, String p1, String p2){
 	if (TablaSimbolos.contieneSimbolo(funcion)){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(funcion);
-		System.out.println(p1);
-		System.out.println(p2);
 		if (aux.getUso().equals("funcion")){
 			if (!p1.equals(aux.getTipoP1()) || !p2.equals(aux.getTipoP2()))
 				erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": Los tipos de los parametros no coinciden");

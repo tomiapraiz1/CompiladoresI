@@ -12,29 +12,35 @@ DIVISIONPORCERO db "Error division por cero", 0
 OVERFLOW db "Error overflow de suma", 0
 INVOCACION db "Error la funcion no puede volver a ser invocada", 0
 @auxDivision dw ?
-x dd ?
-y dd ?
-w dd ?
-z dd ?
-@aux1 dd ?
-@aux0 dd ?
+d dw ?
+g dw ?
+b dw ?
+h dw ?
+a dw ?
+c dw ?
+e dw ?
+f dw ?
+@aux2 dw ?
+@aux1 dw ?
+@aux0 dw ?
 .code
 START:
 FNINIT
-FLD y
-FTST
-JNE Label@aux0
+MOV AX, c
+SUB AX, d
+MOV @aux0, AX
+MOV AX, e
+MOV DX, e
+MUL f
+MOV @aux1, AX
+MOV AX, h
+CMP AX, 00h
+JNE Label@aux2
 invoke MessageBox, NULL, addr DIVISIONPORCERO, addr DIVISIONPORCERO, MB_OK
 invoke ExitProcess, 0
-Label@aux0:
-FLD x
-FLD y
-FDIV
-FSTP @aux0
-FLD @aux0
-FLD z
-FADD
-FSTP @aux1
-FLD @aux1
-FSTP w
+Label@aux2:
+MOV AX, g
+MOV DX, g
+DIV h
+MOV @aux2, AX
 END START

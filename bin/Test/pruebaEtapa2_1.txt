@@ -1,14 +1,28 @@
-pepe{
-	fun aa(): i16{
-		fun cc(): i16{
-			i16 z;
-			z =: 5;
-			return (z);
-		}
+program{
+	<<Casos válidos para cada estructura sintáctica solicitada en archivo pruebaEtapa2_1 y pruebaEtapa2_2
+	
+	i16 a,b,d,e,i;
+	const f =: 3, g =: 5, h=:7;
+	
+	when(a < b + d)then{
+		i16 z;
+		z =: a + 5;
+		outer: do{
+	
+			i =: i + 1;
+			do{
+				a =: a + 2;
+			
+				b =: b + 1; 
 				
-		i16 x;
-		x =: 4;
-		return (x);
+				if(a < b)then{
+					continue: outer;
+				}end_if;
+			
+			}until (a < b);
+		
+		}until (i < 100);
+	
 	}
 	
 	fun bb(): f32{
@@ -16,4 +30,5 @@ pepe{
 		y =: 3;
 		return (y);
 	}
+	
 }

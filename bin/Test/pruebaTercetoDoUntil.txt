@@ -1,7 +1,25 @@
 program{
 
-	f32 w, x, y, z;
+	fun suma(i16 a, i16 b): i16{
+		
+		fun resta(i16 c, i16 d): i16{
+			return (c - d);
+		}
 	
-	w =: x / y + z;
+		fun mul(i16 e, i16 f): i16{
+			return (e * f);
+		}
 	
+		fun div(i16 g, i16 h): i16{
+			return (suma(g,h));
+		}
+		
+		i16 sum;
+		sum =: div(1,2);
+	
+	}
+	
+	i16 pepe;
+	pepe =: suma(3,4);	
+
 }
