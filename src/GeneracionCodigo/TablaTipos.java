@@ -32,6 +32,8 @@ public class TablaTipos {
 	        String tipoOp1;
 	        String tipoOp2;
 	        
+	        if(op1 == null || op2 == null) return;
+	        
 	        if(op1.startsWith("[")) {
 	        	int indexTerceto = Integer.parseInt(op1.substring(1, op1.length() - 1));
 	        	tipoOp1 = TercetoManager.getTerceto(indexTerceto).getTipoTerceto();
@@ -66,6 +68,8 @@ public class TablaTipos {
 	    public static String getTipoAbarcativo(String op1, String op2, String operador) {
 	    	String tipoOp1;
 	        String tipoOp2;
+	        
+	        if(op1 == null || op2 == null) return "Error";
 	        
 	        if(op1.startsWith("[")) {
 	        	int indexTerceto = Integer.parseInt(op1.substring(1, op1.length() - 1));

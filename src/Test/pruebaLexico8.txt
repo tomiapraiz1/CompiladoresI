@@ -1,5 +1,0 @@
-program {
-	out('Esto es una cadena');
-	out('Esto es una multi /
-	cadena');
-}

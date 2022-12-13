@@ -1,0 +1,12 @@
+program {
+	<< Casos de prueba para el tema particular 9 o 10, según corresponda
+	const z=:3, a=:2, b=:10;
+	i16 i;
+	
+	z =: a + 2 * b;
+	
+	when(b + a > z + 10)then{
+		i =: i + 1;
+	}
+}
+

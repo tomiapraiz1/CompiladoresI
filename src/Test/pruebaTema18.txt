@@ -1,0 +1,26 @@
+program{
+	<< Casos de prueba para el tema particular 17 o 18, según corresponda. Incluir en las pruebas, el
+	<< anidamiento de sentencias de control conteniendo el break o continue etiquetado, según corresponda. 
+	
+	i16 a, i, j;
+	
+	etiqueta1:do{
+		i =: i + 1;
+		
+		if(i = 50) then{
+			etiqueta2: do{
+				j =: j + 1;
+			
+			}until(j < a +50);
+		}end_if;
+		
+		if(i = 25)then{
+			continue: etiqueta2;
+		}else{
+			continue: etiqueta1;
+		}end_if;
+		
+		break;
+	
+	}until(i < a + 100);
+}

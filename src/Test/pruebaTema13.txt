@@ -1,0 +1,31 @@
+program {
+	<< Casos de prueba para el tipo de sentencia de control asignada en los temas 11 a 16. Incluir en
+	<< las pruebas, el anidamiento de este tipo de sentencias, así como con sentencias de Selección.
+	
+	i16 i,j,a,b;
+	i =: 0;
+	j =: 0;
+	a =: 0;
+	b =: 0;
+	
+	do{
+		i =: i + 1;
+		j =: j + i - 1;
+		do{
+			a =: a + 2;
+			b =: b + 1; 
+			
+			if(a < b)then{
+				continue;
+			}end_if;
+			
+		}until (a < b);
+		
+		if(a - i < b + 10)then{
+				continue;
+		}else{
+			break;
+		}end_if;
+		
+	}until (i < 100);
+}

@@ -42,7 +42,8 @@ sentencia_declarativa:	declaracion_variables
 			| estruct_when
 ;
 
-declaracion_variables:	tipo lista_variables ';' 
+declaracion_variables:	tipo lista_variables ';'
+					|	tipo lista_variables {erroresSintacticos.add("Falta un ';' en la linea: " + Integer.toString(AnalizadorLexico.getLine() - 1));}
 ;
 
 lista_variables:	ID	{setTipo($1.sval); setUso($1.sval, "variable"); $1.sval = TablaSimbolos.modificarNombre($1.sval);}
@@ -182,6 +183,7 @@ inicio_id_estruct: ID ':' {TablaSimbolos.agregarSimbolo($1.sval, 257, "", Analiz
 ;
 
 seleccion:		inicio_if condicion_if cuerpo_if END_IF {TercetoManager.add_seleccion();}
+			|	inicio_if condicion_if cuerpo_if {erroresSintacticos.add("Falta la palabra reservada"+" end_if "+" en la linea: " + AnalizadorLexico.getLine());}
 ;
 
 inicio_if: IF
@@ -206,6 +208,7 @@ operador:		'<' {$$.sval = "<";}
 cuerpo_if:		THEN cuerpo_then ELSE cuerpo_else 
 			| THEN cuerpo_then
 			| THEN cuerpo_then ELSE {erroresSintacticos.add("Falta un cuerpo de else");}
+			| cuerpo_then ELSE {erroresSintacticos.add("Falta la palabra reservada" + " else " +  "en la linea " + AnalizadorLexico.getLine());}
 ;
 
 cuerpo_then:	'{' lista_sentencias_ejecutables '}' {TercetoManager.add_seleccion_then(); }
@@ -307,7 +310,7 @@ void chequearTipoParametros(String funcion, String p1, String p2){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(funcion);
 		if (aux.getUso().equals("funcion")){
 			if (!p1.equals(aux.getTipoP1()) || !p2.equals(aux.getTipoP2()))
-				erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": Los tipos de los parametros no coinciden");
+				erroresSemanticos.add("Error en la linea "+ AnalizadorLexico.getLine()+" : Los tipos de los parametros no coinciden");
 		}
 	}
 }
@@ -317,19 +320,19 @@ void chequearParametros(String simbolo, int cantidad){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(simbolo);
 		if (aux.getUso().equals("funcion")){
 			if (aux.getCantidadParametros() != cantidad)
-				erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": No coinciden la cantidad de parametros de '" + Ambito.sinAmbito(simbolo) + "'");
+				erroresSemanticos.add("Error en la linea "+ AnalizadorLexico.getLine()+" : No coinciden la cantidad de parametros de '" + Ambito.sinAmbito(simbolo) + "'");
 		} else
-			erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": '" + simbolo + "' no es una funcion");
+			erroresSemanticos.add("Error en la linea "+ AnalizadorLexico.getLine()+" : '" + simbolo + "' no es una funcion");
 	} else
-		erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": La funcion '" + simbolo + "' no esta declarada");
+		erroresSemanticos.add("Error en la linea "+ AnalizadorLexico.getLine()+" : La funcion '" + simbolo + "' no esta declarada");
 }
 
 void contieneEtiqueta(String etiqueta){
 	if (TablaSimbolos.contieneSimbolo(etiqueta)){
 		if (!TablaSimbolos.obtenerSimbolo(etiqueta).getUso().equals("etiqueta"))
-			erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": '" + Ambito.sinAmbito(etiqueta) + "' no es una etiqueta valida");
+			erroresSemanticos.add("Error en la linea "+ AnalizadorLexico.getLine()+" : '" + Ambito.sinAmbito(etiqueta) + "' no es una etiqueta valida");
 	} else
-		erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": '" + Ambito.sinAmbito(etiqueta) + "' no esta declarada");
+		erroresSemanticos.add("Error en la linea "+ AnalizadorLexico.getLine()+" : '" + Ambito.sinAmbito(etiqueta) + "' no esta declarada");
 
 }
 
@@ -337,7 +340,7 @@ void esConstante(String simbolo){
 	if (TablaSimbolos.contieneSimbolo(simbolo)){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(simbolo);
 		if (aux.getUso().equals("constante"))
-			erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": No se puede asignar un valor a una constante");
+			erroresSemanticos.add("Error en la linea "+ AnalizadorLexico.getLine()+" : No se puede asignar un valor a una constante");
 	}
 }
 
@@ -356,7 +359,7 @@ void setUso(String simbolo, String uso){
 void comprobarAmbito(String simbolo){
 	String aux = Ambito.getAmbito(simbolo);
 	if (aux == null)
-		erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": '" + simbolo + "' no esta al alcance");
+		erroresSemanticos.add("Error en la linea "+ AnalizadorLexico.getLine()+" : '" + simbolo + "' no esta al alcance");
 }
 
 void yyerror(String mensaje) {

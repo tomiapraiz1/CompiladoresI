@@ -214,6 +214,9 @@ public class TercetoManager {
 	
 	//Chequear este metodo con el archivo pruebaTercetoDoUntil porque tira error
 	public static void add_return_funcion(String id, String retorno) {
+		
+		if(retorno == null) return;
+		
 		String tipo = id;
 		String tipoOp1;
 		if(retorno.startsWith("[")) {
@@ -227,7 +230,7 @@ public class TercetoManager {
 				crear_terceto("tof32", retorno, "_", "f32");
 				crear_terceto("Return", "["+(getIndexTerceto()-1)+"]", "_", tipo);
 			} else if (tipo.equals("i16")) {
-				Parser.erroresSemanticos.add("Error en la linea"+ AnalizadorLexico.getLine()+": no se puede convertir entre i16 y f32");
+				Parser.erroresSemanticos.add("Error en la linea "+ AnalizadorLexico.getLine()+" : no se puede convertir entre i16 y f32");
 			}
 		} else {
 			crear_terceto("Return", retorno, "_", tipo);

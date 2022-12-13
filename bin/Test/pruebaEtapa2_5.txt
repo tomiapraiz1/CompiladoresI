@@ -1,5 +1,0 @@
-program {
-	<< Casos con errores de redeclaración o no declaración de variables / funciones / etiquetas
-	
-
-}

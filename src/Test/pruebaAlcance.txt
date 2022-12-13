@@ -1,0 +1,19 @@
+program {
+	<< Casos que violen las restriciones de alcance del lenguaje
+	
+	fun aa(): i16{
+		i16 a;
+		a =: a + 1;
+		fun bb(): i16{
+			a =: a + 1; << Variable a esta al alcance
+			return (a);
+		}
+		return (a); 
+	}
+	
+	fun bb(): i16{
+		a =: a + 2; << Variable a no esta al alcance
+		return (a);
+	}
+}
+

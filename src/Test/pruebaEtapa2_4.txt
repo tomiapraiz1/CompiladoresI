@@ -1,9 +1,0 @@
-program {
-	<< Casos con errores por Tipos incompatibles, y/o que requieran conversiones para los temas 21 y 22.
-	i16 x,y,z;
-	f32 u,v,w;
-	
-	u =: x / v + y * w; << Conversiones implicitas
-	
-	x =: u * v + w; << Error por incompatibilidad de tipos
-}

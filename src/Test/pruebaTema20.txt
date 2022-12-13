@@ -1,0 +1,12 @@
+program{
+	<< Casos de prueba para el tema particular 19 o 20, según corresponda.
+	
+	i16 a, i, number, end;
+
+	a =: do {
+ 		if (i = number)then {
+ 			break 1;
+ 		}end_if;
+ 	}until (i> end) else 3 ;
+	
+}

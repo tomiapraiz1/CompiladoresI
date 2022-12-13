@@ -1,0 +1,3 @@
+program{
+	<< Casos que generen errores en tiempo de ejecución (para cada control asignado al grupo)
+}

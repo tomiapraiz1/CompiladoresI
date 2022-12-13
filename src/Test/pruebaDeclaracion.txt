@@ -1,0 +1,56 @@
+program {
+	<< Casos con errores de redeclaración o no declaración de variables / funciones / etiquetas
+	<< Con este ejemplo podemos ver como el compilador nos informa que tanto la variable a, la funcion aa y la etiqueta outer estan redeclaradas
+	
+	i16 a,i,b;
+	
+	fun aa(i16 a):i16{
+		a =: 5;
+		return (a);
+		fun bb():f32{
+			return (5);
+		}
+	}
+	do{
+		i =: i + 1;
+		outer: do{
+			a =: a + 2;
+			
+			b =: b + 1; 
+			
+			if(a < b)then{
+				continue: outer;
+			}end_if;
+		
+		}until (a < b);
+		
+	}until (i < 100);
+	
+	f32 a;
+	
+	a =: 2;
+	fun bb():f32{
+		return (5);
+	}
+	
+	fun aa():f32{
+		return (8);
+	}
+	
+	outer: do{
+	
+			i =: i + 1;
+			do{
+				a =: a + 2;
+			
+				b =: b + 1; 
+				
+				if(a < b)then{
+					continue: outer;
+				}end_if;
+			
+			}until (a < b);
+		
+	}until (i < 100);
+
+}
