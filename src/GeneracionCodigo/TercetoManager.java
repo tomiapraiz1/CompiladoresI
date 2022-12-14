@@ -164,7 +164,6 @@ public class TercetoManager {
 	public static void add_inicio_id_asig() {
 		crear_terceto("Label"+tercetos.size()+":", "_", "_");
 		pushTercetoAsignacion("["+ (tercetos.size()-1)+ "]");
-		stackAsignacion.push('['+Integer.toString(tercetos.size() - 1 )+']');
 	}
 	
 	public static void add_break_cte(String id, String cte, String tipo){

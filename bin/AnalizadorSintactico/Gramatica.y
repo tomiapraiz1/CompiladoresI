@@ -5,6 +5,7 @@ import java.io.Reader;
 import AnalizadorLexico.*;
 import GeneracionCodigo.*;
 import java.util.ArrayList;
+import java.util.Stack;
 %}
 
 %token ID CTE IF THEN ELSE END_IF OUT FUN RETURN BREAK WHEN DO UNTIL CONTINUE ASIG MENORIGUAL MAYORIGUAL DISTINTO COMENTARIO I16 F32 CONST CADENA
@@ -160,7 +161,7 @@ ejecutable:		asignacion ';'
 
 con_etiqueta:		BREAK ';' {TercetoManager.breakDoUntil();}
 			| BREAK {erroresSintacticos.add("Falta un ;");}
-			| BREAK CTE ';' {TercetoManager.add_break_cte(idAux, $2.sval, TablaSimbolos.obtenerSimbolo($2.sval).getTipo());}
+			| BREAK CTE ';' {TercetoManager.add_break_cte(pilaAux.pop(), $2.sval, TablaSimbolos.obtenerSimbolo($2.sval).getTipo());}
 			| BREAK CTE {erroresSintacticos.add("Falta un ;");}
 			| CONTINUE ';' {TercetoManager.continueDoUntil();}
 			| CONTINUE {erroresSintacticos.add("Falta un ;");}
@@ -176,7 +177,7 @@ con_etiqueta:		BREAK ';' {TercetoManager.breakDoUntil();}
 			| inicio_id_asignacion ';' {erroresSintacticos.add("Falta un =:");}
 ;
 
-inicio_id_asignacion: ID ASIG {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); idAux = $1.sval; TercetoManager.add_inicio_id_asig();}
+inicio_id_asignacion: ID ASIG {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); pilaAux.push($1.sval); pilaAux.push($1.sval); TercetoManager.add_inicio_id_asig();}
 ;
 
 inicio_id_estruct: ID ':' {TablaSimbolos.agregarSimbolo($1.sval, 257, "", AnalizadorLexico.getLine()); setUso($1.sval,"etiqueta"); $1.sval = TablaSimbolos.modificarNombre($1.sval); TablaSimbolos.setTercetoSalto($1.sval,"[" + TercetoManager.getIndexTerceto() + "]");}
@@ -269,17 +270,18 @@ inicio_sentencia_ctr_expr: '{'
 fin_sentencia_ctr_expr: '}' 
 ;
 
-else_until:		ELSE CTE {TercetoManager.add_else_cte(idAux, $2.sval, TablaSimbolos.obtenerSimbolo($2.sval).getTipo());}
+else_until:		ELSE CTE {TercetoManager.add_else_cte(pilaAux.pop(), $2.sval, TablaSimbolos.obtenerSimbolo($2.sval).getTipo());}
 				| ELSE {erroresSintacticos.add("Falta una constante para asignar");}
 				| CTE {erroresSintacticos.add("Se esperaba un else");}
 ;
 
 %%
 
+public String idAux = "";
 public String tipoAux = "";
 public String ambitoAux = "";
 public String funcionAux = "";
-public String idAux = "";
+public Stack<String> pilaAux = new Stack<String>();
 public String parametro1 = "";
 public String parametro2 = "";
 public static ArrayList<String> erroresSintacticos = new ArrayList<String>();

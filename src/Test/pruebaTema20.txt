@@ -4,9 +4,20 @@ program{
 	i16 a, i, number, end;
 
 	a =: do {
+ 		
  		if (i = number)then {
  			break 1;
  		}end_if;
+ 		
+ 		i =: i + 2 * end;
+ 		
+ 		a =: do {
+ 			if (i = number)then {
+ 				break 1;
+ 			}end_if;
+ 		
+ 		}until (i> end) else 2;
+ 		
  	}until (i> end) else 3 ;
 	
 }
