@@ -113,7 +113,7 @@ termino:		termino '*' factor {int indice = TercetoManager.getIndexTerceto(); ver
 
 factor:		ID {comprobarAmbito($1.sval); $1.sval = Ambito.getAmbito($1.sval); $$.sval = $1.sval;}
       		| CTE 
-      		| '-' CTE {/*ChequearRangoNegativo($2.sval)*/;$$.sval = "-" + $2.sval;}
+      		| '-' CTE {ChequearRangoNegativo($2.sval);$$.sval = "-" + $2.sval;}
       		| ID '(' lista_inv_func ')' {TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, $3.ival); else chequearParametros($1.sval, $3.ival); chequearTipoParametros($1.sval, parametro1, parametro2); TercetoManager.llamado_funcion($1.sval); $$.sval = "["+(TercetoManager.getIndexTerceto()-1)+"]";}
 			| ID '('')'	{TablaSimbolos.eliminarSimbolo($1.sval); comprobarAmbito($1.sval); $2.sval = $1.sval; $1.sval = Ambito.getAmbito($1.sval); if ($1.sval == null) chequearParametros($2.sval, 0); else chequearParametros($1.sval, 0); TercetoManager.llamado_funcion($1.sval); $$.sval = "["+(TercetoManager.getIndexTerceto()-1)+"]";}
 ;
@@ -288,10 +288,26 @@ public static ArrayList<String> erroresSintacticos = new ArrayList<String>();
 public static ArrayList<String> erroresLexicos = new ArrayList<String>();
 public static ArrayList<String> erroresSemanticos = new ArrayList<String>();
 
-/*public void ChequearRangoNegativo(String numNegativo){
+public void ChequearRangoNegativo(String numNegativo){
+
+	Atributo a = TablaSimbolos.obtenerSimbolo(numNegativo);
+	
+	if(a.getTipo().equals("i16")){
+		Integer valor = Integer.parseInt(numNegativo) * -1;
+	
+		if (valor < AnalizadorLexico.minInt) {
+			Parser.erroresLexicos.add("Warning linea " + AnalizadorLexico.getLine() + " : el valor del simbolo sobrepasa el valor minimo."
+							+ " El mismo fue truncado al minimo.");
+			a.setLexema(Integer.toString(AnalizadorLexico.minInt));
+		}else
+			a.setLexema(Integer.toString(valor));
+		
+		TablaSimbolos.eliminarSimbolo(numNegativo);
+		TablaSimbolos.agregarSimbolo("-" + numNegativo, a);
+	}
 	
 
-}*/
+}
 
 public String getTipoParametro(String p){
 	if (TablaSimbolos.contieneSimbolo(p)){

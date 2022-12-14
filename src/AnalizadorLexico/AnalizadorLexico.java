@@ -29,6 +29,7 @@ public class AnalizadorLexico {
 	public static final int CADENA = 279;
 	
 	public static final Integer maxInt = 32768;
+	public static final Integer minInt = -32768;
 	public static final double maxF = 2147483648.0d;
 	
 	

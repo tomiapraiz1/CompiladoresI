@@ -712,10 +712,26 @@ public static ArrayList<String> erroresSintacticos = new ArrayList<String>();
 public static ArrayList<String> erroresLexicos = new ArrayList<String>();
 public static ArrayList<String> erroresSemanticos = new ArrayList<String>();
 
-/*public void ChequearRangoNegativo(String numNegativo){
+public void ChequearRangoNegativo(String numNegativo){
+
+	Atributo a = TablaSimbolos.obtenerSimbolo(numNegativo);
+	
+	if(a.getTipo().equals("i16")){
+		Integer valor = Integer.parseInt(numNegativo) * -1;
+	
+		if (valor < AnalizadorLexico.minInt) {
+			Parser.erroresLexicos.add("Warning linea " + AnalizadorLexico.getLine() + " : el valor del simbolo sobrepasa el valor minimo."
+							+ " El mismo fue truncado al minimo.");
+			a.setLexema(Integer.toString(AnalizadorLexico.minInt));
+		}else
+			a.setLexema(Integer.toString(valor));
+		
+		TablaSimbolos.eliminarSimbolo(numNegativo);
+		TablaSimbolos.agregarSimbolo("-" + numNegativo, a);
+	}
 	
 
-}*/
+}
 
 public String getTipoParametro(String p){
 	if (TablaSimbolos.contieneSimbolo(p)){
@@ -836,7 +852,7 @@ int yylex() {
 
 	    return identificador_token;
 }
-//#line 768 "Parser.java"
+//#line 784 "Parser.java"
 //###############################################################
 // method: yylexdebug : check lexer state
 //###############################################################
@@ -1136,7 +1152,7 @@ case 50:
 break;
 case 52:
 //#line 116 "Gramatica.y"
-{/*ChequearRangoNegativo($2.sval)*/;yyval.sval = "-" + val_peek(0).sval;}
+{ChequearRangoNegativo(val_peek(0).sval);yyval.sval = "-" + val_peek(0).sval;}
 break;
 case 53:
 //#line 117 "Gramatica.y"
@@ -1424,7 +1440,7 @@ case 144:
 //#line 275 "Gramatica.y"
 {erroresSintacticos.add("Se esperaba un else");}
 break;
-//#line 1351 "Parser.java"
+//#line 1367 "Parser.java"
 //########## END OF USER-SUPPLIED ACTIONS ##########
     }//switch
     //#### Now let's reduce... ####

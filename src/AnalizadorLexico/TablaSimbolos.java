@@ -33,6 +33,10 @@ public class TablaSimbolos {
 		tabla.put(lexema, a);
 	}
 	
+	public static void agregarSimbolo(String lexema, Atributo a) {
+		tabla.put(lexema, a);
+	}
+	
 	public static void agregarSimbolo(String identificador, String lexema,  String tipo) {
 		Atributo a = new Atributo(lexema, tipo);
 		tabla.put(identificador, a);

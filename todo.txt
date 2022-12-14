@@ -1,1 +1,2 @@
 1- Falta completar funciones en assembler
+2- Falta completar archivo con pruebaEerroresEjecucion
