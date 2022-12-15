@@ -58,21 +58,21 @@ tipo:		I16	{$$.sval = $1.sval; tipoAux = $1.sval;}
 declaracion_funcion:	header_funcion complete_header_funcion cuerpo_funcion {setTipo(funcionAux, $1.sval); Ambito.removeAmbito();}
 ;
 
-header_funcion:		FUN ID '(' {ambitoAux = $2.sval;; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); idAux = $2.sval; $$.sval = $2.sval; TercetoManager.add_funcion($2.sval); Ambito.concatenarAmbito(ambitoAux);}
+header_funcion:		FUN ID '(' {ambitoAux = $2.sval;; setTipo($2.sval); setUso($2.sval, "funcion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); funciones.add($2.sval); $$.sval = $2.sval; TercetoManager.add_funcion($2.sval); Ambito.concatenarAmbito(ambitoAux);}
 					| FUN '(' {erroresSintacticos.add("Se esperaba un identificador de la funcion");}
 					| FUN ID {erroresSintacticos.add("Falta un (");}
 					| FUN CTE '(' {erroresSintacticos.add("No se puede declarar una funcion con una constante como nombre");}
 ;
 
 complete_header_funcion:	lista_parametros ')' ':' tipo {funcionAux = $4.sval;}
-							| ')' ':' tipo	{TablaSimbolos.modificarParametros(idAux, 0); funcionAux = $3.sval;}
+							| ')' ':' tipo	{TablaSimbolos.modificarParametros(funciones.peek(), 0); funcionAux = $3.sval;}
 							|  ':' tipo	{erroresSintacticos.add("Falta un )");}
 							| ')' tipo	{erroresSintacticos.add("Falta un :");}
 							| ')' ':' 	{erroresSintacticos.add("Se esperaba un tipo de retorno");}
 ;
 
-lista_parametros:	tipo ID ',' tipo ID {TablaSimbolos.modificarParametros(idAux, 2); TablaSimbolos.modificarTipoParametros(idAux, $1.sval, $4.sval); setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); setTipo($4.sval,$5.sval); setUso($5.sval, "ParametroFuncion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); $5.sval = TablaSimbolos.modificarNombre($5.sval);}
-                	| tipo ID {TablaSimbolos.modificarParametros(idAux, 1); TablaSimbolos.modificarTipoParametros(idAux, $1.sval, ""); setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); $2.sval = TablaSimbolos.modificarNombre($2.sval);}
+lista_parametros:	tipo ID ',' tipo ID {TablaSimbolos.modificarParametros(funciones.peek(), 2); TablaSimbolos.modificarTipoParametros(funciones.peek(), $2.sval+Ambito.getAmbitoActual(), $5.sval+Ambito.getAmbitoActual()); setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); setTipo($4.sval,$5.sval); setUso($5.sval, "ParametroFuncion"); $2.sval = TablaSimbolos.modificarNombre($2.sval); $5.sval = TablaSimbolos.modificarNombre($5.sval);}
+                	| tipo ID {TablaSimbolos.modificarParametros(funciones.peek(), 1); TablaSimbolos.modificarTipoParametros(funciones.peek(), $2.sval+Ambito.getAmbitoActual(), ""); setTipo($1.sval,$2.sval);setUso($2.sval, "ParametroFuncion"); $2.sval = TablaSimbolos.modificarNombre($2.sval);}
                 	| ID		{erroresSintacticos.add("Se esperaba un tipo para el identificador");}
                 	| ID ',' ID {erroresSintacticos.add("Los identificadores deben tener un tipo");}
 ;
@@ -83,7 +83,7 @@ cuerpo_funcion:		inicio_funcion bloque fin_funcion
 inicio_funcion: '{' 
 ;
 
-fin_funcion: '}'
+fin_funcion: '}' {TercetoManager.add_end_funcion(funciones.pop());}
 ;
 
 retorno_funcion:	RETURN '(' expresion_aritmetica ')' ';' {TercetoManager.add_return_funcion(funcionAux, $3.sval);}
@@ -282,6 +282,7 @@ public String tipoAux = "";
 public String ambitoAux = "";
 public String funcionAux = "";
 public Stack<String> pilaAux = new Stack<String>();
+public Stack<String> funciones = new Stack<String>();
 public String parametro1 = "";
 public String parametro2 = "";
 public static ArrayList<String> erroresSintacticos = new ArrayList<String>();
@@ -309,7 +310,7 @@ public void ChequearRangoNegativo(String numNegativo){
 
 }
 
-public String getTipoParametro(String p){
+public static String getTipoParametro(String p){
 	if (TablaSimbolos.contieneSimbolo(p)){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(p);
 		return aux.getTipo();
@@ -327,7 +328,11 @@ void chequearTipoParametros(String funcion, String p1, String p2){
 	if (TablaSimbolos.contieneSimbolo(funcion)){
 		Atributo aux = TablaSimbolos.obtenerSimbolo(funcion);
 		if (aux.getUso().equals("funcion")){
-			if (!p1.equals(aux.getTipoP1()) || !p2.equals(aux.getTipoP2()))
+			String parametro1 = aux.getTipoP1();
+			String parametro2 = aux.getTipoP2();
+			String tipoP1 = getTipoParametro(parametro1);
+			String tipoP2 = getTipoParametro(parametro2);
+			if (!p1.equals(tipoP1) || !p2.equals(tipoP2))
 				erroresSemanticos.add("Error en la linea "+ AnalizadorLexico.getLine()+" : Los tipos de los parametros no coinciden");
 		}
 	}
@@ -385,19 +390,24 @@ void yyerror(String mensaje) {
         System.out.println("Error yacc: " + mensaje);
 }
 
-public static void printErrores(){
+public static int printErrores(){
+	int i = 0;
 	if (!erroresLexicos.isEmpty()) {
 		System.out.println("ERRORES LEXICOS:");
 		System.out.println(erroresLexicos);
+		i++;
 	} else System.out.println("No hay errores lexicos.");
 	if (!erroresSintacticos.isEmpty()) {
 		System.out.println("ERRORES SINTACTICOS:");
 		System.out.println(erroresSintacticos);
+		i++;
 	} else System.out.println("No hay errores sintacticos.");
 	if (!erroresSemanticos.isEmpty()) {
 		System.out.println("ERRORES SEMANTICOS:");
 		System.out.println(erroresSemanticos);
+		i++;
 	} else System.out.println("No hay errores semanticos.");
+	return i;
 }
 
 int yylex() {

@@ -211,6 +211,10 @@ public class TercetoManager {
 		crear_terceto("Funcion",funcion,"_");
 	}
 	
+	public static void add_end_funcion(String id) {
+		crear_terceto("End_funcion", id, "_");
+	}
+	
 	//Chequear este metodo con el archivo pruebaTercetoDoUntil porque tira error
 	public static void add_return_funcion(String id, String retorno) {
 		
@@ -235,7 +239,6 @@ public class TercetoManager {
 			crear_terceto("Return", retorno, "_", tipo);
 
 		}
-		crear_terceto("End_funcion", "_", "_"); //poner nombre de la funcion
 	}
 
 

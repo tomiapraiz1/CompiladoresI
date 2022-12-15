@@ -1,0 +1,12 @@
+program {
+	
+	fun suma(i16 x) : i16 {
+		i16 a;
+		a =: 1 + 2;
+		return (a);
+	}
+	
+	i16 b, a;
+	
+	b =: suma(a);
+}

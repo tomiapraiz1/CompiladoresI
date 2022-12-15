@@ -21,8 +21,10 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Stack;
 
 import AnalizadorLexico.*;
+import AnalizadorSintactico.Parser;
 
 public class GeneradorAssembler {
 	
@@ -38,6 +40,7 @@ public class GeneradorAssembler {
     private static ArrayList<StringBuilder> codigo =new ArrayList<StringBuilder>();
     private static ArrayList<StringBuilder> codigoAux = new ArrayList<StringBuilder>();
     private static ArrayList<StringBuilder> datos =new ArrayList<StringBuilder>();
+    private static ArrayList<StringBuilder> funciones =new ArrayList<StringBuilder>();
     private static HashMap<String, String> variablesAuxiliares = new HashMap<String, String>();
     private static HashMap<String, String> floatAuxiliares = new HashMap<String, String>();
     private static Integer auxDisponible = 0;
@@ -71,6 +74,9 @@ public class GeneradorAssembler {
     }
     
     public static void procesarArchivo(){
+    	
+    	Stack<Integer> s = new Stack<Integer>();
+    	String parametroF1 = "", parametroF2 = "";
         
     	generarCabecera();
     	
@@ -128,6 +134,61 @@ public class GeneradorAssembler {
     				String aux = obtenerAuxiliar("f32");
     				codigoAux.add(new StringBuilder("FSTP ").append(aux+"\n"));
     				break;
+    			case "Funcion":
+    				s.add(codigoAux.size());
+    				String parametro1 = Parser.getTipoParametro(auxOp1.getTipoP1());
+    				String parametro2 = Parser.getTipoParametro(auxOp1.getTipoP2());
+    				
+    				if (!parametro1.equals(""))
+    					parametro1 = "WORD";
+    				if (!parametro2.equals(""))
+    					parametro2 = "WORD";
+    				
+    				if (!parametro1.equals("") && !parametro2.equals(""))
+    					codigoAux.add(new StringBuilder(auxOp1.getLexema()+" proc " + devolverNombre(Ambito.sinAmbito(auxOp1.getTipoP1())) + ":"+ parametro1 + ", " + devolverNombre(Ambito.sinAmbito(auxOp1.getTipoP2()))+ ":"+ parametro2 +"\n"));
+    				else if (!auxOp1.getTipoP1().equals("") && auxOp1.getTipoP2().equals(""))
+    					codigoAux.add(new StringBuilder(auxOp1.getLexema()+" proc " + devolverNombre(Ambito.sinAmbito(auxOp1.getTipoP1()))+ ":"+ parametro1+"\n"));
+    				else if (auxOp1.getTipoP1().equals("") && !auxOp1.getTipoP2().equals(""))
+    					codigoAux.add(new StringBuilder(auxOp1.getLexema()+" proc " + devolverNombre(Ambito.sinAmbito(auxOp1.getTipoP2())) + ":"+ parametro2 +"\n"));
+    				else
+    					codigoAux.add(new StringBuilder(auxOp1.getLexema()+" proc\n"));
+    				break;
+    			case "Return":
+    				codigoAux.add(new StringBuilder("MOV AX, " + devolverNombre(auxOp1.getLexema())+"\nret\n"));
+    				break;
+    			case "End_funcion":
+    				int indice = s.pop();
+    				for (int i = indice; i < codigoAux.size(); i++) {
+    					funciones.add(codigoAux.get(i));
+    				}
+    				
+    				int size = codigoAux.size()-1;
+    				
+    				for (int i = size; i >= indice; i--) {
+    					codigoAux.remove(i);
+    				}
+    				
+    				funciones.add(new StringBuilder(auxOp1.getLexema()+ " endp\n"));
+    				break;
+    			case "Parametros":
+    				if (auxOp1 != null)
+    					parametroF1 = devolverNombre(auxOp1.getLexema());
+    				if (auxOp2 != null)
+    					parametroF2 = devolverNombre(auxOp2.getLexema());
+    				break;
+    			case "CALL":
+    				if (!parametroF1.equals("") && !parametroF2.equals(""))
+    					codigoAux.add(new StringBuilder("invoke "+auxOp1.getLexema()+", " + parametroF1 + " ," + parametroF2 +"\n"));
+    				else if (!parametroF1.equals("") && parametroF2.equals(""))
+    					codigoAux.add(new StringBuilder("invoke "+auxOp1.getLexema()+", " + parametroF1+"\n"));
+    				else if (parametroF1.equals("") && !parametroF2.equals(""))
+    					codigoAux.add(new StringBuilder("invoke "+auxOp1.getLexema()+", " + parametroF2 +"\n"));
+    				else
+    					codigoAux.add(new StringBuilder("invoke "+auxOp1.getLexema()+"\n"));
+    				
+    				String aux1 = obtenerAuxiliar("i16");
+    				codigoAux.add(new StringBuilder("MOV "+ aux1 + ", AX\n"));
+    				break;
     			default:
     				break;
     		}
@@ -137,7 +198,11 @@ public class GeneradorAssembler {
     	
     	generarCodigoDatos();
         StringBuilder x = new StringBuilder();
-    	x.append(".code\n").append("START:\nFNINIT\n");
+    	x.append(".code\n");
+    	for (StringBuilder string : funciones) {
+    		x.append(string);
+    	}
+    	x.append("START:\nFNINIT\n");
     	codigo.add(x);
     	
     	codigoAux.add(new StringBuilder("END START\n"));

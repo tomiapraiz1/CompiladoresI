@@ -6,7 +6,7 @@ program {
 		i16 a; << La variable se llamara a:main:aa
  		
  		fun aaa(i16 w) : f32{ <<ambito aaa
-			f32 x; <<La variable se llamara a:main:aa:aaa
+			f32 a; <<La variable se llamara a:main:aa:aaa
 		}
 	}
 	
