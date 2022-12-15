@@ -4,6 +4,7 @@ program{
 	a =: 50;
 	b =: 5;
 	i =: 0;
+	number =: 50;
 	
 	f32 z;
 	z =: a + b;

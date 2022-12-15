@@ -162,7 +162,7 @@ public class TercetoManager {
 	}
 	
 	public static void add_inicio_id_asig() {
-		crear_terceto("Label"+tercetos.size()+":", "_", "_");
+		crear_terceto("Label"+tercetos.size(), "_", "_");
 		pushTercetoAsignacion("["+ (tercetos.size()-1)+ "]");
 	}
 	
@@ -177,14 +177,14 @@ public class TercetoManager {
 	}
 	
 	public static void add_condicion_id_asig() {
-		crear_terceto("BF", "["+ (tercetos.size()-1)+ "]","["+ (tercetos.size()+2)+ "]");
+		crear_terceto("BF", "["+ (tercetos.size()-1)+ "]","["+ (tercetos.size()+3)+ "]");
 		int indice = popTercetoAsignacion();
 		int indiceAux = popTercetoAsignacion();
 		crear_terceto("BI", "["+ (indiceAux)+ "]","_");
 		pushTercetoAsignacion("["+indice+"]");
 	}
 	public static void add_fin_id_asig() {
-		crear_terceto("Label"+tercetos.size()+":", "_", "_");
+		crear_terceto("Label"+tercetos.size(), "_", "_");
 		int indice = popTercetoAsignacion();
 		getTerceto(indice).setOperador1('['+Integer.toString(tercetos.size()-1)+']');
 	}
