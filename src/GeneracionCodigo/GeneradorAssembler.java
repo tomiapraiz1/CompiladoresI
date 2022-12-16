@@ -219,65 +219,111 @@ public class GeneradorAssembler {
     	switch(operador) {
 		    case "+":
 		    	if (tipoTerceto.equals("i16")) {
+		    		Integer op1 = Integer.parseInt(auxOp1.getValor());
+			    	Integer op2 = Integer.parseInt(auxOp2.getValor());
+
+			    	Integer suma = op1 + op2;
+			    	
+			    	if (suma > AnalizadorLexico.maxInt) {
+			    		System.out.println("Error en ejecucion, la suma se pasa del maximo admitido");
+			    	}
 		    		codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp1.getLexema())+"\n"));
 					codigoAux.add(new StringBuilder("ADD AX, ").append(devolverNombre(auxOp2.getLexema())+"\n"));					
-					String auxiliar = obtenerAuxiliar("i16");
+					String auxiliar = obtenerAuxiliar("i16", suma);
 					codigoAux.add(new StringBuilder("JNC Label").append(auxiliar+"\n"));
 					codigoAux.add(new StringBuilder("invoke MessageBox, NULL, addr OVERFLOW, addr OVERFLOW, MB_OK\n"));
 					codigoAux.add(new StringBuilder("invoke ExitProcess, 0\n"));
 					codigoAux.add(new StringBuilder("Label"+auxiliar+":\n"));
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", AX\n"));
 				} else {
+					
+					Float opf1 = Float.parseFloat(auxOp1.getValor());
+			    	Float opf2 = Float.parseFloat(auxOp2.getValor());
+
+			    	Float sumaf = opf1 + opf2;
+			    	
+			    	System.out.println(sumaf);
+			    	
+			    	if (sumaf > AnalizadorLexico.maxF) {
+			    		System.out.println("Error en ejecucion, la suma se pasa del maximo admitido");
+			    	}
+					
 					if(auxOp2.getIdToken() == 258){
 						String auxiliar = obtenerFloat(auxOp2.getLexema()); 
 						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
 						codigoAux.add(new StringBuilder("FLD ").append(auxiliar+"\nFADD\n"));
-						auxiliar = obtenerAuxiliar("f32");
+						auxiliar = obtenerAuxiliar("f32", sumaf);
 						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
 					}else if(auxOp1.getIdToken() == 258){
 						String auxiliar = obtenerFloat(auxOp1.getLexema()); 
 						codigoAux.add(new StringBuilder("FLD ").append(auxiliar+"\n"));
 						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())+"\nFADD\n"));
-						auxiliar = obtenerAuxiliar("f32");
+						auxiliar = obtenerAuxiliar("f32", sumaf);
 						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
 					} else {
 						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
 						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())+"\nFADD\n"));
-						String auxiliar = obtenerAuxiliar("f32");
+						String auxiliar = obtenerAuxiliar("f32", sumaf);
 						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
 					}
 				}
 		    	break;
 			case "-":
 				if (tipoTerceto.equals("i16")) {
+					Integer op1 = Integer.parseInt(auxOp1.getValor());
+			    	Integer op2 = Integer.parseInt(auxOp2.getValor());
+
+			    	Integer resta = op1 - op2;
 					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp1.getLexema())+"\n"));
 					codigoAux.add(new StringBuilder("SUB AX, ").append(devolverNombre(auxOp2.getLexema())+"\n"));
-					String auxiliar = obtenerAuxiliar("i16");
+					String auxiliar = obtenerAuxiliar("i16", resta);
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", AX\n"));
 				} else {
+					Float opf1 = Float.parseFloat(auxOp1.getValor());
+			    	Float opf2 = Float.parseFloat(auxOp2.getValor());
+
+			    	Float restaf = opf1 - opf2;
 					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
 					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())+"\nFSUB\n"));
-					String auxiliar = obtenerAuxiliar("f32");
+					String auxiliar = obtenerAuxiliar("f32", restaf);
 					codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
 				}
 				break;
 			case "*":
 				if (tipoTerceto.equals("i16")) {
+					Integer op1 = Integer.parseInt(auxOp1.getValor());
+			    	Integer op2 = Integer.parseInt(auxOp2.getValor());
+
+			    	Integer mul = op1 * op2;
 					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp1.getLexema())+"\n"));
 					codigoAux.add(new StringBuilder("MOV DX, ").append(devolverNombre(auxOp1.getLexema())+"\n"));
 					codigoAux.add(new StringBuilder("MUL ").append(devolverNombre(auxOp2.getLexema())+"\n"));
-					String auxiliar = obtenerAuxiliar("i16");
+					String auxiliar = obtenerAuxiliar("i16", mul);
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", AX\n"));
 				} else {
+					Float opf1 = Float.parseFloat(auxOp1.getValor());
+			    	Float opf2 = Float.parseFloat(auxOp2.getValor());
+
+			    	Float mulf = opf1 * opf2;
 					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
 					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())+"\nFMUL\n"));
-					String auxiliar = obtenerAuxiliar("f32");
+					String auxiliar = obtenerAuxiliar("f32", mulf);
 					codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
 				}
 				break;
 			case "/":
 				if (tipoTerceto.equals("i16")) {
-					String auxiliar = obtenerAuxiliar("i16");					
+					Integer op1 = Integer.parseInt(auxOp1.getValor());
+			    	Integer op2 = Integer.parseInt(auxOp2.getValor());
+			    	
+			    	Integer div = op1;
+
+					if(op2 == 0) {
+						System.out.println("Error en tiempo de ejecucion, el operando de la division es 0");
+					}else {
+						div = op1 / op2;
+					}
+					String auxiliar = obtenerAuxiliar("i16", div);					
 					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema())+"\n"));
 					codigoAux.add(new StringBuilder("CMP AX, 00h\n"));
 					codigoAux.add(new StringBuilder("JNE ").append("Label"+auxiliar+"\n"));
@@ -289,7 +335,18 @@ public class GeneradorAssembler {
 					codigoAux.add(new StringBuilder("DIV ").append(devolverNombre(auxOp2.getLexema())+"\n"));
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", AX\n"));
 				} else {
-					String auxiliar = obtenerAuxiliar("f32");					
+					Float opf1 = Float.parseFloat(auxOp1.getValor());
+			    	Float opf2 = Float.parseFloat(auxOp2.getValor());
+			    	
+			    	Float divf = opf1;
+
+			    	if(opf2 == 0.0) {
+						System.out.println("Error en tiempo de ejecucion, el operando de la division es 0 ");
+					}else {
+						divf = opf1 / opf2;
+					}
+
+					String auxiliar = obtenerAuxiliar("f32", divf);					
 					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())+"\n"));
 					codigoAux.add(new StringBuilder("FTST\n")); //Intruccion que compara ST con 0
 					codigoAux.add(new StringBuilder("JNE ").append("Label"+auxiliar+"\n"));
@@ -303,6 +360,7 @@ public class GeneradorAssembler {
 				}
 				break;
 			case "=:": 
+				auxOp1.setValor(auxOp2.getValor());
 				if (tipoTerceto.equals("i16")) {
 					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema())).append("\n"));
 					codigoAux.add(new StringBuilder("MOV ").append(devolverNombre(auxOp1.getLexema())+", AX\n"));			
@@ -457,6 +515,22 @@ public class GeneradorAssembler {
 			default:
 				break;
     	}
+	}
+    
+    public static String obtenerAuxiliar(String tipo, Integer valor) {
+		String aux = "@aux" + auxDisponible;
+		auxDisponible++;
+		TablaSimbolos.agregarSimbolo(aux, aux, tipo, Integer.toString(valor));
+		variablesAuxiliares.put("["+numero+"]", aux);
+		return aux;
+	}
+
+	public static String obtenerAuxiliar(String tipo, Float valor) {
+		String aux = "@aux" + auxDisponible;
+		auxDisponible++;
+		TablaSimbolos.agregarSimbolo(aux, aux, tipo, Float.toString(valor));
+		variablesAuxiliares.put("["+numero+"]", aux);
+		return aux;
 	}
     
     public static String obtenerFloat(String valor) {

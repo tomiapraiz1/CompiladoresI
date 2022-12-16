@@ -29,6 +29,7 @@ public class AS5 extends AccionSemantica{
 		
 		AnalizadorLexico.token_actual.setLength(0);
 		AnalizadorLexico.token_actual.append(simbolo);
+		TablaSimbolos.modificarValor(simbolo,simbolo);
 		
 		return AnalizadorLexico.CONSTANTE;
 	}

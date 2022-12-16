@@ -12,11 +12,26 @@ public class Atributo {
     private String tipoP1 = "";
     private String tipoP2 = "";
     private String tercetoSalto = "";
+    private String valor = "";
     
     public Atributo(String lexema, int id) {
     	this.lexema = lexema;
     	this.idToken = id;
     }
+    
+    public Atributo(String lexema, String tipo, String valor) {
+    	this.lexema = lexema;
+    	this.tipo = tipo;
+    	this.valor = valor;
+    }
+    
+    public String getValor() {
+		return valor;
+	}
+
+	public void setValor(String valor) {
+		this.valor = valor;
+	}
     
     public String getTipoP1() {
 		return tipoP1;
@@ -120,7 +135,7 @@ public class Atributo {
 						+ tercetoSalto +  ", tipoP1=" + tipoP1 + ", tipoP2=" + tipoP2 +"]";
 		else
 			return "Atributo [idToken=" + idToken + ", lexema=" + lexema + ", tipo=" + tipo + ", line=" + line + ", uso="
-			+ uso + ", ambito=" + ambito + ", tercetoSalto=" + tercetoSalto + "]";
+			+ uso + ", ambito=" + ambito + ", tercetoSalto=" + tercetoSalto + ", valor=" + valor +"]";
 	}
 
 	

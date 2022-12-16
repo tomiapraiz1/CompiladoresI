@@ -33,6 +33,11 @@ public class TablaSimbolos {
 		tabla.put(lexema, a);
 	}
 	
+	public static void agregarSimbolo(String identificador, String lexema,  String tipo, String valor) {
+		Atributo a = new Atributo(lexema, tipo, valor);
+		tabla.put(identificador, a);
+	}
+	
 	public static void agregarSimbolo(String lexema, Atributo a) {
 		tabla.put(lexema, a);
 	}
@@ -73,6 +78,12 @@ public class TablaSimbolos {
 	public static void modificarUso(String key, String uso) {
         if (tabla.containsKey(key)) {
             tabla.get(key).setUso(uso);
+        }  
+    }
+	
+	public static void modificarValor(String key, String valor) {
+        if (tabla.containsKey(key)) {
+            tabla.get(key).setValor(valor);
         }  
     }
 	

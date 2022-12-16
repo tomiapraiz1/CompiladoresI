@@ -1,6 +1,9 @@
 program{
 	<< Casos que generen errores en tiempo de ejecución (para cada control asignado al grupo)
-	i16 a,b,c;
+	f32 a,b,c;
 	
-	a =: b  + -32769 * c;
+	b =: 1.0;
+	c =: 1.0 - 1.0;
+
+	a =: b / c;
 }
