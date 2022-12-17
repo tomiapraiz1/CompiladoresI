@@ -125,14 +125,21 @@ public class GeneradorAssembler {
     				codigoAux.add(new StringBuilder("JMP Label").append(devolverNumeroTerceto(op1)+"\n"));
     				break;
     			case "BF":
-    				codigoAux.add(new StringBuilder("MOV AX, ").append(auxOp1.getLexema()+"\n"));
+    				codigoAux.add(new StringBuilder("MOV AX, ").append(auxOp1.getLexema()+auxOp1.getAmbito()+"\n"));
     				codigoAux.add(new StringBuilder("OR AX, 0\n"));
 	    			codigoAux.add(new StringBuilder("JNE Label").append(devolverNumeroTerceto(op2)+"\n"));
     				break;
     			case "tof32":
-    				codigoAux.add(new StringBuilder("FILD ").append(auxOp1.getLexema()+"\n"));
-    				String aux = obtenerAuxiliar("f32");
-    				codigoAux.add(new StringBuilder("FSTP ").append(aux+"\n"));
+    				if (auxOp1.getIdToken() == 258) {
+    					String aux = obtenerFloat(auxOp1.getLexema()+auxOp1.getAmbito());
+	    				codigoAux.add(new StringBuilder("FILD ").append(aux+"\n"));
+	    				aux = obtenerAuxiliar("f32");
+	    				codigoAux.add(new StringBuilder("FSTP ").append(aux+"\n"));
+    				} else {
+	    				codigoAux.add(new StringBuilder("FILD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+	    				String aux = obtenerAuxiliar("f32");
+	    				codigoAux.add(new StringBuilder("FSTP ").append(aux+"\n"));
+    				}
     				break;
     			case "Funcion":
     				s.add(codigoAux.size());
@@ -145,16 +152,19 @@ public class GeneradorAssembler {
     					parametro2 = "WORD";
     				
     				if (!parametro1.equals("") && !parametro2.equals(""))
-    					codigoAux.add(new StringBuilder(auxOp1.getLexema()+" proc " + devolverNombre(Ambito.sinAmbito(auxOp1.getTipoP1())) + ":"+ parametro1 + ", " + devolverNombre(Ambito.sinAmbito(auxOp1.getTipoP2()))+ ":"+ parametro2 +"\n"));
+    					codigoAux.add(new StringBuilder(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+" proc " + devolverNombre(Ambito.sinAmbito(auxOp1.getTipoP1())) + ":"+ parametro1 + ", " + devolverNombre(Ambito.sinAmbito(auxOp1.getTipoP2()))+ ":"+ parametro2 +"\n"));
     				else if (!auxOp1.getTipoP1().equals("") && auxOp1.getTipoP2().equals(""))
-    					codigoAux.add(new StringBuilder(auxOp1.getLexema()+" proc " + devolverNombre(Ambito.sinAmbito(auxOp1.getTipoP1()))+ ":"+ parametro1+"\n"));
+    					codigoAux.add(new StringBuilder(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+" proc " + devolverNombre(Ambito.sinAmbito(auxOp1.getTipoP1()))+ ":"+ parametro1+"\n"));
     				else if (auxOp1.getTipoP1().equals("") && !auxOp1.getTipoP2().equals(""))
-    					codigoAux.add(new StringBuilder(auxOp1.getLexema()+" proc " + devolverNombre(Ambito.sinAmbito(auxOp1.getTipoP2())) + ":"+ parametro2 +"\n"));
+    					codigoAux.add(new StringBuilder(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+" proc " + devolverNombre(Ambito.sinAmbito(auxOp1.getTipoP2())) + ":"+ parametro2 +"\n"));
     				else
-    					codigoAux.add(new StringBuilder(auxOp1.getLexema()+" proc\n"));
+    					codigoAux.add(new StringBuilder(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+" proc\n"));
     				break;
     			case "Return":
-    				codigoAux.add(new StringBuilder("MOV AX, " + devolverNombre(auxOp1.getLexema())+"\nret\n"));
+    				if (auxOp1.getTipo().equals("i16"))
+    					codigoAux.add(new StringBuilder("MOV AX, " + devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\nret\n"));
+    				else
+    					codigoAux.add(new StringBuilder("MOV EAX, " + devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\nret\n"));
     				break;
     			case "End_funcion":
     				int indice = s.pop();
@@ -168,23 +178,23 @@ public class GeneradorAssembler {
     					codigoAux.remove(i);
     				}
     				
-    				funciones.add(new StringBuilder(auxOp1.getLexema()+ " endp\n"));
+    				funciones.add(new StringBuilder(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+ " endp\n"));
     				break;
     			case "Parametros":
     				if (auxOp1 != null)
-    					parametroF1 = devolverNombre(auxOp1.getLexema());
+    					parametroF1 = devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito());
     				if (auxOp2 != null)
-    					parametroF2 = devolverNombre(auxOp2.getLexema());
+    					parametroF2 = devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito());
     				break;
     			case "CALL":
     				if (!parametroF1.equals("") && !parametroF2.equals(""))
-    					codigoAux.add(new StringBuilder("invoke "+auxOp1.getLexema()+", " + parametroF1 + " ," + parametroF2 +"\n"));
+    					codigoAux.add(new StringBuilder("invoke "+devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+", " + parametroF1 + " ," + parametroF2 +"\n"));
     				else if (!parametroF1.equals("") && parametroF2.equals(""))
-    					codigoAux.add(new StringBuilder("invoke "+auxOp1.getLexema()+", " + parametroF1+"\n"));
+    					codigoAux.add(new StringBuilder("invoke "+devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+", " + parametroF1+"\n"));
     				else if (parametroF1.equals("") && !parametroF2.equals(""))
-    					codigoAux.add(new StringBuilder("invoke "+auxOp1.getLexema()+", " + parametroF2 +"\n"));
+    					codigoAux.add(new StringBuilder("invoke "+devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+", " + parametroF2 +"\n"));
     				else
-    					codigoAux.add(new StringBuilder("invoke "+auxOp1.getLexema()+"\n"));
+    					codigoAux.add(new StringBuilder("invoke "+devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
     				
     				String aux1 = obtenerAuxiliar("i16");
     				codigoAux.add(new StringBuilder("MOV "+ aux1 + ", AX\n"));
@@ -225,10 +235,10 @@ public class GeneradorAssembler {
 			    	Integer suma = op1 + op2;
 			    	
 			    	if (suma > AnalizadorLexico.maxInt) {
-			    		System.out.println("Error en ejecucion, la suma se pasa del maximo admitido");
+			    		System.out.println("Error en tiempo de ejecucion, la suma se pasa del maximo admitido");
 			    	}
-		    		codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("ADD AX, ").append(devolverNombre(auxOp2.getLexema())+"\n"));					
+		    		codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("ADD AX, ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));					
 					String auxiliar = obtenerAuxiliar("i16", suma);
 					codigoAux.add(new StringBuilder("JNC Label").append(auxiliar+"\n"));
 					codigoAux.add(new StringBuilder("invoke MessageBox, NULL, addr OVERFLOW, addr OVERFLOW, MB_OK\n"));
@@ -241,28 +251,26 @@ public class GeneradorAssembler {
 			    	Float opf2 = Float.parseFloat(auxOp2.getValor());
 
 			    	Float sumaf = opf1 + opf2;
-			    	
-			    	System.out.println(sumaf);
-			    	
+			    				    	
 			    	if (sumaf > AnalizadorLexico.maxF) {
-			    		System.out.println("Error en ejecucion, la suma se pasa del maximo admitido");
+			    		System.out.println("Error en tiempo de ejecucion, la suma se pasa del maximo admitido");
 			    	}
 					
 					if(auxOp2.getIdToken() == 258){
-						String auxiliar = obtenerFloat(auxOp2.getLexema()); 
-						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
+						String auxiliar = obtenerFloat(auxOp2.getLexema()+auxOp2.getAmbito()); 
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
 						codigoAux.add(new StringBuilder("FLD ").append(auxiliar+"\nFADD\n"));
 						auxiliar = obtenerAuxiliar("f32", sumaf);
 						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
 					}else if(auxOp1.getIdToken() == 258){
-						String auxiliar = obtenerFloat(auxOp1.getLexema()); 
+						String auxiliar = obtenerFloat(auxOp1.getLexema()+auxOp1.getAmbito()); 
 						codigoAux.add(new StringBuilder("FLD ").append(auxiliar+"\n"));
-						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())+"\nFADD\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\nFADD\n"));
 						auxiliar = obtenerAuxiliar("f32", sumaf);
 						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
 					} else {
-						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())+"\nFADD\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\nFADD\n"));
 						String auxiliar = obtenerAuxiliar("f32", sumaf);
 						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
 					}
@@ -274,8 +282,8 @@ public class GeneradorAssembler {
 			    	Integer op2 = Integer.parseInt(auxOp2.getValor());
 
 			    	Integer resta = op1 - op2;
-					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("SUB AX, ").append(devolverNombre(auxOp2.getLexema())+"\n"));
+					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("SUB AX, ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
 					String auxiliar = obtenerAuxiliar("i16", resta);
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", AX\n"));
 				} else {
@@ -283,10 +291,24 @@ public class GeneradorAssembler {
 			    	Float opf2 = Float.parseFloat(auxOp2.getValor());
 
 			    	Float restaf = opf1 - opf2;
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())+"\nFSUB\n"));
-					String auxiliar = obtenerAuxiliar("f32", restaf);
-					codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+			    	if(auxOp2.getIdToken() == 258){
+						String auxiliar = obtenerFloat(auxOp2.getLexema()+auxOp2.getAmbito()); 
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(auxiliar+"\nFSUB\n"));
+						auxiliar = obtenerAuxiliar("f32", restaf);
+						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					}else if(auxOp1.getIdToken() == 258){
+						String auxiliar = obtenerFloat(auxOp1.getLexema()+auxOp1.getAmbito()); 
+						codigoAux.add(new StringBuilder("FLD ").append(auxiliar+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\nFSUB\n"));
+						auxiliar = obtenerAuxiliar("f32", restaf);
+						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					} else {
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\nFSUB\n"));
+						String auxiliar = obtenerAuxiliar("f32", restaf);
+						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					}
 				}
 				break;
 			case "*":
@@ -295,9 +317,9 @@ public class GeneradorAssembler {
 			    	Integer op2 = Integer.parseInt(auxOp2.getValor());
 
 			    	Integer mul = op1 * op2;
-					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("MOV DX, ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("MUL ").append(devolverNombre(auxOp2.getLexema())+"\n"));
+					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("MOV DX, ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("MUL ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
 					String auxiliar = obtenerAuxiliar("i16", mul);
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", AX\n"));
 				} else {
@@ -305,10 +327,25 @@ public class GeneradorAssembler {
 			    	Float opf2 = Float.parseFloat(auxOp2.getValor());
 
 			    	Float mulf = opf1 * opf2;
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())+"\nFMUL\n"));
-					String auxiliar = obtenerAuxiliar("f32", mulf);
-					codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+			    	
+			    	if(auxOp2.getIdToken() == 258){
+						String auxiliar = obtenerFloat(auxOp2.getLexema()+auxOp2.getAmbito()); 
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(auxiliar+"\nFMUL\n"));
+						auxiliar = obtenerAuxiliar("f32", mulf);
+						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					}else if(auxOp1.getIdToken() == 258){
+						String auxiliar = obtenerFloat(auxOp1.getLexema()+auxOp1.getAmbito()); 
+						codigoAux.add(new StringBuilder("FLD ").append(auxiliar+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\nFMUL\n"));
+						auxiliar = obtenerAuxiliar("f32", mulf);
+						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					} else {
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\nFMUL\n"));
+						String auxiliar = obtenerAuxiliar("f32", mulf);
+						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					}
 				}
 				break;
 			case "/":
@@ -324,15 +361,15 @@ public class GeneradorAssembler {
 						div = op1 / op2;
 					}
 					String auxiliar = obtenerAuxiliar("i16", div);					
-					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema())+"\n"));
+					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
 					codigoAux.add(new StringBuilder("CMP AX, 00h\n"));
 					codigoAux.add(new StringBuilder("JNE ").append("Label"+auxiliar+"\n"));
 					codigoAux.add(new StringBuilder("invoke MessageBox, NULL, addr DIVISIONPORCERO, addr DIVISIONPORCERO, MB_OK\n"));
 					codigoAux.add(new StringBuilder("invoke ExitProcess, 0\n"));
 					codigoAux.add(new StringBuilder("Label"+auxiliar+":\n"));
-					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("MOV DX, ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("DIV ").append(devolverNombre(auxOp2.getLexema())+"\n"));
+					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("MOV DX, ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("DIV ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", AX\n"));
 				} else {
 					Float opf1 = Float.parseFloat(auxOp1.getValor());
@@ -345,53 +382,82 @@ public class GeneradorAssembler {
 					}else {
 						divf = opf1 / opf2;
 					}
-
-					String auxiliar = obtenerAuxiliar("f32", divf);					
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("FTST\n")); //Intruccion que compara ST con 0
-					codigoAux.add(new StringBuilder("JNE ").append("Label"+auxiliar+"\n"));
-					codigoAux.add(new StringBuilder("invoke MessageBox, NULL, addr DIVISIONPORCERO, addr DIVISIONPORCERO, MB_OK\n"));
-					codigoAux.add(new StringBuilder("invoke ExitProcess, 0\n"));
-					codigoAux.add(new StringBuilder("Label"+auxiliar+":\n"));
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("FDIV\n"));
-					codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+			    	
+			    	if(auxOp2.getIdToken() == 258 && auxOp1.getIdToken() == 258){
+			    		String auxiliarOp2 = obtenerFloat(auxOp2.getLexema()+auxOp2.getAmbito());
+			    		codigoAux.add(new StringBuilder("FLD ").append(auxiliarOp2+"\n"));
+			    		codigoAux.add(new StringBuilder("FTST\n")); //Intruccion que compara ST con 0
+			    		String auxiliar = obtenerAuxiliar("f32", divf);
+						codigoAux.add(new StringBuilder("JNE ").append("Label"+auxiliar+"\n"));
+						codigoAux.add(new StringBuilder("invoke MessageBox, NULL, addr DIVISIONPORCERO, addr DIVISIONPORCERO, MB_OK\n"));
+						codigoAux.add(new StringBuilder("invoke ExitProcess, 0\n"));
+						codigoAux.add(new StringBuilder("Label"+auxiliar+":\n"));
+						String auxiliarOp1 = obtenerFloat(auxOp1.getLexema()+auxOp1.getAmbito());
+						codigoAux.add(new StringBuilder("FLD ").append(auxiliarOp1+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(auxiliarOp2+"\n"));
+						codigoAux.add(new StringBuilder("FDIV\n"));
+						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					}else if(auxOp2.getIdToken() == 258 && auxOp2.getIdToken() != 258){
+						String auxiliarOp2 = obtenerFloat(auxOp2.getLexema()+auxOp2.getAmbito());
+			    		codigoAux.add(new StringBuilder("FLD ").append(auxiliarOp2+"\n"));
+			    		codigoAux.add(new StringBuilder("FTST\n")); //Intruccion que compara ST con 0
+			    		String auxiliar = obtenerAuxiliar("f32", divf);
+						codigoAux.add(new StringBuilder("JNE ").append("Label"+auxiliar+"\n"));
+						codigoAux.add(new StringBuilder("invoke MessageBox, NULL, addr DIVISIONPORCERO, addr DIVISIONPORCERO, MB_OK\n"));
+						codigoAux.add(new StringBuilder("invoke ExitProcess, 0\n"));
+						codigoAux.add(new StringBuilder("Label"+auxiliar+":\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(auxiliarOp2+"\n"));
+						codigoAux.add(new StringBuilder("FDIV\n"));
+						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					} else {
+						String auxiliar = obtenerAuxiliar("f32", divf);					
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
+						codigoAux.add(new StringBuilder("FTST\n")); //Intruccion que compara ST con 0
+						codigoAux.add(new StringBuilder("JNE ").append("Label"+auxiliar+"\n"));
+						codigoAux.add(new StringBuilder("invoke MessageBox, NULL, addr DIVISIONPORCERO, addr DIVISIONPORCERO, MB_OK\n"));
+						codigoAux.add(new StringBuilder("invoke ExitProcess, 0\n"));
+						codigoAux.add(new StringBuilder("Label"+auxiliar+":\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
+						codigoAux.add(new StringBuilder("FDIV\n"));
+						codigoAux.add(new StringBuilder("FSTP ").append(auxiliar+"\n"));
+					}
 				}
 				break;
 			case "=:": 
 				auxOp1.setValor(auxOp2.getValor());
 				if (tipoTerceto.equals("i16")) {
-					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema())).append("\n"));
-					codigoAux.add(new StringBuilder("MOV ").append(devolverNombre(auxOp1.getLexema())+", AX\n"));			
+					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())).append("\n"));
+					codigoAux.add(new StringBuilder("MOV ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+", AX\n"));			
 				} else {
 					if(auxOp2.getLexema().startsWith("@aux")) {
-						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())).append("\n"));
-						codigoAux.add(new StringBuilder("FSTP ").append(devolverNombre(auxOp1.getLexema())+"\n"));
+						codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())).append("\n"));
+						codigoAux.add(new StringBuilder("FSTP ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
 					}else {
 						if(auxOp2.getIdToken() == 258){
-							String auxiliar = obtenerFloat(auxOp2.getLexema()); 
+							String auxiliar = obtenerFloat(auxOp2.getLexema()+auxOp2.getAmbito());
 							codigoAux.add(new StringBuilder("FLD ").append(auxiliar+"\n"));
-							codigoAux.add(new StringBuilder("FSTP ").append(devolverNombre(auxOp1.getLexema())+"\n"));
+							codigoAux.add(new StringBuilder("FSTP ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
 						} else {
-							codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema())).append("\n"));
-							codigoAux.add(new StringBuilder("FSTP ").append(devolverNombre(auxOp1.getLexema())+"\n"));
+							codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())).append("\n"));
+							codigoAux.add(new StringBuilder("FSTP ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
 						}
 					}
 				}
 				break;
 			case ">":
 				if (tipoTerceto.equals("i16")) {
-					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("CMP ").append(devolverNombre(auxOp1.getLexema())+", AX\n"));
+					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("CMP ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+", AX\n"));
 					String auxiliar = obtenerAuxiliar("i16");
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFh\n"));
 					codigoAux.add(new StringBuilder("JA ").append("Label"+auxiliar+"\n"));
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("FCOM ").append(devolverNombre(auxOp2.getLexema())+"\n"));
+					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("FCOM ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
 					codigoAux.add(new StringBuilder("FSTSW ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("SAHF\n"));
@@ -404,16 +470,16 @@ public class GeneradorAssembler {
 				break;
 			case ">=":
 				if (tipoTerceto.equals("i16")) {
-					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("CMP ").append(devolverNombre(auxOp1.getLexema())+", AX\n"));
+					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("CMP ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+", AX\n"));
 					String auxiliar = obtenerAuxiliar("i16");
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFh\n"));
 					codigoAux.add(new StringBuilder("JAE ").append("Label"+auxiliar+"\n"));
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("FCOM ").append(devolverNombre(auxOp2.getLexema())+"\n"));
+					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("FCOM ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
 					codigoAux.add(new StringBuilder("FSTSW ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("SAHF\n"));
@@ -426,16 +492,16 @@ public class GeneradorAssembler {
 				break;
 			case "<":
 				if (tipoTerceto.equals("i16")) {
-					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("CMP ").append(devolverNombre(auxOp1.getLexema())+", AX\n"));
+					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("CMP ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+", AX\n"));
 					String auxiliar = obtenerAuxiliar("i16");
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFh\n"));
 					codigoAux.add(new StringBuilder("JB ").append("Label"+auxiliar+"\n"));
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("FCOM ").append(devolverNombre(auxOp2.getLexema())+"\n"));
+					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("FCOM ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
 					codigoAux.add(new StringBuilder("FSTSW ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("SAHF\n"));
@@ -448,16 +514,16 @@ public class GeneradorAssembler {
 				break;
 			case "<=":
 				if (tipoTerceto.equals("i16")) {
-					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("CMP ").append(devolverNombre(auxOp1.getLexema())+", AX\n"));
+					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("CMP ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+", AX\n"));
 					String auxiliar = obtenerAuxiliar("i16");
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFh\n"));
 					codigoAux.add(new StringBuilder("JBE ").append("Label"+auxiliar+"\n"));
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("FCOM ").append(devolverNombre(auxOp2.getLexema())+"\n"));
+					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("FCOM ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
 					codigoAux.add(new StringBuilder("FSTSW ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("SAHF\n"));
@@ -470,16 +536,16 @@ public class GeneradorAssembler {
 				break;
 			case "=!":
 				if (tipoTerceto.equals("i16")) {
-					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("CMP ").append(devolverNombre(auxOp1.getLexema())+", AX\n"));
+					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("CMP ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+", AX\n"));
 					String auxiliar = obtenerAuxiliar("i16");
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFh\n"));
 					codigoAux.add(new StringBuilder("JNE ").append("Label"+auxiliar+"\n"));
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("FCOM ").append(devolverNombre(auxOp2.getLexema())+"\n"));
+					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("FCOM ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
 					codigoAux.add(new StringBuilder("FSTSW ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("SAHF\n"));
@@ -492,16 +558,16 @@ public class GeneradorAssembler {
 				break;
 			case "=":
 				if (tipoTerceto.equals("i16")) {
-					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("CMP ").append(devolverNombre(auxOp1.getLexema())+", AX\n"));
+					codigoAux.add(new StringBuilder("MOV AX, ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("CMP ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+", AX\n"));
 					String auxiliar = obtenerAuxiliar("i16");
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0FFFFh\n"));
 					codigoAux.add(new StringBuilder("JE ").append("Label"+auxiliar+"\n"));
 					codigoAux.add(new StringBuilder("MOV ").append(auxiliar+", 0000h\n"));
 					codigoAux.add(new StringBuilder("Label").append(auxiliar+":\n"));
 				} else {
-					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema())+"\n"));
-					codigoAux.add(new StringBuilder("FCOM ").append(devolverNombre(auxOp2.getLexema())+"\n"));
+					codigoAux.add(new StringBuilder("FLD ").append(devolverNombre(auxOp1.getLexema()+auxOp1.getAmbito())+"\n"));
+					codigoAux.add(new StringBuilder("FCOM ").append(devolverNombre(auxOp2.getLexema()+auxOp2.getAmbito())+"\n"));
 					codigoAux.add(new StringBuilder("FSTSW ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("MOV AX, ").append(auxDivision+"\n"));
 					codigoAux.add(new StringBuilder("SAHF\n"));
@@ -516,6 +582,16 @@ public class GeneradorAssembler {
 				break;
     	}
 	}
+    
+    public static String devolverNombre(String nombre) {
+    	if (nombre.startsWith("@") || esConstante(nombre))
+    		return nombre;
+    	else {
+    		String aux = nombre.replaceAll(":", "_");
+    		return aux;
+    	}
+    		
+    }
     
     public static String obtenerAuxiliar(String tipo, Integer valor) {
 		String aux = "@aux" + auxDisponible;
@@ -535,8 +611,11 @@ public class GeneradorAssembler {
     
     public static String obtenerFloat(String valor) {
 		String aux = "@auxf" + floatDisponible;
-		floatDisponible++;
-		floatAuxiliares.put(valor, aux);
+		if (!floatAuxiliares.containsKey(valor)) {
+			floatDisponible++;
+			floatAuxiliares.put(valor, aux);
+		} else
+			aux = floatAuxiliares.get(valor);
 		return aux;
 	}
 
@@ -554,13 +633,6 @@ public class GeneradorAssembler {
 	
 	private static String devolverNumeroTerceto(String terceto) {
 		return terceto.substring(1, terceto.length()-1);
-	}
-	
-	private static String devolverNombre(String simbolo) {
-		if (simbolo.startsWith("@") || esConstante(simbolo)) {
-			return simbolo;
-		} else
-			return "_"+simbolo;
 	}
 
 	private static boolean esConstante(String simbolo) {
@@ -606,7 +678,7 @@ public class GeneradorAssembler {
             }
             
             if(a.getIdToken() == 258 && a.getTipo().equals("f32")){
-            	String lexema_actual = a.getLexema();
+            	String lexema_actual = devolverNombre(a.getLexema() + a.getAmbito());
             	String auxiliar = floatAuxiliares.get(lexema_actual);
             	codigo.add(new StringBuilder(auxiliar).append(" dd " + lexema_actual+ "\n"));
             	continue;
@@ -615,7 +687,7 @@ public class GeneradorAssembler {
             if (!a.getUso().equals("") && (a.getIdToken() == 258 || a.getUso().equals("funcion") )) continue;
 
             String tipo_actual = e.getValue().getTipo();
-            String lexema_actual = e.getValue().getLexema();
+            String lexema_actual = e.getValue().getLexema() + e.getValue().getAmbito();
             StringBuilder b = new StringBuilder();
             
             if (tipo_actual.equals("")) continue;
@@ -623,14 +695,14 @@ public class GeneradorAssembler {
             switch (tipo_actual) {
                 case TablaTipos.STR_TYPE:
                     String valor_actual = e.getKey();
-                    codigo.add(b.append("_"+lexema_actual).append(" db \"").append(valor_actual).append("\", 0\n"));
+                    codigo.add(b.append(devolverNombre(lexema_actual)).append(" db \"").append(valor_actual).append("\", 0\n"));
                     break;
                 case TablaTipos.FLOAT_TYPE:
                 case TablaTipos.FUNC_TYPE:      
-                    codigo.add(b.append("_"+lexema_actual).append(" dd ?\n"));
+                    codigo.add(b.append(devolverNombre(lexema_actual)).append(" dd ?\n"));
                     break;
                 case TablaTipos.INTEGER_TYPE:
-                    codigo.add(b.append("_"+lexema_actual).append(" dw ?\n"));
+                    codigo.add(b.append(devolverNombre(lexema_actual)).append(" dw ?\n"));
                     break;
             }
         }

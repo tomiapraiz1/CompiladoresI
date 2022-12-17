@@ -33,14 +33,15 @@ public class Main {
 				}
 			}
 			TablaSimbolos.imprimirTabla();
-			System.out.println("\nErrores:");
 			
 			System.out.println("\nTercetos:");
 			TercetoManager.imprimirTercetos();
-			System.out.println();
+			System.out.println("\nErrores:");
 			if (Parser.printErrores() == 0) {
+				System.out.println();
 				GeneradorAssembler.procesarArchivo();
 				GeneradorAssembler.crearArchivoASM();
+				System.out.println("Se genero correctamente el archivo salida.asm");
 			} else
 				System.out.println("\nEl programa contiene errores, por lo tanto no se genera el codigo assembler");
 	}

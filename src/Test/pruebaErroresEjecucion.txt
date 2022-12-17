@@ -1,9 +1,18 @@
 program{
-	<< Casos que generen errores en tiempo de ejecución (para cada control asignado al grupo)
+	<< Casos que generen errores en tiempo de ejecucion (para cada control asignado al grupo)
 	f32 a,b,c;
 	
 	b =: 1.0;
-	c =: 1.0 - 1.0;
+	c =: b - 1.0;
 
 	a =: b / c;
+	
+	i16 d, e, f;
+	
+	d =: 30000;
+	e =: 10000;
+	
+	f =: d + e;
+	
+	
 }

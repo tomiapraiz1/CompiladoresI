@@ -1,5 +1,5 @@
 program {
-	<< Casos de prueba para el tema particular 9 o 10, según corresponda
+	<< Casos de prueba para el tema particular 9 o 10, segun corresponda
 	const z=:3, a=:2, b=:10;
 	i16 i;
 	

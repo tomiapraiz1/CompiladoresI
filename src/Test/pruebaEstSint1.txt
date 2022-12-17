@@ -1,8 +1,18 @@
 program{
 	<<Casos válidos para cada estructura sintáctica solicitada en archivo pruebaEtapa2_1 y pruebaEtapa2_2
 	
-	i16 a,b,d,e,i;
+	i16 a,b,d,i, j;
 	const f =: 3, g =: 5, h=:7;
+	
+	a =: 1;
+	
+	b =: 1;
+	
+	d =: 5;
+	
+	i =: 0;
+	
+	j =: 100;
 	
 	when(a < b + d)then{
 		i16 z;
@@ -21,13 +31,13 @@ program{
 			
 			}until (a < b);
 		
-		}until (i < 100);
+		}until (i < j);
 	
 	}
 	
 	fun bb(): f32{
 		f32 y;
-		y =: 3;
+		y =: 3.0;
 		return (y);
 	}
 	

@@ -1,10 +1,12 @@
 program{
 	<<Casos válidos para cada estructura sintáctica solicitada en archivo pruebaEtapa2_1 y pruebaEtapa2_2
-	i16 a,b,i,number,end;
+	i16 a,b,i,number,end,j;
 	a =: 50;
 	b =: 5;
 	i =: 0;
 	number =: 50;
+	j =: 100;
+	end =: 50;
 	
 	f32 z;
 	z =: a + b;
@@ -24,7 +26,7 @@ program{
 		
 		break;
 			
-	}until(i > 100);
+	}until(i > j);
 	
 	
 }

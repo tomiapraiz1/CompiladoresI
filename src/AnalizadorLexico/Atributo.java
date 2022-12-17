@@ -7,12 +7,12 @@ public class Atributo {
     private String tipo;
     private int line;
     private String uso;
-    private String ambito;
+    private String ambito = "";
     private int cantidadParametros = -1;
     private String tipoP1 = "";
     private String tipoP2 = "";
     private String tercetoSalto = "";
-    private String valor = "";
+    private String valor = "0";
     
     public Atributo(String lexema, int id) {
     	this.lexema = lexema;

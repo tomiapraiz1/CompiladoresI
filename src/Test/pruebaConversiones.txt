@@ -1,0 +1,11 @@
+program {
+
+	<< Conversiones compatibles
+	i16 x,y,z;
+	f32 u,v,w;
+	
+	u =: x + y;
+	
+	v =: u + x;
+	
+}
